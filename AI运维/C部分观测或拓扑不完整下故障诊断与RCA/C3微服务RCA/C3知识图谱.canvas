@@ -1,0 +1,330 @@
+﻿{
+    "nodes":  [
+                  {
+                      "id":  "p9",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/C3微服务RCA/论文9/9带盲点的服务调用图根因分析.md",
+                      "x":  -520,
+                      "y":  -320,
+                      "width":  420,
+                      "height":  320,
+                      "color":  "4"
+                  },
+                  {
+                      "id":  "p12",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/C3微服务RCA/论文12/12Topo-MFP：拓扑感知多模态传播学习.md",
+                      "x":  120,
+                      "y":  -320,
+                      "width":  420,
+                      "height":  320,
+                      "color":  "4"
+                  },
+                  {
+                      "id":  "c1",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/微服务根因分析（microservice RCA）.md",
+                      "x":  -200,
+                      "y":  60,
+                      "width":  320,
+                      "height":  180,
+                      "color":  "6"
+                  },
+                  {
+                      "id":  "c2",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/服务调用图（service call graph）.md",
+                      "x":  -580,
+                      "y":  280,
+                      "width":  300,
+                      "height":  180,
+                      "color":  "6"
+                  },
+                  {
+                      "id":  "c3",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/盲点服务（blind spots）.md",
+                      "x":  -920,
+                      "y":  60,
+                      "width":  300,
+                      "height":  180,
+                      "color":  "1"
+                  },
+                  {
+                      "id":  "c4",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/多模态观测（metrics、logs、traces）.md",
+                      "x":  260,
+                      "y":  60,
+                      "width":  320,
+                      "height":  180,
+                      "color":  "6"
+                  },
+                  {
+                      "id":  "c5",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/故障传播建模.md",
+                      "x":  -200,
+                      "y":  300,
+                      "width":  320,
+                      "height":  180,
+                      "color":  "6"
+                  },
+                  {
+                      "id":  "c6",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/拓扑感知.md",
+                      "x":  480,
+                      "y":  300,
+                      "width":  300,
+                      "height":  180,
+                      "color":  "5"
+                  },
+                  {
+                      "id":  "c7",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/因果发现（causal discovery）.md",
+                      "x":  -920,
+                      "y":  300,
+                      "width":  300,
+                      "height":  180,
+                      "color":  "5"
+                  },
+                  {
+                      "id":  "c8",
+                      "type":  "file",
+                      "file":  "AI运维/C部分观测或拓扑不完整下故障诊断与RCA/概念汇总/随机游走重启（RWR）.md",
+                      "x":  480,
+                      "y":  60,
+                      "width":  300,
+                      "height":  180,
+                      "color":  "5"
+                  },
+                  {
+                      "id":  "t1",
+                      "type":  "text",
+                      "text":  "## 核心对照：C3 内部光谱\n**弃图**（论文9 TORAI）：盲点不可避免 → 完全不建调用图，严重度聚类 + 因果发现 + 假设检验，无监督\n**软用图**（论文12 Topo-MFP）：trace 可得时把拓扑当软先验（ρ_in/ρ_out），学传播图 + 反向 RWR\n**边界**：trace 覆盖好 + 有数据 → Topo-MFP 上限高；盲点多 + 无标注 → TORAI 更稳",
+                      "x":  -520,
+                      "y":  540,
+                      "width":  560,
+                      "height":  260,
+                      "color":  "1"
+                  },
+                  {
+                      "id":  "t2",
+                      "type":  "text",
+                      "text":  "## 共同痛点\n- 故障沿依赖传播，症状在下游\n- 局部异常分分不清根因和受害者\n- 多模态数据异质、融合难\n- 学出来的图都不是验证过的因果图",
+                      "x":  120,
+                      "y":  540,
+                      "width":  400,
+                      "height":  220,
+                      "color":  "6"
+                  },
+                  {
+                      "id":  "t3",
+                      "type":  "text",
+                      "text":  "## 与 B 部分的联系\nB 部分在不完备/有噪观测下**重构真图**；\nC3 或者**弃图**（论文9）或者学**诊断导向的图**（论文12）——\n「修图 → 弃图/用图」是观测不完备问题的方法论光谱",
+                      "x":  120,
+                      "y":  800,
+                      "width":  480,
+                      "height":  200,
+                      "color":  "5"
+                  },
+                  {
+                      "id":  "t4",
+                      "type":  "text",
+                      "text":  "## 与 C1/C2 的关系\nC1：拓扑不完整/无拓扑 RCA（论文5/6/11）\nC2：电力稀疏量测（论文7/8/10）\n论文9 的盲点 = 数据源缺失；论文12 的软先验 = 传播方向不可信——各缺各的。",
+                      "x":  -520,
+                      "y":  840,
+                      "width":  360,
+                      "height":  180,
+                      "color":  "4"
+                  },
+                  {
+                      "id":  "plain-title",
+                      "type":  "text",
+                      "text":  "## 人话解释（研0 版）\n下面每张卡对应本图中的一个概念文件，先用生活类比说人话；要严谨版就点概念文件本身。",
+                      "x":  -920,
+                      "y":  1120,
+                      "width":  380,
+                      "height":  120,
+                      "color":  "2"
+                  },
+                  {
+                      "id":  "plain-0",
+                      "type":  "text",
+                      "text":  "### 人话：微服务根因分析\n网站拆成几十上百个小服务，出故障时回答「是哪个服务引起的」——像在大楼里找出哪间房漏水。",
+                      "x":  -920,
+                      "y":  1280,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-1",
+                      "type":  "text",
+                      "text":  "### 人话：服务调用图\n服务之间「谁调用谁」的关系图，靠 trace 埋点画出来；埋点不全图就残缺。",
+                      "x":  -540,
+                      "y":  1280,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-2",
+                      "type":  "text",
+                      "text":  "### 人话：盲点服务\n没装 trace 埋点的服务，在调用图上隐形——但它们的故障照样发生。",
+                      "x":  -160,
+                      "y":  1280,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-3",
+                      "type":  "text",
+                      "text":  "### 人话：多模态观测\n三种体检数据：指标（数值曲线）、日志（文字记录）、trace（调用轨迹），合起来才看得清病人。",
+                      "x":  220,
+                      "y":  1280,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-4",
+                      "type":  "text",
+                      "text":  "### 人话：故障传播建模\n故障像传染病沿依赖扩散：A 慢了导致 B 超时、C 报错；建模就是还原这条传染链。",
+                      "x":  -920,
+                      "y":  1470,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-5",
+                      "type":  "text",
+                      "text":  "### 人话：拓扑感知\n把「谁连着谁」当参考信息（先验）喂给模型，但不当铁律——地图会过时，证据说了算。",
+                      "x":  -540,
+                      "y":  1470,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-6",
+                      "type":  "text",
+                      "text":  "### 人话：因果发现\n从数据里自动找「谁影响谁」：不看相关性而推断因果方向，像从案发现场推断谁先动手。",
+                      "x":  -160,
+                      "y":  1470,
+                      "width":  340,
+                      "height":  160
+                  },
+                  {
+                      "id":  "plain-7",
+                      "type":  "text",
+                      "text":  "### 人话：随机游走重启\n从嫌疑人出发在图上随机走、偶尔跳回起点，最后停留最多的节点最可疑——像顺风闻气味找源头。",
+                      "x":  220,
+                      "y":  1470,
+                      "width":  340,
+                      "height":  160
+                  }
+              ],
+    "edges":  [
+                  {
+                      "id":  "e1",
+                      "fromNode":  "p9",
+                      "toNode":  "c1",
+                      "label":  "无监督多源RCA"
+                  },
+                  {
+                      "id":  "e2",
+                      "fromNode":  "p12",
+                      "toNode":  "c1",
+                      "label":  "检测+定位两阶段"
+                  },
+                  {
+                      "id":  "e3",
+                      "fromNode":  "p9",
+                      "toNode":  "c3",
+                      "label":  "核心问题设定"
+                  },
+                  {
+                      "id":  "e4",
+                      "fromNode":  "p9",
+                      "toNode":  "c2",
+                      "label":  "弃用"
+                  },
+                  {
+                      "id":  "e5",
+                      "fromNode":  "p12",
+                      "toNode":  "c2",
+                      "label":  "软先验/动态依赖图"
+                  },
+                  {
+                      "id":  "e6",
+                      "fromNode":  "p12",
+                      "toNode":  "c6",
+                      "label":  "标志性设计"
+                  },
+                  {
+                      "id":  "e7",
+                      "fromNode":  "p9",
+                      "toNode":  "c7",
+                      "label":  "CausalRanker使用Ψ-PC"
+                  },
+                  {
+                      "id":  "e8",
+                      "fromNode":  "p12",
+                      "toNode":  "c8",
+                      "label":  "反向RWR排序"
+                  },
+                  {
+                      "id":  "e9",
+                      "fromNode":  "p9",
+                      "toNode":  "c4",
+                      "label":  "缺失源填0"
+                  },
+                  {
+                      "id":  "e10",
+                      "fromNode":  "p12",
+                      "toNode":  "c4",
+                      "label":  "跨模态一致性融合"
+                  },
+                  {
+                      "id":  "e11",
+                      "fromNode":  "p9",
+                      "toNode":  "c5",
+                      "label":  "因果图建模传播"
+                  },
+                  {
+                      "id":  "e12",
+                      "fromNode":  "p12",
+                      "toNode":  "c5",
+                      "label":  "学习传播图(非因果)"
+                  },
+                  {
+                      "id":  "e13",
+                      "fromNode":  "p9",
+                      "toNode":  "t1",
+                      "label":  "弃图路线"
+                  },
+                  {
+                      "id":  "e14",
+                      "fromNode":  "p12",
+                      "toNode":  "t1",
+                      "label":  "软用图路线"
+                  },
+                  {
+                      "id":  "e15",
+                      "fromNode":  "t2",
+                      "toNode":  "c1",
+                      "label":  "驱动问题"
+                  },
+                  {
+                      "id":  "e16",
+                      "fromNode":  "t1",
+                      "toNode":  "t3",
+                      "label":  "方法论呼应"
+                  },
+                  {
+                      "id":  "e17",
+                      "fromNode":  "t1",
+                      "toNode":  "t4",
+                      "label":  "部分内定位"
+                  }
+              ]
+}

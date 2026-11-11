@@ -1,0 +1,39 @@
+{
+	"nodes":[
+		{"id":"c1","type":"text","text":"## 基于第一性原理的诊断\n诊断 = 最小 AB 假设撤回集合\n三篇论文的总纲概念\n（Reiter 1987 公理化）","x":-880,"y":40,"width":320,"height":170,"color":"4"},
+		{"id":"c2","type":"text","text":"## 系统模型 SD 与 AB\n(SD, COMPONENTS, OBS)\nAB 谓词 = 可撤回的正常性假设\n与默认逻辑扩展一一对应","x":-520,"y":40,"width":320,"height":170,"color":"4"},
+		{"id":"c4","type":"text","text":"## 最小命中集\n诊断 = 极小冲突的极小命中集\nReiter 定理 4.4\n计算结构：HS-tree","x":180,"y":40,"width":300,"height":170,"color":"5"},
+		{"id":"c5","type":"text","text":"## GDE 通用诊断引擎\nATMS + 约束传播\n支撑环境缓存，推断不重复\n候选 = 与所有冲突相交的假设集","x":540,"y":40,"width":320,"height":170,"color":"6"},
+		{"id":"c6","type":"text","text":"## 概率诊断\n候选先验 = 部件故障率独立连乘\n条件概率只有 0 / 1 / 1/m 三种\n由模型推导，不需经验表","x":900,"y":40,"width":320,"height":170,"color":"6"},
+		{"id":"c7","type":"text","text":"## 主动测量与诊断消歧\n最小熵选下一个测量（GDE）\n增量：旧诊断 → 新冲突 → 新诊断（Hou）\n测量可扩大候选空间（非单调）","x":180,"y":290,"width":360,"height":180,"color":"1"},
+		{"id":"c8","type":"text","text":"## 候选诊断\n极小候选在格上划边界\n被消灭永不复活\n单故障层面可分治","x":-520,"y":290,"width":320,"height":180,"color":"5"},
+		{"id":"cx","type":"text","text":"## 与 B/C 部分\nA 部分假设 SD 完美、OBS 为真\nB 部分松动观测可靠性\nC 部分处理观测/拓扑不完整的 RCA","x":-880,"y":290,"width":320,"height":180,"color":"1"},
+		{"id":"kg","type":"file","file":"AI运维/A经典诊断与测量理论/A-知识图谱.md","x":-70,"y":560,"width":400,"height":240,"color":"1"},
+		{"id":"p13","type":"file","file":"AI运维/A经典诊断与测量理论/论文13/13基于第一性原理的诊断理论.md","x":-600,"y":-520,"width":400,"height":280,"color":"4"},
+		{"id":"c3","type":"text","text":"## 冲突集（conflict set）\n不可能全正常的部件集合\n超集封闭 → 只存极小冲突","x":-220,"y":120,"width":300,"height":170,"color":"5"},
+		{"id":"p14","type":"file","file":"AI运维/A经典诊断与测量理论/论文14/14诊断多重故障.md","x":160,"y":-520,"width":400,"height":280,"color":"5"},
+		{"id":"p15","type":"file","file":"AI运维/A经典诊断与测量理论/论文15/15第一性原理诊断中的测量理论.md","x":760,"y":-480,"width":400,"height":280,"color":"6"}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"p13","fromSide":"bottom","toNode":"c1","toSide":"top","label":"公理化"},
+		{"id":"e2","fromNode":"p13","fromSide":"bottom","toNode":"c2","toSide":"top","label":"定义"},
+		{"id":"e3","fromNode":"p13","fromSide":"bottom","toNode":"c3","toSide":"top","label":"定理 4.4"},
+		{"id":"e4","fromNode":"p13","fromSide":"right","toNode":"c4","toSide":"left","label":"HS-tree 算法"},
+		{"id":"e5","fromNode":"p14","fromSide":"bottom","toNode":"c3","toSide":"top","label":"极小冲突"},
+		{"id":"e6","fromNode":"p14","fromSide":"bottom","toNode":"c8","toSide":"top","label":"候选格"},
+		{"id":"e7","fromNode":"p14","fromSide":"right","toNode":"c5","toSide":"top","label":"实现"},
+		{"id":"e8","fromNode":"p14","fromSide":"right","toNode":"c6","toSide":"left","label":"最小熵 + 概率"},
+		{"id":"e9","fromNode":"p15","fromSide":"bottom","toNode":"c7","toSide":"top","label":"增量测量理论"},
+		{"id":"e10","fromNode":"p15","fromSide":"bottom","toNode":"c5","toSide":"top","label":"形式化辩护"},
+		{"id":"e11","fromNode":"p15","fromSide":"left","toNode":"p13","toSide":"right","color":"1","label":"继承定义"},
+		{"id":"e12","fromNode":"p14","fromSide":"left","toNode":"p13","toSide":"right","label":"同期独立、刻画等价"},
+		{"id":"e13","fromNode":"c3","fromSide":"right","toNode":"c4","toSide":"left","label":"命中"},
+		{"id":"e14","fromNode":"c4","fromSide":"left","toNode":"c8","toSide":"right","label":"刻画"},
+		{"id":"e15","fromNode":"c7","fromSide":"right","toNode":"c6","toSide":"left","label":"用概率选点"},
+		{"id":"e16","fromNode":"kg","fromSide":"top","toNode":"p13","toSide":"bottom","label":"总览"},
+		{"id":"e17","fromNode":"kg","fromSide":"top","toNode":"p14","toSide":"bottom","label":"总览"},
+		{"id":"e18","fromNode":"kg","fromSide":"top","toNode":"p15","toSide":"bottom","label":"总览"},
+		{"id":"e19","fromNode":"kg","fromSide":"left","toNode":"cx","toSide":"right","label":"跨部分"},
+		{"id":"e20","fromNode":"c1","fromSide":"right","toNode":"c2","toSide":"left","label":"使用"}
+	]
+}
