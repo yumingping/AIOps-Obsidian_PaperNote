@@ -1,0 +1,421 @@
+{
+ "nodes": [
+  {
+   "id": "63f9e0f10238e6d0",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 80,
+   "text": "**topic 必须对 broker 明文 → 作息可被画像**"
+  },
+  {
+   "id": "2c91f910a08a725c",
+   "type": "text",
+   "x": 760,
+   "y": 104,
+   "width": 420,
+   "height": 56,
+   "text": "TLS 只保传输层，不管元数据"
+  },
+  {
+   "id": "c19b0866263213d3",
+   "type": "text",
+   "x": 760,
+   "y": 228,
+   "width": 420,
+   "height": 56,
+   "text": "5 种 topic 混淆，全部只在客户端做"
+  },
+  {
+   "id": "cfbe5762141253ec",
+   "type": "text",
+   "x": 760,
+   "y": 308,
+   "width": 420,
+   "height": 56,
+   "text": "实现并验证 AOTP（进阶一次性口令）"
+  },
+  {
+   "id": "3ba802139a815daa",
+   "type": "text",
+   "x": 760,
+   "y": 432,
+   "width": 420,
+   "height": 56,
+   "text": "PRF 同步随机 topic（DHKE 传种子）"
+  },
+  {
+   "id": "d2218cb759543a71",
+   "type": "text",
+   "x": 760,
+   "y": 512,
+   "width": 420,
+   "height": 56,
+   "text": "hash 链一次性口令：每环只用一次"
+  },
+  {
+   "id": "790045acc4ddf56a",
+   "type": "text",
+   "x": 760,
+   "y": 592,
+   "width": 420,
+   "height": 56,
+   "text": "AOTP = 隔项掺盐递推 + 随机多项式"
+  },
+  {
+   "id": "31ccf9b13d9790e0",
+   "type": "text",
+   "x": 760,
+   "y": 672,
+   "width": 420,
+   "height": 56,
+   "text": "用 p/# 通配订阅过滤无关消息"
+  },
+  {
+   "id": "41048f8176aed347",
+   "type": "text",
+   "x": 760,
+   "y": 796,
+   "width": 420,
+   "height": 80,
+   "text": "AOTP 解混淆 1–13 ms（RPi），占远程时延 10%"
+  },
+  {
+   "id": "2f004fd55d534fcc",
+   "type": "text",
+   "x": 760,
+   "y": 900,
+   "width": 420,
+   "height": 80,
+   "text": "ESP8266 上约 120 ms（MCU 不做解混淆）"
+  },
+  {
+   "id": "f8c2570e7356dfcb",
+   "type": "text",
+   "x": 760,
+   "y": 1004,
+   "width": 420,
+   "height": 56,
+   "text": "明文本地基线 3.7 ms"
+  },
+  {
+   "id": "2c6b5b68ab74c2a9",
+   "type": "text",
+   "x": 760,
+   "y": 1084,
+   "width": 420,
+   "height": 56,
+   "text": "方案 A 的 payload 体积 +33%"
+  },
+  {
+   "id": "a348afea78f2f306",
+   "type": "text",
+   "x": 760,
+   "y": 1208,
+   "width": 420,
+   "height": 56,
+   "text": "「安全与展望」章的扩展素材"
+  },
+  {
+   "id": "3858a562f1ad3a11",
+   "type": "text",
+   "x": 760,
+   "y": 1288,
+   "width": 420,
+   "height": 56,
+   "text": "混淆 vs 明文 × 本地 vs 远程 2×2 实验"
+  },
+  {
+   "id": "ada91c1b4cef4115",
+   "type": "text",
+   "x": 760,
+   "y": 1368,
+   "width": 420,
+   "height": 56,
+   "text": "混淆 ≠ 加密：统计侧信道仍是开放问题"
+  },
+  {
+   "id": "5a68bb03d5458ae1",
+   "type": "text",
+   "x": 760,
+   "y": 1492,
+   "width": 420,
+   "height": 56,
+   "text": "网关做混淆/解混淆，MCU 只采集发布"
+  },
+  {
+   "id": "6cff381ea38d244e",
+   "type": "text",
+   "x": 760,
+   "y": 1572,
+   "width": 420,
+   "height": 56,
+   "text": "映射表按发布频率排序降低试错开销"
+  },
+  {
+   "id": "6078ed8c3ded2e11",
+   "type": "text",
+   "x": 760,
+   "y": 1652,
+   "width": 420,
+   "height": 80,
+   "text": "C++：OpenSSL HMAC/SHA-256 实现 hash 链"
+  },
+  {
+   "id": "26182eaf6a10c27e",
+   "type": "text",
+   "x": 20,
+   "y": 783,
+   "width": 310,
+   "height": 190,
+   "text": "# MQTT协议隐私改进\nFischer et al.\nIEEE 2019\nAOTP topic 混淆"
+  },
+  {
+   "id": "a9d570785d425443",
+   "type": "text",
+   "x": 380,
+   "y": 38,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "fec991c389475885",
+   "type": "text",
+   "x": 380,
+   "y": 254,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "268e20b8bde03f09",
+   "type": "text",
+   "x": 380,
+   "y": 538,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "61f4368b66e81236",
+   "type": "text",
+   "x": 380,
+   "y": 926,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "ac822fa0ec924f8a",
+   "type": "text",
+   "x": 380,
+   "y": 1274,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "ba680c0c9013574f",
+   "type": "text",
+   "x": 380,
+   "y": 1570,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "a8a72f24a44099eb",
+   "type": "file",
+   "x": 20,
+   "y": 1796,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/D可靠性容错与安全/论文12MQTT协议隐私改进/12MQTT协议隐私改进.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "26816811c8aae2c1",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "right",
+   "toNode": "a9d570785d425443",
+   "toSide": "left"
+  },
+  {
+   "id": "6d775b5674040df1",
+   "fromNode": "a9d570785d425443",
+   "fromSide": "right",
+   "toNode": "63f9e0f10238e6d0",
+   "toSide": "left"
+  },
+  {
+   "id": "3f489ad5bd3f7d21",
+   "fromNode": "a9d570785d425443",
+   "fromSide": "right",
+   "toNode": "2c91f910a08a725c",
+   "toSide": "left"
+  },
+  {
+   "id": "a9a9671d77de8d1a",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "right",
+   "toNode": "fec991c389475885",
+   "toSide": "left"
+  },
+  {
+   "id": "a2ae5c1dcdaaf574",
+   "fromNode": "fec991c389475885",
+   "fromSide": "right",
+   "toNode": "c19b0866263213d3",
+   "toSide": "left"
+  },
+  {
+   "id": "2087dd68aa7c3138",
+   "fromNode": "fec991c389475885",
+   "fromSide": "right",
+   "toNode": "cfbe5762141253ec",
+   "toSide": "left"
+  },
+  {
+   "id": "b73ef05e9c27264b",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "right",
+   "toNode": "268e20b8bde03f09",
+   "toSide": "left"
+  },
+  {
+   "id": "e53a6c4b1e44bc10",
+   "fromNode": "268e20b8bde03f09",
+   "fromSide": "right",
+   "toNode": "3ba802139a815daa",
+   "toSide": "left"
+  },
+  {
+   "id": "c4a0d0f98a504cc4",
+   "fromNode": "268e20b8bde03f09",
+   "fromSide": "right",
+   "toNode": "d2218cb759543a71",
+   "toSide": "left"
+  },
+  {
+   "id": "9c8022e1903f0969",
+   "fromNode": "268e20b8bde03f09",
+   "fromSide": "right",
+   "toNode": "790045acc4ddf56a",
+   "toSide": "left"
+  },
+  {
+   "id": "064b3be427741f79",
+   "fromNode": "268e20b8bde03f09",
+   "fromSide": "right",
+   "toNode": "31ccf9b13d9790e0",
+   "toSide": "left"
+  },
+  {
+   "id": "5552bad5a4bd628c",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "right",
+   "toNode": "61f4368b66e81236",
+   "toSide": "left"
+  },
+  {
+   "id": "0c175457da784dc3",
+   "fromNode": "61f4368b66e81236",
+   "fromSide": "right",
+   "toNode": "41048f8176aed347",
+   "toSide": "left"
+  },
+  {
+   "id": "5a2995ebce06d417",
+   "fromNode": "61f4368b66e81236",
+   "fromSide": "right",
+   "toNode": "2f004fd55d534fcc",
+   "toSide": "left"
+  },
+  {
+   "id": "8a8044b829e6db54",
+   "fromNode": "61f4368b66e81236",
+   "fromSide": "right",
+   "toNode": "f8c2570e7356dfcb",
+   "toSide": "left"
+  },
+  {
+   "id": "fc9a8ce9710f322d",
+   "fromNode": "61f4368b66e81236",
+   "fromSide": "right",
+   "toNode": "2c6b5b68ab74c2a9",
+   "toSide": "left"
+  },
+  {
+   "id": "b50f56280c732f32",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "right",
+   "toNode": "ac822fa0ec924f8a",
+   "toSide": "left"
+  },
+  {
+   "id": "d0e16c8349af5bf7",
+   "fromNode": "ac822fa0ec924f8a",
+   "fromSide": "right",
+   "toNode": "a348afea78f2f306",
+   "toSide": "left"
+  },
+  {
+   "id": "9070093bb79ad642",
+   "fromNode": "ac822fa0ec924f8a",
+   "fromSide": "right",
+   "toNode": "3858a562f1ad3a11",
+   "toSide": "left"
+  },
+  {
+   "id": "f4aad345939a6bdb",
+   "fromNode": "ac822fa0ec924f8a",
+   "fromSide": "right",
+   "toNode": "ada91c1b4cef4115",
+   "toSide": "left"
+  },
+  {
+   "id": "ce46df933201afa0",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "right",
+   "toNode": "ba680c0c9013574f",
+   "toSide": "left"
+  },
+  {
+   "id": "2896a8f3a863eff7",
+   "fromNode": "ba680c0c9013574f",
+   "fromSide": "right",
+   "toNode": "5a68bb03d5458ae1",
+   "toSide": "left"
+  },
+  {
+   "id": "b0125eb5f3294bbb",
+   "fromNode": "ba680c0c9013574f",
+   "fromSide": "right",
+   "toNode": "6cff381ea38d244e",
+   "toSide": "left"
+  },
+  {
+   "id": "153485333946410f",
+   "fromNode": "ba680c0c9013574f",
+   "fromSide": "right",
+   "toNode": "6078ed8c3ded2e11",
+   "toSide": "left"
+  },
+  {
+   "id": "8852668a8b31a8bc",
+   "fromNode": "26182eaf6a10c27e",
+   "fromSide": "bottom",
+   "toNode": "a8a72f24a44099eb",
+   "toSide": "top"
+  }
+ ]
+}

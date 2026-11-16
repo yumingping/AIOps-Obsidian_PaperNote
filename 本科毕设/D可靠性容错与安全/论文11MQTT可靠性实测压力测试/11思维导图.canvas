@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "5c69c679f5e1a2c4",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 80,
+   "text": "真实硬件 + 真实参数组合下 QoS 的代价无系统实测"
+  },
+  {
+   "id": "f72eaa601150342c",
+   "type": "text",
+   "x": 760,
+   "y": 104,
+   "width": 420,
+   "height": 56,
+   "text": "e-Health 场景选 QoS 无现成答案"
+  },
+  {
+   "id": "e68f3f49972fa5b2",
+   "type": "text",
+   "x": 760,
+   "y": 228,
+   "width": 420,
+   "height": 56,
+   "text": "11 块单板机 + 隔离千兆有线网"
+  },
+  {
+   "id": "4aa6689b4c44d96f",
+   "type": "text",
+   "x": 760,
+   "y": 308,
+   "width": 420,
+   "height": 80,
+   "text": "7 参数全组合：1944 配置 × 10 次 × 8700 万条"
+  },
+  {
+   "id": "1154aac89c57b775",
+   "type": "text",
+   "x": 760,
+   "y": 456,
+   "width": 420,
+   "height": 80,
+   "text": "RTT 口径按 QoS 分层（PUBACK/PUBCOMP/TCP ACK）"
+  },
+  {
+   "id": "652507511de29620",
+   "type": "text",
+   "x": 760,
+   "y": 560,
+   "width": 420,
+   "height": 80,
+   "text": "Time Factor = 实际耗时 / 理论最短耗时"
+  },
+  {
+   "id": "fe7e299a1b1835f4",
+   "type": "text",
+   "x": 760,
+   "y": 664,
+   "width": 420,
+   "height": 56,
+   "text": "CPU 配额故意掐算力逼出可靠性下限"
+  },
+  {
+   "id": "adb22537679281f5",
+   "type": "text",
+   "x": 760,
+   "y": 788,
+   "width": 420,
+   "height": 80,
+   "text": "RTT 3.38 / 20.06 / 53.45 ms（QoS0/1/2）"
+  },
+  {
+   "id": "5041beb496258b6c",
+   "type": "text",
+   "x": 760,
+   "y": 892,
+   "width": 420,
+   "height": 80,
+   "text": "丢包 0.77 / 0.36 / 0.19%（随 QoS 下降）"
+  },
+  {
+   "id": "633eb6e6a99ce84b",
+   "type": "text",
+   "x": 760,
+   "y": 996,
+   "width": 420,
+   "height": 56,
+   "text": "10 客户端是拐点：丢包 1.75%、长尾爆发"
+  },
+  {
+   "id": "db563e047fe14207",
+   "type": "text",
+   "x": 760,
+   "y": 1076,
+   "width": 420,
+   "height": 56,
+   "text": "CPU 25→100%：丢包 43.6%→0.42%"
+  },
+  {
+   "id": "009c32d69184ac00",
+   "type": "text",
+   "x": 760,
+   "y": 1200,
+   "width": 420,
+   "height": 56,
+   "text": "任务6 测试矩阵直接照抄"
+  },
+  {
+   "id": "ede51d30eff2e329",
+   "type": "text",
+   "x": 760,
+   "y": 1280,
+   "width": 420,
+   "height": 56,
+   "text": "报均值±标准差暴露长尾"
+  },
+  {
+   "id": "2d9970f02e2ff3f7",
+   "type": "text",
+   "x": 760,
+   "y": 1360,
+   "width": 420,
+   "height": 56,
+   "text": "区分连接瓶颈 vs 聚合吞吐瓶颈"
+  },
+  {
+   "id": "c9a12519d977111d",
+   "type": "text",
+   "x": 760,
+   "y": 1484,
+   "width": 420,
+   "height": 80,
+   "text": "systemd CPUQuota=25% 复现 CPU 实验"
+  },
+  {
+   "id": "b1646d6d14b223a6",
+   "type": "text",
+   "x": 760,
+   "y": 1588,
+   "width": 420,
+   "height": 56,
+   "text": "树莓派当 publisher 集群 + 有线交换机"
+  },
+  {
+   "id": "e012f16869d4426e",
+   "type": "text",
+   "x": 760,
+   "y": 1668,
+   "width": 420,
+   "height": 56,
+   "text": "网关不给 mosquitto 进程限 CPU"
+  },
+  {
+   "id": "233f53cd5c72855c",
+   "type": "text",
+   "x": 20,
+   "y": 779,
+   "width": 310,
+   "height": 190,
+   "text": "# MQTT可靠性实测压力测试\nGaspar et al.\nIEEE IoT Magazine 2026\n7 参数全组合压测"
+  },
+  {
+   "id": "829617a143f516ec",
+   "type": "text",
+   "x": 380,
+   "y": 38,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "eafc303e6885cf8c",
+   "type": "text",
+   "x": 380,
+   "y": 266,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "441714e50c94c15c",
+   "type": "text",
+   "x": 380,
+   "y": 546,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "abb0524004239083",
+   "type": "text",
+   "x": 380,
+   "y": 918,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "984adb1c4932e86c",
+   "type": "text",
+   "x": 380,
+   "y": 1266,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "34af959621b4d3a3",
+   "type": "text",
+   "x": 380,
+   "y": 1562,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "1a8a42a089643d50",
+   "type": "file",
+   "x": 20,
+   "y": 1788,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/D可靠性容错与安全/论文11MQTT可靠性实测压力测试/11MQTT可靠性实测压力测试.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "856377418d4feb64",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "right",
+   "toNode": "829617a143f516ec",
+   "toSide": "left"
+  },
+  {
+   "id": "96c9f4f184f76afc",
+   "fromNode": "829617a143f516ec",
+   "fromSide": "right",
+   "toNode": "5c69c679f5e1a2c4",
+   "toSide": "left"
+  },
+  {
+   "id": "8907ecd33d7239de",
+   "fromNode": "829617a143f516ec",
+   "fromSide": "right",
+   "toNode": "f72eaa601150342c",
+   "toSide": "left"
+  },
+  {
+   "id": "232401dcd6c9d9af",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "right",
+   "toNode": "eafc303e6885cf8c",
+   "toSide": "left"
+  },
+  {
+   "id": "63c11d80c438c86e",
+   "fromNode": "eafc303e6885cf8c",
+   "fromSide": "right",
+   "toNode": "e68f3f49972fa5b2",
+   "toSide": "left"
+  },
+  {
+   "id": "0c37c01bd23669e5",
+   "fromNode": "eafc303e6885cf8c",
+   "fromSide": "right",
+   "toNode": "4aa6689b4c44d96f",
+   "toSide": "left"
+  },
+  {
+   "id": "c24039ae6b9f02c3",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "right",
+   "toNode": "441714e50c94c15c",
+   "toSide": "left"
+  },
+  {
+   "id": "fae55be1aaf6ddd3",
+   "fromNode": "441714e50c94c15c",
+   "fromSide": "right",
+   "toNode": "1154aac89c57b775",
+   "toSide": "left"
+  },
+  {
+   "id": "76a5dfb2a5c73b31",
+   "fromNode": "441714e50c94c15c",
+   "fromSide": "right",
+   "toNode": "652507511de29620",
+   "toSide": "left"
+  },
+  {
+   "id": "4404f9c6ff3a5d28",
+   "fromNode": "441714e50c94c15c",
+   "fromSide": "right",
+   "toNode": "fe7e299a1b1835f4",
+   "toSide": "left"
+  },
+  {
+   "id": "60919f3876ded38a",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "right",
+   "toNode": "abb0524004239083",
+   "toSide": "left"
+  },
+  {
+   "id": "40b4d5dcea8a9753",
+   "fromNode": "abb0524004239083",
+   "fromSide": "right",
+   "toNode": "adb22537679281f5",
+   "toSide": "left"
+  },
+  {
+   "id": "9001f0185c234749",
+   "fromNode": "abb0524004239083",
+   "fromSide": "right",
+   "toNode": "5041beb496258b6c",
+   "toSide": "left"
+  },
+  {
+   "id": "cd9d8a76af597b35",
+   "fromNode": "abb0524004239083",
+   "fromSide": "right",
+   "toNode": "633eb6e6a99ce84b",
+   "toSide": "left"
+  },
+  {
+   "id": "3927cfb1617c7100",
+   "fromNode": "abb0524004239083",
+   "fromSide": "right",
+   "toNode": "db563e047fe14207",
+   "toSide": "left"
+  },
+  {
+   "id": "918117e26e6a5222",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "right",
+   "toNode": "984adb1c4932e86c",
+   "toSide": "left"
+  },
+  {
+   "id": "c7903d99ffd79a43",
+   "fromNode": "984adb1c4932e86c",
+   "fromSide": "right",
+   "toNode": "009c32d69184ac00",
+   "toSide": "left"
+  },
+  {
+   "id": "451164fb874fcef1",
+   "fromNode": "984adb1c4932e86c",
+   "fromSide": "right",
+   "toNode": "ede51d30eff2e329",
+   "toSide": "left"
+  },
+  {
+   "id": "4a6f302810af9ac4",
+   "fromNode": "984adb1c4932e86c",
+   "fromSide": "right",
+   "toNode": "2d9970f02e2ff3f7",
+   "toSide": "left"
+  },
+  {
+   "id": "d652a9436befe837",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "right",
+   "toNode": "34af959621b4d3a3",
+   "toSide": "left"
+  },
+  {
+   "id": "f3f2fb7db67f9a73",
+   "fromNode": "34af959621b4d3a3",
+   "fromSide": "right",
+   "toNode": "c9a12519d977111d",
+   "toSide": "left"
+  },
+  {
+   "id": "6c12fdc292ac7490",
+   "fromNode": "34af959621b4d3a3",
+   "fromSide": "right",
+   "toNode": "b1646d6d14b223a6",
+   "toSide": "left"
+  },
+  {
+   "id": "d7ab06de19855e63",
+   "fromNode": "34af959621b4d3a3",
+   "fromSide": "right",
+   "toNode": "e012f16869d4426e",
+   "toSide": "left"
+  },
+  {
+   "id": "9a751c06a6381c92",
+   "fromNode": "233f53cd5c72855c",
+   "fromSide": "bottom",
+   "toNode": "1a8a42a089643d50",
+   "toSide": "top"
+  }
+ ]
+}

@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "950686d7998d53ba",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 80,
+   "text": "规范：每 clientID 只 1 条 retained；无 broker 端容错"
+  },
+  {
+   "id": "4a7f9aba37939064",
+   "type": "text",
+   "x": 760,
+   "y": 104,
+   "width": 420,
+   "height": 56,
+   "text": "边缘 broker 内存存不下大量未确认消息"
+  },
+  {
+   "id": "b606c6691b37680f",
+   "type": "text",
+   "x": 760,
+   "y": 228,
+   "width": 420,
+   "height": 80,
+   "text": "3 层架构：链上 3 合约 + broker 池 + 负载均衡"
+  },
+  {
+   "id": "e97d56354622c590",
+   "type": "text",
+   "x": 760,
+   "y": 332,
+   "width": 420,
+   "height": 80,
+   "text": "合约管：retained 队列 / 死信队列 / BNS 域名"
+  },
+  {
+   "id": "97198f9ebc0be7ab",
+   "type": "text",
+   "x": 760,
+   "y": 480,
+   "width": 420,
+   "height": 56,
+   "text": "retained → 按 topic 的链上队列"
+  },
+  {
+   "id": "f47c27a9b81e5ca6",
+   "type": "text",
+   "x": 760,
+   "y": 560,
+   "width": 420,
+   "height": 56,
+   "text": "未确认消息 → 链上 DLQ，重连补发"
+  },
+  {
+   "id": "726b779e8f5f2e5a",
+   "type": "text",
+   "x": 760,
+   "y": 640,
+   "width": 420,
+   "height": 56,
+   "text": "客户端连固定域名，故障时 topic 迁移"
+  },
+  {
+   "id": "61e635e02149c5cb",
+   "type": "text",
+   "x": 760,
+   "y": 720,
+   "width": 420,
+   "height": 56,
+   "text": "客户端零改动"
+  },
+  {
+   "id": "ed1d644c9afe93be",
+   "type": "text",
+   "x": 760,
+   "y": 844,
+   "width": 420,
+   "height": 56,
+   "text": "**无量化数据（仅 PoC 截图演示）**"
+  },
+  {
+   "id": "a3e2e9922bb1ba02",
+   "type": "text",
+   "x": 760,
+   "y": 924,
+   "width": 420,
+   "height": 80,
+   "text": "Node.js broker + SCILLA/Zilliqa 公链"
+  },
+  {
+   "id": "5eb93ed441c41d73",
+   "type": "text",
+   "x": 760,
+   "y": 1028,
+   "width": 420,
+   "height": 56,
+   "text": "每条 retained/未确认消息 = 一笔链上事务"
+  },
+  {
+   "id": "f48ab7873f24449f",
+   "type": "text",
+   "x": 760,
+   "y": 1152,
+   "width": 420,
+   "height": 56,
+   "text": "**对比方案，不是推荐方案**"
+  },
+  {
+   "id": "0103e6d184f39fba",
+   "type": "text",
+   "x": 760,
+   "y": 1232,
+   "width": 420,
+   "height": 56,
+   "text": "论证 broker 故障切换的必要性"
+  },
+  {
+   "id": "c1f7773f46022d49",
+   "type": "text",
+   "x": 760,
+   "y": 1312,
+   "width": 420,
+   "height": 56,
+   "text": "反面教材：机制必须配量化对比"
+  },
+  {
+   "id": "83adbd7ef891595e",
+   "type": "text",
+   "x": 760,
+   "y": 1436,
+   "width": 420,
+   "height": 56,
+   "text": "去区块链版：SQLite 落盘补发队列"
+  },
+  {
+   "id": "a624c0da5c4d156c",
+   "type": "text",
+   "x": 760,
+   "y": 1516,
+   "width": 420,
+   "height": 80,
+   "text": "nginx/HAProxy 健康检查 + 固定接入地址"
+  },
+  {
+   "id": "ea4a7d8f5b720bbb",
+   "type": "text",
+   "x": 760,
+   "y": 1620,
+   "width": 420,
+   "height": 56,
+   "text": "S1 稳定 + S2 频繁断连的现成测试用例"
+  },
+  {
+   "id": "f711ae03e5e87d31",
+   "type": "text",
+   "x": 20,
+   "y": 755,
+   "width": 310,
+   "height": 190,
+   "text": "# 区块链增强MQTT容错\nPaul et al.\nICAECT 2023\n链上容错 PoC"
+  },
+  {
+   "id": "6d0990de96a11acc",
+   "type": "text",
+   "x": 380,
+   "y": 38,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "95b70f346a3f45eb",
+   "type": "text",
+   "x": 380,
+   "y": 278,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "6131fcb862b34be8",
+   "type": "text",
+   "x": 380,
+   "y": 586,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "73cb0900454ea721",
+   "type": "text",
+   "x": 380,
+   "y": 922,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "57c500130d23a27c",
+   "type": "text",
+   "x": 380,
+   "y": 1218,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "8bafe9df94363284",
+   "type": "text",
+   "x": 380,
+   "y": 1514,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "f12ec96bf10a8bc3",
+   "type": "file",
+   "x": 20,
+   "y": 1740,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/D可靠性容错与安全/论文10区块链增强MQTT容错/10区块链增强MQTT容错.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "e431964e4803eb24",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "right",
+   "toNode": "6d0990de96a11acc",
+   "toSide": "left"
+  },
+  {
+   "id": "d30d977f2a34e167",
+   "fromNode": "6d0990de96a11acc",
+   "fromSide": "right",
+   "toNode": "950686d7998d53ba",
+   "toSide": "left"
+  },
+  {
+   "id": "f5e971ecce2892d3",
+   "fromNode": "6d0990de96a11acc",
+   "fromSide": "right",
+   "toNode": "4a7f9aba37939064",
+   "toSide": "left"
+  },
+  {
+   "id": "fe50a38bb8ba5b78",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "right",
+   "toNode": "95b70f346a3f45eb",
+   "toSide": "left"
+  },
+  {
+   "id": "7a8615bacebfd47a",
+   "fromNode": "95b70f346a3f45eb",
+   "fromSide": "right",
+   "toNode": "b606c6691b37680f",
+   "toSide": "left"
+  },
+  {
+   "id": "30b88f830a70999c",
+   "fromNode": "95b70f346a3f45eb",
+   "fromSide": "right",
+   "toNode": "e97d56354622c590",
+   "toSide": "left"
+  },
+  {
+   "id": "819648c0238a5bc6",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "right",
+   "toNode": "6131fcb862b34be8",
+   "toSide": "left"
+  },
+  {
+   "id": "d0c06f65948b1fe1",
+   "fromNode": "6131fcb862b34be8",
+   "fromSide": "right",
+   "toNode": "97198f9ebc0be7ab",
+   "toSide": "left"
+  },
+  {
+   "id": "3a9a14b577545c7a",
+   "fromNode": "6131fcb862b34be8",
+   "fromSide": "right",
+   "toNode": "f47c27a9b81e5ca6",
+   "toSide": "left"
+  },
+  {
+   "id": "495fb61e6470066f",
+   "fromNode": "6131fcb862b34be8",
+   "fromSide": "right",
+   "toNode": "726b779e8f5f2e5a",
+   "toSide": "left"
+  },
+  {
+   "id": "fb0ee1d31a255228",
+   "fromNode": "6131fcb862b34be8",
+   "fromSide": "right",
+   "toNode": "61e635e02149c5cb",
+   "toSide": "left"
+  },
+  {
+   "id": "2cff8629f2c23d16",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "right",
+   "toNode": "73cb0900454ea721",
+   "toSide": "left"
+  },
+  {
+   "id": "41efe5922d450028",
+   "fromNode": "73cb0900454ea721",
+   "fromSide": "right",
+   "toNode": "ed1d644c9afe93be",
+   "toSide": "left"
+  },
+  {
+   "id": "74944630acbf8d42",
+   "fromNode": "73cb0900454ea721",
+   "fromSide": "right",
+   "toNode": "a3e2e9922bb1ba02",
+   "toSide": "left"
+  },
+  {
+   "id": "1e8d2efe5e6cf158",
+   "fromNode": "73cb0900454ea721",
+   "fromSide": "right",
+   "toNode": "5eb93ed441c41d73",
+   "toSide": "left"
+  },
+  {
+   "id": "bbcc064f7c48eaf6",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "right",
+   "toNode": "57c500130d23a27c",
+   "toSide": "left"
+  },
+  {
+   "id": "2566f33f6c350712",
+   "fromNode": "57c500130d23a27c",
+   "fromSide": "right",
+   "toNode": "f48ab7873f24449f",
+   "toSide": "left"
+  },
+  {
+   "id": "cc648af0899bafc6",
+   "fromNode": "57c500130d23a27c",
+   "fromSide": "right",
+   "toNode": "0103e6d184f39fba",
+   "toSide": "left"
+  },
+  {
+   "id": "65016840191050be",
+   "fromNode": "57c500130d23a27c",
+   "fromSide": "right",
+   "toNode": "c1f7773f46022d49",
+   "toSide": "left"
+  },
+  {
+   "id": "c88a76303b3b2582",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "right",
+   "toNode": "8bafe9df94363284",
+   "toSide": "left"
+  },
+  {
+   "id": "d720131adc8af8df",
+   "fromNode": "8bafe9df94363284",
+   "fromSide": "right",
+   "toNode": "83adbd7ef891595e",
+   "toSide": "left"
+  },
+  {
+   "id": "c912b15a40677d5a",
+   "fromNode": "8bafe9df94363284",
+   "fromSide": "right",
+   "toNode": "a624c0da5c4d156c",
+   "toSide": "left"
+  },
+  {
+   "id": "d2dad20b02048aaa",
+   "fromNode": "8bafe9df94363284",
+   "fromSide": "right",
+   "toNode": "ea4a7d8f5b720bbb",
+   "toSide": "left"
+  },
+  {
+   "id": "d9d848e5c827b2ce",
+   "fromNode": "f711ae03e5e87d31",
+   "fromSide": "bottom",
+   "toNode": "f12ec96bf10a8bc3",
+   "toSide": "top"
+  }
+ ]
+}

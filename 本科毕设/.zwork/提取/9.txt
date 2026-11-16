@@ -1,0 +1,1464 @@
+
+
+===== p.1 =====
+Evaluation of MQTT Bridge Architectures in a
+Cross-Organizational Context
+Keila Lima∗, Tosin Daniel Oyetoyan∗, Rogardt Heldal∗, Wilhelm Hasselbring†
+∗Western Norway University of Applied Sciences, Norway
+Email: {keila.lima, tosin.daniel.oyetoyan, rogardt.heldal}@hvl.no
+†Kiel University, Kiel, Germany
+Email: hasselbring@email.uni-kiel.de
+Abstract—The latest surveys estimate an increasing number
+of connected Internet-of-Things (IoT) devices (around 16 billion)
+despite the sector’s shortage of manufacturers. All these devices
+deployed into the wild will collect data to guide decision-making
+that can be made automatically by other systems, humans, or
+hybrid approaches. In this work, we conduct an initial inves-
+tigation of benchmark configuration options for IoT Platforms
+that process data ingested by such devices in real-time using
+the MQTT protocol. We identified metrics and related MQTT
+configurable parameters in the system’s component deployment
+for an MQTT bridge architecture. For this purpose, we bench-
+mark a real-world IoT platform’s operational data flow design
+to monitor the surrounding environment remotely. We consider
+the MQTT broker solution and the system’s real-time ingestion
+and bridge processing portion of the platform to be the system
+under test. In the benchmark, we investigate two architectural
+deployment options for the bridge component to gain insights
+into the latency and reliability of MQTT bridge deployments in
+which data is provided in a cross-organizational context. Our
+results indicate that the number of bridge components, MQTT
+packet sizes, and the topic name can impact the quality attributes
+in IoT architectures using MQTT protocol.
+Index Terms—IoT, Benchmark, MQTT
+I. INTRODUCTION
+The 2023 report on the IoT market predicted an 18%
+increase in the number of deployed devices in the previous
+year [10]. The same report estimates a continued increase
+in this number by at least 16% until 2025 which will result
+in more than 16 billion devices if the prediction is fulfilled.
+Many of these deployed systems are already delivering data
+as a service via sensor data provider organizations to other
+organizations that use them in their daily operations. This
+interfacing raises interoperability issues when integrating with
+the sensor provider’s systems [1]. In this context, business
+models for IoT data marketplaces emerge where data vari-
+ety is pointed out as one of the biggest challenge of such
+systems in order to provide “value-added services” to data
+consumers [23]. The Message Queuing Telemetry Transport
+(MQTT) standard appears as an adequate application-level
+communication protocol in these IoT contexts helping to
+bridge the sensor provider systems with the data consumer
+systems.
+MQTT is a publish-subscribe architecture where publishers
+(e.g., IoT sensor processes) publish on a topic (e.g., Topic
+This work was supported by SFI SmartOcean NFR Project 309612/F40.
+A) configured in a MQTT broker and values are pushed by
+the broker to subscribers (e.g., Data Consumer System) that
+subscribed to the same topic (see Figure 1a). This simple
+architecture does not apply to real-world IoT data scenarios
+where producers and consumers are often separated by loca-
+tion and network. As a result, the huge data volume that is
+generated in these remote locations have to be transferred over
+communication links to data platforms for access by consumer
+applications. A bridge architecture is thus an approach to
+push data from a producer broker to a consumer broker
+that sits in a different network (see Figure
+1b). Different
+use cases arise for a bridge architecture in practice. For
+example, aggregating MQTT topics of the publishers can be
+an efficient strategy to reduce the amount of traffic during
+publisher broker to subscriber broker communication [27].
+Furthermore, in-stream sensor data processing requirements
+can arise from performing quality analysis in the middleware
+layer [18]. For example, semantic analysis that compares the
+validity of data using different IoT sensor parameters or the
+relationship between observations around a specific location.
+Other examples include data filtering and preparation (e.g.,
+anonymizing) for sharing across domains or use cases [24].
+There are different ways that bridge architecture can be
+implemented in MQTT. A common approach is the imple-
+mentation on the broker-side [19, 27] as provided by the
+Eclipse Mosquitto. This approach is feasible when there is
+no administrative barriers, no requirement for data transfor-
+mation, and the MQTT solution is homogeneous. Current
+MQTT broker vendors can offer both data transformation
+and or processing using rules or policies, and bridging as
+separated services. However, in real-world scenarios, data can
+be provided and published by different providers who are using
+different MQTT solutions and are in heterogeneous formats
+thus creating a requirement for data transformation and a
+requirement to harmonize them for analytic applications before
+forwarding to another MQTT broker [17].
+In this IoT sensor data-sharing paradigm, additional chal-
+lenges are faced when data streams are merged in a cross-
+organizational setting [17]. There are administrative barriers
+and trust boundaries that need to be addressed in the in-
+tegration of the data producer and data consumer software
+architectures.
+To address these challenges in a cross-organizational set-
+2025 IEEE 22nd International Conference on Software Architecture (ICSA) | 979-8-3315-2090-8/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICSA65012.2025.00032
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.2 =====
+tings, some studies have proposed a client-side bridging ar-
+chitecture for handling heterogeneous data stream together
+with a data transformer function between MQTT brokers
+[17]. In this study, we evaluate the latency and reliability of
+deploying two variants of such architecture when implemented
+on the client-side of the broker. In addition, we evaluate the
+overhead of topic name and the payload size and their effects
+on latency and reliability of the architectures. To infer the
+identified quality attributes, we have used metrics measured
+in the system: the number of lost messages for reliability and
+the end-to-end delay in milliseconds (ms) for latency.
+We have used a benchmark methodology to investigate the
+architectural deployment options for MQTT bridge solutions
+implemented on the client side. Performance benchmarks are
+part of the measurement-based approaches in the field of
+Software Performance Engineering [26]. In empirical software
+engineering, benchmarks can be used for comparing different
+methods, techniques and tools [8].
+The overall contribution of this study is twofold:
+1) We show benchmark results for MQTT bridge architec-
+tures with lower throughput but latency and reliability
+concerns for real-world IoT systems that stakeholders
+in practice can consider before designing their bridge
+architectures.
+2) We demonstrate that additional benchmark parameters
+for MQTT-based systems under test, such as data size
+and topic name, should be considered. These parameters
+have implications for the latency and reliability of the
+MQTT bridge architecture.
+The rest of the paper is structured as follows: In Sec-
+tion II, we introduce the role of MQTT in IoT architectures.
+Section III explains our benchmarking methodology, before
+the experiment results which are presented in Section IV.
+In Section V, we discuss potential threats to validity of the
+study. Finally, we compare our approach to other studies in
+Section VI, and conclude the paper in Section VII.
+Sensor
+MQTT 
+Broker
+Data Consumer 
+System
+Topic A
+Sensor
+(a) Standard MQTT broker (single instance/cluster) deployment.
+Sensor
+MQTT 
+Broker
+Data Consumer 
+System
+MQTT 
+Broker
+Operational Environment 1
+Topic A
+Topic B
+Sensor
+Operational Environment 2
+(b) MQTT broker bridge deployment.
+Fig. 1: MQTT example communication patterns.
+II. MQTT IN IOT ARCHITECTURES
+IoT architecture in some approaches, has been defined by
+five main layers [12]: the perception layer, network layer,
+processing layer, application layer, and the business layer. The
+perception layer is the one responsible for the devices sensing
+and actuation, interacting directly with the surrounding phys-
+ical environment. Secondly, the network layer is responsible
+for the channeling of data to/from the sensing (perception)
+layer to the processing layer, typically at the cloud side
+or an infrastructure with access to more computational re-
+sources. The processing layer manages data flows performing
+operations such as aggregations, analysis and storage, and
+serving data to the domain-specific IoT application where the
+application layer resides. The last layer, the business layer, is
+responsible for managing the overall IoT system, including
+building business models [12, 21]. For the network layer,
+there is no universal or best-fit option for the communication
+protocol at the application level, but MQTT is often employed
+because of its lightweight footprint, having a header of 2 bytes,
+QoS levels, ordered message delivery, and less complexity
+characteristics [20]. In a systematic mapping study in [21],
+up to six layers were identified, adding an adaptation layer
+that is responsible for handling device interoperability inside
+the sensor network.
+In a relative comparison done in [22], MQTT appears as the
+best good option when considering the latency and reliability
+performance. MQTT is a standard application level protocol
+managed by OASIS, first created in 1999. It was designed
+to be lightweight in terms of communication overhead (small
+headers) and reliability (embedded QoS levels) and thus
+suited for IoT applications [28]. The protocol follows the
+publish/subscribe communication model for message exchange
+between actors. The protocol has two different client actors,
+publishers and subscribers, that can communicate via the third
+one: the broker. The capacity of the broker to handle the clients
+is constrained by the queue size, memory, and CPU.
+The packet structure in MQTT has a header and a payload
+section that can optional depend on the type of control packet.
+There are 16 types of control packets, and they are related
+to the connection, disconnection, publishing, subscribing, and
+authentication [28]. Concerning message exchange, publishing
+clients provide data via a topic name. This topic name is
+verified against a topic filter specified by subscribing clients.
+The name is often structured by levels that follow some
+business logic hierarchy, such as geographic location and
+sensor arrangement in the system. Lastly, the protocol defines
+three levels of quality-of-service (QoS) [28]. The first, “At
+most once” (QoS level 0), does not guarantee the delivery of
+the message to the broker and thus it is prone to message
+lost. The second, “At least once” (QoS level 1), guarantee
+the delivery of the message to the broker but duplicates can
+occur. The last one, “Exactly once” (QoS level 2), guarantee
+the delivery of the message to the broker but requires double
+the number of message exchange when compared with the
+QoS level 0.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.3 =====
+There are three broker deployment options when using
+MQTT protocol for the network layer of IoT systems: single
+broker deployment, cluster of brokers, and bridge of brokers.
+The basic option is a single broker instance deployment
+that handles all publisher and subscriber connections, which
+includes managing information regarding topics and authoriza-
+tion while handling message traffic. In the publish/subscribe
+model, the broker becomes a bottleneck, because of the
+limit of allocated resources, queue size, and message storage
+(persistency) for failure recovery. Other technique used to
+improve the fault tolerance is to deploy a cluster of brokers,
+by replicating single instances deployments and adding links
+among them for synchronization and consistency of the logic
+information needed to manage MQTT implementations. This
+architecture brings greater throughput and capacity to handle
+a large number of concurrent connections, but as a trade-
+off, the inter-broker communication brings overhead in the
+latency [19]. Lastly, there is the bridge architecture between
+brokers that enables forwarding of messages produced in one
+environment or part of the system to be decoupled from
+another section.
+A. MQTT Bridge
+In a MQTT bridge architecture there is a data flow between
+at least two brokers, typically imposed by the need to separate
+operational fields where sensors sit from the data delivery
+pipeline inter or cross-organizational. The rationale behind the
+bridge of MQTT brokers is that data is published in one topic
+on the source broker will be made available in a topic to
+subscribers in the receiving broker. In the latest version of
+the standard, MQTT 5.0 [28], launched in 2019, there are
+some non-normative comments referring to features that can
+be used to implement the bridge architecture. These features
+are associated to the options when subscribing to topics on
+the source broker, namely the “No Local” and the “Retain As
+Published” flags [28]. The “No Local” flag when publishing
+is important to avoid creating loops because if triggered,
+the publisher client will receive its own message. Common
+applications are to separate the sensor network from the data
+storage, aggregation and analytics (usually at the cloud side),
+or in industrial IoT settings, to separate different productions
+lines. Examples of such scenario that motivates the usage of
+the broker-to-broker bridge in literature are presented in [17,
+27, 30]. The first scenario relates to handling of heterogeneous
+sensor data streams processing. Another scenario relates to
+the optimization of a constrained link over satellite for data
+distribution for subscribers in the receiving side broker. The
+particularity of this solution is that the pre-processing is
+performed in the sending broker side, having access to MQTT
+components in both sides. Lastly, the geographical separation
+of MQTT clients is the main reason for adopting the bridge
+architecture. In the last two cases, the system is operated by the
+same organization, having access to the software components
+in the processing units where data is collected and published.
+While in the first, data is being delivered as a service, having
+no access to components on the publishing side. Additional
+use cases with similar driver, i.e the separation of modules
+in different deployment infrastructure environments, are also
+described by MQTT solutions vendors [16, 25].
+This study focuses on the link between the edge and
+the cloud in IoT systems, which also requires data format
+conversion for the data provided by the organizations oper-
+ating these sensor-based systems. In Figure 1b, we depict an
+example of such a scenario, considering the data provision
+context described in Section I. In this example, the bridge is
+implemented on the MQTT client-side, and the topic A where
+data is published on the source broker is subscribed by the
+bridge component that provides transformed data into topic B
+to subscribers in the receiving broker.
+B. Security in MQTT
+Compared with the existing alternatives, MQTT has fewer
+features in its specification when securing the communication
+link [1]. Although many non-normative recommendations are
+suggested in the standard, how these are enforced depends on
+the implementation [3]. Authentication can be done by user
+and password definition or by using enhanced methods that
+require additional message exchange when clients establish a
+connection to a broker [28]. Authorization is possible with
+access control level (ACL) definitions in some implementa-
+tions (e.g., with dynamic security in Mosquitto). Furthermore,
+there is support for encryption of the communication channel
+using TLS/SSL. Alternative authentication and authorization
+can be implemented around the infrastructure where clients
+and brokers operate but lay outside the standard specification.
+Lastly, there are also non-normative recommendations for
+security measures and options in the standard. One example
+is the encryption of the payload for message integrity beyond
+TLS/SSL in devices that can accommodate the different exist-
+ing algorithms [28].
+III. METHODOLOGY
+In this section, we describe our context, research questions,
+the architectural deployment options under test, the load
+profile and the origin of the replicated data, and the MQTT-
+related parameters used in the different benchmark setups. The
+MQTT bridge architectures we evaluate in this study have the
+following characteristics:
+1) A gateway node serves as a sink of data at the edge
+of operational fields where sensors are deployed, con-
+centrating higher volumes of data instead of sensors
+transmitting data individually.
+2) Real-time systems require data for decision-making as
+soon as transmitted and require stream processing on
+ingested data from gateways. Such systems require less
+delay (low latency).
+3) Reliability of message delivery associated with the
+(over-the-air) transmission of data from the gateways at
+the edge and cloud hosted systems.
+These architectures introduce conflicting quality attributes in
+the end-to-end data flow, i.e. Latency vs. Reliability. This
+trade-off is also present in the MQTT protocol, captured by the
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.4 =====
+IoT Data Platform
+MQTT Data 
+Consumer
+Data Consumer
+Data Provider
+Gateway:
+MQTT
+Client
+Monitoring Subsystem
+Prometheus
+Grafana
+Architecture Under Test 
+(AUT)
+Source 
+Broker
+Monitoring 
+Agent
+Sensor 
+Data Flow
+Monitoring 
+Data Flow
+Transformer
+(Bridge)
+Forwarder
+Subscriber: 
+MQTT
+Client
+Legend:
+Destination 
+Broker
+Data 
+Warehouse
+Benchmark 
+Setup 
+Component
+Host Machine 1
+Host Machine 1
+Host Machine 2
+Not Deployed 
+System 
+Component
+Fig. 2: Benchmark setup components in the overall data delivery flow architecture.
+quality-of-service (QoS) levels defined in the standard. Since
+more reliable levels (1 and 2) require additional messages
+exchange, it results in the increase of the end-to-end delay.
+A. Research Questions
+The study’s overall goal is to evaluate latency and reliability
+deployment options for the MQTT bridge architecture when
+implemented with processing capabilities on the client side,
+and when sensor data is provided in a cross-organizational
+context. The quality attributes selected as targets for the
+benchmark are the same as the IoT platform use case, which
+aims to monitor operational fields remotely. In this case, how
+fast data arrives at the application layer for decision-making,
+and also the availability of data. The end-to-end latency was
+measured by finding the difference between the time message
+was published by the gateway and the time the message was
+received by the subscriber (see Figure 2). The end-to-end
+message loss was calculated by finding the difference between
+the number of published messages by each gateway and the
+number of messages that arrived at the subscriber end from
+that specific gateway. We aim to understand which deploy-
+ment options are more latency-efficient, i.e., allow faster data
+delivery to the application layer, and and reliability-efficient,
+i.e., which parameters make the data delivery more reliable.
+Therefore, we investigate the following research questions:
+RQ1: How does the deployment architecture of MQTT bridge
+components impacts message delivery latency and reliability
+in a cross-organizational data delivery context?
+We aim to investigate the latency and reliability of different
+bridge deployment options which are two instances of the
+same higher-level architecture presented in Figure 2.
+RQ2: How does the topic name and the payload size impact
+both latency and reliability of the deployment architecture of
+MQTT bridge components?
+We intend to investigate the overhead of the topic name and the
+payload size, which are the sections that occupy most of the
+size of MQTT packets. Our aim is to understand how those
+parameters and the software components using them should
+be configured when data delivery latency and reliability are of
+concern. To answer this research question we rely on the sizes
+of the different topic names configured for AUT 1 to be able
+to compare based on the same number of links and deployed
+bridge processor components.
+B. Benchmark Setup
+We employ a benchmark methodology to collect quantitative
+data in an automated manner of MQTT bridge components
+from a software prototype of a real IoT system [17]. Figure 2
+shows the benchmarked IoT Data Platform prototype, while
+Figure 3 shows two deployment architecture options of the
+referred prototype. The prototype is composed of the following
+components:
+• Data Provider: data is provided by external systems
+perceived as sensor data providers via the source broker.
+These data providers have different sensor hubs, i.e., a
+system that combines many sensor instruments and has at
+least a communication device that allows the transmission
+of collected data upstream to the cloud via an MQTT
+publisher client that functions as a gateway.
+• Source Broker: MQTT broker responsible for managing
+raw sensor data streams. There is one instance for each
+sensor data provider.
+• Transformer: bridge component implemented on the
+client side that converts the incoming sensor data from
+the source broker. The outputted data by the deployed
+bridge transformation instances reduces the original sizes
+of sensor data as a result of merging the heterogeneous
+formats and converting them into a unifying data model.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.5 =====
+• Destination Broker: MQTT broker that distributes data
+to the different applications needing data (see applica-
+tion layer in the IoT layered architecture introduced in
+Section II).
+• Data Consumer: MQTT subscriber client that functions as
+an entry point of real-time sensor data in the application
+for which the system was designed.
+• Forwarder: MQTT subscriber client that forwards data
+using different application layer protocols, e.g., REST
+(Excluded in our study).
+• Data Warehouse: data space service responsible for stor-
+ing incoming sensor data and metadata and providing
+them as historical data (Excluded in our study).
+• Monitoring Subsystem: stores data collected by the Mon-
+itoring Agent in the IoT Data Platform.
+We have used the HiveMQ community edition as the broker,
+which is available open-source1. For the benchmark, only the
+Data Consumer MQTT subscriber was deployed for the study
+while we excluded both the Forwarder and Data Warehouse
+components. Our main focus is the data delivery to the
+application layer via MQTT.
+Concerning the configurations for the MQTT clients (pub-
+lishers represented by the gateways and the subscriber), we
+configured 60 seconds for the connection’s KEEP ALIVE
+flag. We also used the MQTT CLEAN START flag when
+connecting to the broker to ensure no persistency between
+each of the 10 repetitions ran. Lastly, concerning the session
+persistence during each execution run, on the publisher side,
+we emulated the real-world behavior in which the MQTT
+clients disconnect after successfully sending the message and
+then connecting again to send the next one. This happens
+because the gateways publish data to the source brokers using
+mobile or satellite networks. On the other hand, since the
+subscriber is within the same operational boundary as the
+destination broker and within the same infrastructure and
+network, the connection is made at the beginning of each
+execution run. It is torn down when the execution is halted.
+We used the MQTT-related data from the brokers [9]
+recorded in the IoT platform’s monitoring subsystem during
+the benchmark execution. We used the docker stats command
+to collect resource usage from both host machines. In host
+machine 2, we verified the resource usage data from the
+monitoring system for the measurement validation. Both data
+recorded are available in the replication package. For the
+latency metric, the end-to-end delay was measured by subtract-
+ing the reception time of the messages from the transmission
+time. The transmission time was generated as a user property
+information sent alongside the published message. The recep-
+tion time was generated at the subscriber component upon
+reception of messages but also records the arrival time, topic
+name, order, and ID of the incoming message. The ID was
+used to calculate the number of duplicated messages which
+could happen for the executions of the benchmark for QoS
+level 1 of the deployment options. The recording of the values
+1https://www.hivemq.com/community/open-source/
+were done at the subscriber component which logged them
+into files (execution logs with the recorded raw measurements
+which are available in the replication package). Execution logs
+with MQTT messages transmission and their sizes were also
+recorded during the experiments for the load drivers and the
+transformer bridge components.
+For the bridge architecture under test components, we allo-
+cated a limit of 512 MB of memory and half CPU core for each
+deployed component in option 1. For option 2, the same total
+amount was equally divided among the 4 deployed compo-
+nents. In terms of hardware for the benchmark execution, two
+host virtual machines running on different networks are used as
+hosts for the benchmark load driver and the deployment of the
+architectures under test. Each benchmark component depicted
+in Figure 2 ran in an docker container deployed alongside their
+related components in a docker compose. Table I, summarizes
+the host machines resources specifications, capacity, and the
+associated MQTT components allocated to each machine.
+Host
+CPU
+Mem.
+Network
+Provisioning
+MQTT Component
+1
+8 virtual cores
+@2.5 GHz
+2 GB
+1000 Mb/s
+Ethernet
+On-premises
+3 Publishers (Gateways)
+1 Subscriber
+2
+8 virtual cores
+@ 2.90GHz
+16 GB
+50000 Mb/s
+Ethernet
+Public Cloud
+2 Source Brokers
+1 Receiving Broker
+TABLE I: Benchmark host machines setup configuration.
+A (virtual) host machine with dedicated resources was
+allocated to run the source brokers and the architectural
+options (which includes the destination broker), alongside
+the monitoring subsystem. Another (virtual) host machine on
+servers on-premises was used to run the load driver and the
+subscriber to ensure the accuracy of the end-to-end delay
+measurements in the experiments.
+We kept the same load model for both benchmark de-
+ployment architecture options and allocated the same amount
+of memory and CPU limit for the bridge architecture under
+test components. Each benchmark parameter experiment was
+repeated 10 times, considering the potential effects of random
+factors when running experiments in the cloud and across
+different networks.
+C. Benchmark Parameters
+Overall we configured different topic names, deployment
+options of the bridge component, QoS levels, and different
+payload sizes (small, medium, and large). We explore the
+MQTT topic name subscription in the architectural options
+configuration to deploy one bridge component per sensor
+data provider (AUT 1), in contrast with the second option of
+deploying one bridge component per sensor hub data stream
+(AUT 2). In the production system, the AUT 2 version is
+used; thus, it is the baseline for defining the deployment and
+configuration alternatives. AUT 2 has a one-to-one mapping
+between the number of bridge components deployed and the
+number of sensor hubs deployed at the remote operational
+field. In AUT 1, we chose to map the number of sensor data
+providers to the number of deployed bridge components based
+on the premise that each sensor data provider has a single data
+format. Thus, one deployed bridge component can transform
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.6 =====
+Gateway 1
+Gateway 2
+MQTT
+Source 
+Broker
+MQTT
+Destination 
+Broker
+Cross-organizational 
+Boundary
+Provider 2
+Bridge 
+Processor
+Gateway 1
+MQTT
+Source 
+Broker
+Field Operation Site (replicated) Data
+Data Consumer 
+System
+MQTT 
+Subscriber
+Provider 1
+Bridge 
+Processor
+Sensor Data Provider 1
+Sensor Data Provider 2
+Sensor Hub
+Legend:
+Data Flow
+Trust 
+Boundary
+(a) Architectural deployment option 1 (AUT 1): One bridge component per sensor data provider.
+Gateway 1
+Gateway 2
+MQTT
+Source 
+Broker
+MQTT
+Destination 
+Broker
+Cross-organizational 
+Boundary
+Sensor Data Provider 1
+Hub 2
+Bridge 
+Processor
+Sensor Data Provider 2
+Field Operation Site (replicated) Data
+Data Consumer 
+System
+MQTT 
+Subscriber
+Hub 1
+Bridge 
+Processor
+Hub 2
+Bridge 
+Processor
+Hub 1
+Bridge 
+Processor
+Gateway 1
+MQTT
+Source 
+Broker
+(b) Architectural deployment option 2 (AUT 2): One bridge component per sensor data stream.
+Fig. 3: Architectural Options Under Test (AUT).
+data coming from their sensor hubs, resulting in one bridge
+component and associated link per sensor data provider.
+Consequently, we used the wildcard subscription filter to
+configure the bridge components for each sensor data provider,
+being able to capture data from all its sensor hubs by the
+structure of the topic name where data is published. This
+configuration option makes it easier to adapt to changes on
+the sensor hub side over time. As an alternative to this config-
+uration, we also investigate in the benchmark whether having
+the same topic names as AUT 2 impacts the quality attributes
+mentioned in RQ2. These options imply that each deployed
+bridge component processes less data in AUT 2 because there
+is one instance per sensor hub stream. In contrast, AUT 2 has
+more associated network links than AUT 1.
+As previously mentioned, the IoT platform prototype is
+being fed data from two sensor data providers, whose sensor-
+based systems are deployed at sea and operate autonomously.
+Because of the different architecture of the data provider
+systems, the gateways in Figure 3 have different node topology
+and resulting sensor data sizes, despite both having the same
+number of sensor hubs deployed. Overall, a summary of the
+parameters configured in the two deployment architectures
+options is listed in Table II.
+Options
+Bridges
+Bridge Topics
+Bridge Topic
+Size
+AUT 1
+2
+Wildcard subscription per provider
+15 bytes
+AUT 1
+2
+List of sensor hubs topics
+29 bytes
+AUT 2
+4
+One-to-one mapping to sensor hubs
+29 bytes
+TABLE II: Deployment architecture configurations.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.7 =====
+D. Load Configuration
+For the workload generation, we built a load driver for
+MQTT, since existing tools do not support the payload for
+each publisher and are not suitable for measuring latency
+for bridge broker architecture. Furthermore, considering the
+system’s characteristics described at the beginning of this
+section, additional requirements apply to the load generator
+component in the benchmark. Firstly, the asymmetric number
+of MQTT clients, having many publishers to one subscriber.
+Secondly, custom MQTT payload in terms of content, but also
+custom payload definition and transmission per publisher. And
+lastly, the MQTT topic mapping definition between publishers
+and subscribers due to the bridging of brokers.
+The load follows the fan-in model, which in MQTT trans-
+lates to having many MQTT publisher client systems (gate-
+ways) delivering data to one single MQTT subscriber client.
+By having sensor hubs that collect data from many sensors
+for transmission to the gateways, higher volumes of data are
+generated per transmission hop inside the sensor network. This
+characteristic of the prototype resulted in a higher volume of
+data to be used as payload in the published MQTT messages.
+For the first provider, one sensor hub generated around 125
+KB of payload and the other 35 KB. For the second, each sen-
+sor hub generated around 1,5 KB of data as a payload. In the
+driver, each gateway publishes the data from its sensor hubs
+sequentially, and each data provider is run concurrently. The
+usage of data from real-world sensors created an asymmetric
+workload for the platform. Each sensor hub payload was
+published 1000 times by its associated gateway during each
+execution run and at one batch of sequential transmissions per
+second (see Table III). Each gateway of sensor data provider
+1 (top one in Figure 3) published 1000 messages. For sensor
+provider 2 (bottom one in Figure 3), all the sensor hubs’
+payloads were published by the only gateway, and thus, it
+published 2000 messages per execution. The load for each
+benchmark configuration evaluated contained 4000 messages
+whose transmission was repeated 10 times.2 Because of the
+deployed architecture on the sensor data provider side in
+the benchmark, the resulting ingestion rate for provider one
+was one message per second (1 msg/s per gateway), and for
+provider 2, two messages per second (2 msg/s). An overview
+of the load driver specification is provided in Table III.
+It is important to mention that the topic name where the
+Provider
+Gateway
+Sensor
+Hubs
+Load
+per Hub
+Topic Size
+Rate
+Gateway 1
+1
+125 KB
+29 bytes
+1 msg/s
+Provider 1
+Gateway 2
+1
+35 KB
+29 bytes
+1 msg/s
+Provider 2
+Gateway 1
+2
+1,5 KB
+29 bytes
+2 msg/s
+TABLE III: Benchmark fixed load summary.
+gateways from each provider published were the same for the
+different benchmark parameters evaluated. However, for the
+bridge component in the AUT, the topic name is a studied
+parameter and varies as shown in Table II. The higher volume
+2The described configurations can be found in the replication package.
+of data originates from IoT applications where, between the
+perception and the network layer (see Field Operation Site
+in Figure 3), there is a gateway node working as a sink for
+data collected by sensors and relaying the data from the edge
+of the sensor network to the cloud side for further processing
+and storage. As a result, instead of having each sensor connect
+directly to the broker, this aggregator component intermediates
+both ends.
+E. Trust Boundaries
+The cross-organizational scenario brings not only a higher
+volume of data in this evaluation context when compared
+with other MQTT architecture solutions benchmark studies
+but also the insertion of trust boundaries. These boundaries
+often require implementing security measures known to bring
+an overhead to latency due to additional message exchange
+and processing time due to encryption/decryption [29]. The
+boundaries are inserted because of the integration with sensor
+data provider systems and within each organization, where
+data has to cross different networks.
+Figure 3 depicts these trust boundaries, borrowing the
+notation from OWASP Threat Modeling [4]. The boundary
+inside the sensor network in the link between the sensor hubs
+and the gateways was omitted for simplicity, as it is outside
+the scope of the benchmark. For the benchmark setup, because
+MQTT works over TCP/IP, we employed TLS/SSL to encrypt
+the link between the client and the broker systems. When it
+comes to authentication and authorization, we used the broker
+solution’s available LDAP feature to enforce the access of the
+gateways, bridge components, and subscribers to the respective
+brokers and necessary configured topics.
+IV. RESULTS AND DISCUSSION
+In this section we provide an overview of the results in
+Table IV. This table reflects the aggregated results of each
+one of the benchmark setups execution which took approx-
+imately four hours for the 10 repetitions. The results for
+the different architectural options and MQTT parameters are
+presented throughout this section and discussed in the lens
+of the research questions presented in Section III-A. The
+raw measurements and monitoring data recorded during the
+benchmark are available in the replication package, alongside
+instructions to reproduce the results. We start by presenting
+the average results from the 10 executions for each evaluated
+setup in Table IV. The data in the table was aggregated by
+AUT option and QoS level configured in the benchmark. In
+the table, the average latency for AUT 1 with 29 bytes topic
+size is very similar to 15 bytes topic size in AUT 1. However,
+we notice a marginal difference of a maximum of 1.4 ms in
+latency. Based on our setup, we assume these differences may
+be due to the larger topic size of 29 bytes. Additionally, there is
+an increasing delay pattern observed as the QoS level increases
+in Table IV for all AUT options. This is consistent with MQTT
+reliability design as QoS level 0 has the lowest delay and
+QoS level 2 has the highest delay since more messages are
+exchanged to recover from failure. Furthermore, we analyze
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.8 =====
+AUT 1
+AUT 2
+15 bytes Topic Size
+29 bytes Topic Size
+29 bytes Topic Size
+Metric
+QoS 0
+QoS 1
+QoS 2
+QoS 0
+QoS 1
+QoS 2
+QoS 0
+QoS 1
+QoS 2
+Latency (ms)
+132.3
+185.3
+216.9
+132.9
+186.7
+217.7
+135.6
+191.2
+221.6
+Published Messages (Gateways)
+4000
+4000
+4000
+4000
+4000
+4000
+4000
+4000
+4000
+Received Messages (End-to-end)
+2004
+4000
+4000
+2002
+4000
+4000
+2004
+4000
+4000
+Received Messages (Source Brokers)
+2005
+4000
+4000
+2003
+4000
+4000
+2005
+4000
+4000
+Received Messages (Dest. Brokers)
+2004
+4000
+4000
+2002
+4000
+4000
+2005
+4000
+4000
+4000
+Lost Messages (End-to-end)
+1996
+0
+0
+1998
+0
+0
+1996
+0
+0
+Lost Messages (Source Broker)
+1995
+0
+0
+1997
+0
+0
+1995
+0
+0
+Payload (bytes)
+1044
+5562
+5562
+1037
+5562
+5562
+1045
+5562
+5562
+TABLE IV: Benchmark mean results for 10 executions.
+the latency and reliability results by payload sizes in Figures 4
+to 9.
+Lastly, Figures
+7,
+8, and
+9 show the average message
+loss by provider and gateway filtered by payload size at QoS
+level 0. For payload size of 125 KB, Figure 7 shows similar
+and very high message loss at 997.7 and 997.8 (AUT 1 with
+15 bytes and 29 bytes respectively), and 997.3 (AUT 2). For
+payload size of 35 KB (Figure 8), a similar pattern is observed
+with very high message loss at 997.0 and 998.6 (AUT 1 with
+15 bytes and 29 bytes respectively), and 997.4 (AUT 2). For
+payload sizes of 1.5 KB for sensor provider 2, the message
+loss is minimal at 1.1 and 1.2 (AUT 1 with 15 bytes and 29
+bytes respectively), and 0.6 (AUT 2). In the cases with high
+message loss, there were not enough data points to calculate
+average results that could compensate for outliers caused by
+variability in the real-world network and cloud resources. For
+this reason, those cases were not considered in the analysis
+based on payload sizes.
+RQ1: How does the deployment architecture of MQTT bridge
+components impacts message delivery latency and reliability
+in a cross-organizational data delivery context?
+The result shows there is a slight difference in delay between
+the two configurations used for AUT 1 and a more significant
+difference when comparing both with AUT 2. These results
+also apply when the measurements are analyzed and filtered by
+the provider but do not apply to all payload sizes. The medium
+payload size (see Figure 5) presents a smaller difference
+between the average delays across architectures. The different
+architectural deployment options do not impact the reliability
+metrics measured for medium and high payload sizes. The
+resulting average message losses are very close and consistent
+for both gateways (see Figures 7 and 8). On the other hand,
+architectural option 2 (AUT 2) performs better for smaller
+payload sizes, having almost half of the lost messages (see
+Figure 9). We observe from the collected data that the loss
+is spread more evenly for AUT 1 when compared with data
+loss in the ingestion link between the gateways and the source
+brokers. The smaller data published on the last MQTT link
+also confirms this result, with less data loss between the bridge
+transformer and the subscriber components.
+Overall, the result shows a trade-off between the latency
+and reliability at all QoS levels for small payload sizes, while
+for medium and large payload sizes, this trade-off only exists
+for the higher QoS levels (1 and 2). On average, introducing
+qos1
+aut1_15b
+qos1
+aut1_29b
+qos1
+aut2
+qos2
+aut1_15b
+qos2
+aut1_29b
+qos2
+aut2
+230
+240
+250
+260
+270
+280
+290
+Latency (ms)
+Latency for 125KB Payload
+Median
+Mean
+Fig. 4: Latency results for Gateway 1 of Provider 1 load with
+125 KB payload (see Figure 3).
+qos1
+aut1_15b
+qos1
+aut1_29b
+qos1
+aut2
+qos2
+aut1_15b
+qos2
+aut1_29b
+qos2
+aut2
+170
+180
+190
+200
+210
+220
+Latency (ms)
+Latency for 35KB Payload
+Median
+Mean
+Fig. 5: Latency results for Gateway 2 of Provider 1 load with
+35 KB payload (see Figure 3).
+more bridge processors seems to increase the end-to-end
+delay from the producer to the subscriber. However, there
+is no noticeable difference in message losses. We can infer
+that the transmission cost is higher than the processing cost
+and recommend that fewer bridge processors be used when
+composing the bridge architecture.
+RQ2: How does the topic name and the payload size impact
+both latency and reliability of the deployment architecture of
+MQTT bridge components?
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.9 =====
+qos0
+aut1_15b
+qos0
+aut1_29b
+qos0
+aut2
+qos1
+aut1_15b
+qos1
+aut1_29b
+qos1
+aut2
+qos2
+aut1_15b
+qos2
+aut1_29b
+qos2
+aut2
+140
+160
+180
+200
+Latency (ms)
+Latency for 1.5KB Payload
+Median
+Mean
+Fig. 6: Latency results for Gateway 1 of Provider 2 load with
+1.5 KB payload (see Figure 3).
+Only the QoS level 0 presents losses of messages. These
+losses are significant for the medium (35 KB) and high (125
+KB) payload sizes, despite the payload sizes being much
+smaller than the 256 MB overall packet size limit specified
+in the MQTT protocol. However, the results for the small
+payload size (1.5 KB) for QoS level 0 is much more reliable
+in terms of the message loss metric. In Roy et al. [7], a similar
+pattern is reported showing a correlation between the payload
+size and the number of lost messages. Because both source
+brokers and the destination broker in the bridge architecture
+were deployed in the same host machine (see Figure 2), the
+message loss measured mostly affected the link between the
+gateways and the source brokers (see Table IV) for the higher
+payload sizes (see Figures 7 to 8). On average, there is one
+message loss shared among the links between the bridge and
+the subscriber components to the destination broker. In the real
+system, there could be potentially more losses if both brokers
+bridged are in different networks.
+Regarding the topic name overhead in the delay, from the
+data in Figures 4 to
+6, and Table IV, we can note a slight
+difference in delay across all payload sizes within the same
+AUT. In these cases, the 15 bytes topic size consistently
+presents less average delays compared to the 29 bytes topic
+size. We ignore cases with significant data loss which occurred
+with QoS level 0 for medium (35 KB) and large (125 KB)
+payload sizes. To adequately draw conclusion of the impact of
+topic name overhead, more detailed experiments that consider
+different topic names and sizes will be necessary.
+In summary, as a recommendation to practice, QoS level
+1 performs well regarding reliability for all payload and
+topic overhead sizes. This quality-of-service level should be
+considered if smaller delays are required and mechanisms are
+implemented to detect duplicated message delivery. Further-
+more, the bridge architecture becomes much more unreliable
+for medium and high payload sizes when operating in QoS
+level 0 with the loss of almost all transmitted messages.
+Therefore, this level should be avoided when transmitting with
+medium and high payloads. In our case, 35 KB and 125 KB.
+However, QoS level 0 can be considered for small payload
+(e.g., 1.5 KB in our case) in use cases that can tolerate few
+message losses and where there is bandwidth constraint. As
+QoS level 0 has less communication delay.
+Finally, as recommendations for research, MQTT imple-
+mentations should be investigated regarding different payload
+size magnitudes, from 1 byte up to the maximum allowed
+packet size of 256 MB. As our result has shown, this knowl-
+edge can further help designers composing MQTT bridge
+architecture to efficiently decide on trade-offs between latency
+and reliability for their use cases. In addition, network lo-
+cality should be considered when conducting such studies to
+introduce realistic operational scenarios and enable a better
+assessment of transmission link loss and delay. Lastly, alter-
+native setups can be done by emulating challenging network
+conditions, including the injection of packet loss.
+aut1_15b
+qos0
+aut1_29b
+qos0
+aut2
+qos0
+0
+200
+400
+600
+800
+1000
+Message Loss (Reliability)
+997.7
+997.8
+997.3
+Fig. 7: Average message loss for QoS level 0 for Gateway 1
+of Provider 1 with 125 KB payload (see Figure 3).
+aut1_15b
+qos0
+aut1_29b
+qos0
+aut2
+qos0
+0
+200
+400
+600
+800
+1000
+Message Loss (Reliability)
+997.0
+998.6
+997.4
+Fig. 8: Average message loss for QoS level 0 for Gateway 2
+of Provider 1 with 35 KB payload (see Figure 3).
+aut1_15b
+qos0
+aut1_29b
+qos0
+aut2
+qos0
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+1.2
+Message Loss (Reliability)
+1.1
+1.2
+0.6
+Fig. 9: Average message loss for QoS level 0 for Gateway 1
+of Provider 2 with 1.5 KB payload (see Figure 3).
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.10 =====
+V. THREATS TO VALIDITY
+Since we applied a benchmark methodology to evaluate
+different architectural deployment options, it is important to
+discuss at least the study’s construct validity and reliability [2].
+Firstly, concerning construct validity, we used the end-to-
+end delay as a metric for latency. Considering the MQTT
+clients, this metric was calculated by subtracting the timestamp
+added at the publishing point from the timestamp at the sub-
+scribing client at the destination bridge. To have consistency
+and high accuracy when computing the metric, we deployed
+the clients at both ends in the same host machine to ensure
+the usage of synchronized clocks, ensuring the validity of
+the measurements. Furthermore, the primary purpose of the
+MQTT protocol is to deliver data in IoT contexts, and thus we
+used message loss as an indicator to evaluate the reliability of
+the system. By definition in the MQTT protocol, quality-of-
+service level 0 is the only level where message loss is expected
+and thus, we conduct the analysis of the reliability for that
+benchmark parameter. To capture message loss impact, the
+client and bridge broker components ran on different machines
+on separated networks, which is a more realistic setup. This
+is especially true considering that we used QoS level 0 as
+a parameter, which makes less sense to measure when both
+clients and brokers are on the same machine or even network.
+Regarding the reliability of the benchmark execution, to
+minimize the impact of the variability of using cloud in-
+frastructures and different networks, the systems under test
+were executed under the same resource limits with dedicated
+resources while repeating each experiment 10 times. Further-
+more, raw measurements were also made available in the
+replication package of this study for more details on how to
+reproduce the aggregated results presented in Section IV.
+As regards internal validity, the consistent average payload
+and topic sizes through the different benchmark setups validate
+our fixed message load for the replicated sensor data and, thus,
+the correct and expected behavior of the systems under test.
+In addition, the HiveMQ broker metrics stored in Prometheus
+were used to validate MQTT-related measurements done on
+the subscriber side.
+Lastly, our experiment has considered only three payload
+sizes, two topic names, two deployment options, and one
+subscriber. We cannot generalize to other configuration setups,
+for example, when cluster setup is used. More experiments
+suggested in the recommendation for research will be neces-
+sary to generalize.
+VI. RELATED WORK
+As mentioned in [5], the benchmark definitions for MQTT
+solutions focus on understanding the Service Level Agree-
+ments (SLA) that commercial vendors of such solutions
+specify. In this study, our setup included the evaluation of
+MQTT brokers platforms not in isolation, but in context
+considering the whole data ingestion processing pipeline in a
+bridge architecture scenario. Many recent studies have focused
+on benchmarking metrics such as latency and scalability of
+existing MQTT broker platforms, evaluating parameters such
+as the number of broker nodes and clients or QoS level [6,
+14, 19].
+Contrary to previous studies on MQTT-related benchmarks,
+we introduce topic size overhead as a benchmark parameter
+and use real sensor data, whose volume is in kilobytes. This
+contrasts with previous studies where the payload is smaller
+than 100 bytes as the load originates directly from a sensor and
+does not have a gateway that aggregates data from different
+sensor hubs.
+Concerning network locality, i.e., the network where MQTT
+clients and brokers are deployed, some studies have consid-
+ered this as a benchmark parameter for the MQTT-related
+benchmark [19]. As an alternative. Package loss has also
+been simulated by injection of failures when both client
+and brokers are deployed in the same network [6]. A more
+sophisticated approach by emulating the over-the-air satellite
+link between the gateway and the broker was done in [27] but
+QoS levels were not part of the studied benchmark parameters.
+In our study, we separated the clients from the brokers in our
+benchmark setup, deploying them on separate host machines
+across different networks. This setup allowed the assessment of
+QoS level 0 under realistic network conditions while capturing
+message losses.
+We do not consider cluster architectures for the logical
+broker deployment because scalability and high throughput are
+not concerns/requirements for the deployed system under test,
+in contrast with latency and reliability. In [14] an evaluation of
+several options with a focus on scalability in cluster setups was
+performed for different MQTT brokers vendors and EMQX
+had the lowest average latency for high throughput loads.
+Lastly, other alternatives to MQTT, such as CoAP, HTTP,
+or AMQP, can also be employed in the IoT network layer,
+depending on the requirements, and have been extensively
+investigated and compared in [11, 13, 15, 20, 22].
+VII. CONCLUSION AND FUTURE WORK
+We found that smaller packet size at QoS level 0 can be
+transmitted reliably, whereas medium and larger packet sizes
+suffer high message losses at the same level. Reliability and
+latency conflict for both QoS levels 1 and 2 for all payload
+sizes. We confirm that MQTT payload size significantly im-
+pacts the loss of messages when transmitting with the lower
+quality of service (QoS level 0). In addition, for small and large
+payload sizes, there is a clear difference between architectural
+option 1, which has one bridge component per data provider,
+and architectural option 2, with one bridge component per
+sensor hub stream. The first option performs better in latency,
+with smaller average delays. We can highlight that more
+bridge processors between the source and destination brokers
+correspond to higher delay. In contrast, fewer processors with
+less communication links produce less average delays.
+As previously mentioned, the data provider architecture
+should be investigated in future work, particularly the gateway
+deployment options. The energy efficiency of data transmis-
+sion concerning different payload sizes could also be consid-
+ered as a quality attribute.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.11 =====
+REFERENCES
+[1]
+Abdullah Aziz, Olov Schel´en, and Ulf Bodin. “Data
+Integration Models for Heterogeneous Industrial Sys-
+tems: A Conceptual Analysis”. In: 2021 26th IEEE
+International Conference on Emerging Technologies
+and Factory Automation (ETFA). 2021, pp. 1–8. DOI:
+10.1109/ETFA45728.2021.9613592.
+[2]
+Benchmarking (of Software Systems). URL: https : / /
+github . com / acmsigsoft / EmpiricalStandards / blob /
+master/docs/standards/Benchmarking.md.
+[3]
+Ismail Butun, Patrik ¨Osterberg, and Houbing Song.
+“Security of the Internet of Things: Vulnerabilities,
+Attacks, and Countermeasures”. In: IEEE Communica-
+tions Surveys & Tutorials 22.1 (2020), pp. 616–644.
+DOI: 10.1109/COMST.2019.2953364.
+[4]
+OWASP Foundation. Threat Modeling Project. URL:
+https://owasp.org/www-project-threat-model/.
+[5]
+Ilie-Daniel Gheorghe-Pop et al. “A Performance Bench-
+marking Methodology for MQTT Broker Implementa-
+tions”. In: 2020 IEEE 20th International Conference on
+Software Quality, Reliability and Security Companion
+(QRS-C). 2020, pp. 506–513. DOI: 10 . 1109 / QRS -
+C51114.2020.00090.
+[6]
+Sten Gruener, Heiko Koziolek, and Julius R¨uckert. “To-
+wards Resilient IoT Messaging: An Experience Report
+Analyzing MQTT Brokers”. In: 2021 IEEE 18th Inter-
+national Conference on Software Architecture (ICSA).
+2021, pp. 69–79. DOI: 10 . 1109 / ICSA51549 . 2021 .
+00015.
+[7]
+Deepsubhra Guha Roy et al. “Application-aware end-
+to-end delay and message loss estimation in Internet
+of Things (IoT) — MQTT-SN protocols”. In: Future
+Generation Computer Systems 89 (2018), pp. 300–316.
+ISSN: 0167-739X. DOI: https://doi.org/10.1016/j.future.
+2018.06.040. URL: https://www.sciencedirect.com/
+science/article/pii/S0167739X17329990.
+[8]
+Wilhelm Hasselbring. “Benchmarking as Empirical
+Standard in Software Engineering Research”. In: In-
+ternational Conference on Evaluation and Assessment
+in Software Engineering (EASE 2021). ACM, 2021,
+pp. 365–372. DOI: 10.1145/3463274.3463361.
+[9]
+HiveMQ Available Metrics. URL: https://docs.hivemq.
+com / hivemq / latest / user - guide / monitoring % 5C #
+available-metrics.
+[10]
+IoT Analytics GmbH. Number of connected IoT devices
+growing 16% to 16.7 billion globally. https : / / iot -
+analytics . com / number- connected - iot - devices/. May
+2023.
+[11]
+Janis Kampars, Dainis Tropins, and Ralfs Matisons.
+“A Review of Application Layer Communication Pro-
+tocols for the IoT Edge Cloud Continuum”. In: 2021
+62nd International Scientific Conference on Information
+Technology and Management Science of Riga Technical
+University (ITMS). 2021, pp. 1–6.
+DOI: 10 . 1109 /
+ITMS52826.2021.9615332.
+[12]
+Rafiullah Khan et al. “Future Internet: The Internet
+of Things Architecture, Possible Applications and Key
+Challenges”. In: 2012 10th International Conference on
+Frontiers of Information Technology. 2012, pp. 257–
+260. DOI: 10.1109/FIT.2012.53.
+[13]
+George
+Kokkonis,
+Angelos
+Chatzimparmpas,
+and
+Sotirios Kontogiannis. “Middleware IoT protocols per-
+formance evaluation for carrying out clustered data”.
+In: 2018 South-Eastern European Design Automation,
+Computer Engineering, Computer Networks and Society
+Media Conference (SEEDA CECNSM). 2018, pp. 1–5.
+DOI: 10.23919/SEEDA-CECNSM.2018.8544929.
+[14]
+Heiko Koziolek, Sten Gr¨uner, and Julius R¨uckert. “A
+Comparison of MQTT Brokers for Distributed IoT
+Edge Computing”. In: Software Architecture. Springer
+International Publishing, 2020, pp. 352–368.
+[15]
+Janitha Krishnan and Shriram K. Vasudevan. “An Ex-
+tensive Survey on IoT Smart Gateways, Software Ar-
+chitecture, Related Protocols and Challenges”. In: 2019
+International Conference on Vision Towards Emerging
+Trends in Communication and Networking (ViTECoN).
+2019, pp. 1–6. DOI: 10.1109/ViTECoN.2019.8899513.
+[16]
+Guowei Li. Bridging MQTT messages to the cloud with
+mosquitto bridge. URL: https://www.emqx.com/en/blog/
+bridging-mosquitto-to-emqx-cluster.
+[17]
+Keila Lima et al. “A Data-Flow Oriented Software Ar-
+chitecture for Heterogeneous Marine Data Streams”. In:
+2024 IEEE 21st International Conference on Software
+Architecture (ICSA). 2024, pp. 146–157. DOI: 10.1109/
+ICSA59870.2024.00022.
+[18]
+Caihua Liu et al. “Data quality and the Internet of
+Things”. In: Computing 102.2 (2020), pp. 573–599.
+[19]
+Edoardo Longo et al. “BORDER: A Benchmarking
+Framework for Distributed MQTT Brokers”. In: IEEE
+Internet of Things Journal 9.18 (2022), pp. 17728–
+17740. DOI: 10.1109/JIOT.2022.3155872.
+[20]
+Biswajeeban Mishra and Attila Kertesz. “The use of
+MQTT in M2M and IoT systems: A survey”. In: IEEE
+Access 8 (2020), pp. 201071–201086.
+[21]
+Henry Muccini and Mahyar Tourchi Moghaddam. “IoT
+Architectural Styles”. In: Software Architecture. Ed. by
+Carlos E. Cuesta, David Garlan, and Jennifer P´erez.
+Cham: Springer International Publishing, 2018, pp. 68–
+85.
+[22]
+Nitin Naik. “Choice of effective messaging protocols
+for IoT systems: MQTT, CoAP, AMQP and HTTP”.
+In: 2017 IEEE International Systems Engineering Sym-
+posium (ISSE). 2017, pp. 1–7. DOI: 10.1109/SysEng.
+2017.8088251.
+[23]
+Hyeontaek Oh et al. “Personal Data Trading Scheme
+for Data Brokers in IoT Data Marketplaces”. In: IEEE
+Access 7 (2019), pp. 40120–40132. DOI: 10 . 1109 /
+ACCESS.2019.2904248.
+[24]
+Euripides G.M. Petrakis et al. “Internet of Things as
+a Service (iTaaS): Challenges and solutions for man-
+agement of sensor data on the cloud and the fog”. In:
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.12 =====
+Internet of Things 3-4 (2018), pp. 156–174. ISSN: 2542-
+6605. DOI: https://doi.org/10.1016/j.iot.2018.09.009.
+URL: https://www.sciencedirect.com/science/article/pii/
+S2542660518300350.
+[25]
+Andreas Schiffler. Mosquitto bridge configuration ex-
+plained. 2024. URL: https://cedalo.com/blog/mosquitto-
+bridge-configuration/.
+[26]
+Connie U Smith and Lloyd G Williams. Performance
+solutions: a practical guide to creating responsive,
+scalable software. Addison-Wesley, 2002.
+[27]
+Ridha Soua et al. “MQTT-MFA: A Message Filter
+Aggregator to Support Massive IoT Traffic Over Satel-
+lite”. In: IEEE Internet of Things Journal 9.16 (2022),
+pp. 14928–14937. DOI: 10.1109/JIOT.2021.3129058.
+[28]
+OASIS MQTT TC. MQTT Version 5.0. Standard. OA-
+SIS Standard, Mar. 2019. URL: https://docs.oasis-open.
+org/mqtt/mqtt/v5.0/mqtt-v5.0.html.
+[29]
+Katinka Wolter and Philipp Reinecke. “Performance
+and Security Tradeoff”. In: Formal Methods for Quan-
+titative Aspects of Programming Languages. Springer
+Berlin Heidelberg, 2010, pp. 135–167. DOI: 10.1007/
+978-3-642-13678-8 4.
+[30]
+Ana Mar´ıa Zambrano V et al. “SIGPRO: A Real-Time
+Progressive Notification System Using MQTT Bridges
+and Topic Hierarchy for Rapid Location of Missing Per-
+sons”. In: IEEE Access 8 (2020), pp. 149190–149198.
+DOI: 10.1109/ACCESS.2020.3015183.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 07:15:58 UTC from IEEE Xplore.  Restrictions apply. 

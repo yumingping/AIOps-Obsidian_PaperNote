@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "45f1841087a16062",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 56,
+   "text": "分布式 broker 20+ 个怎么选"
+  },
+  {
+   "id": "c73c2858fc540fdc",
+   "type": "text",
+   "x": 760,
+   "y": 80,
+   "width": 420,
+   "height": 56,
+   "text": "已有评测：只测单机、只看性能、结论难泛化"
+  },
+  {
+   "id": "6c4febff5efd18c8",
+   "type": "text",
+   "x": 760,
+   "y": 204,
+   "width": 420,
+   "height": 56,
+   "text": "GQM 六维：性能/扩展/韧性/安全/扩展机制/易用"
+  },
+  {
+   "id": "bc5b7b843314233d",
+   "type": "text",
+   "x": 760,
+   "y": 284,
+   "width": 420,
+   "height": 80,
+   "text": "StarlingX + K8s 边缘集群实测 EMQX/HiveMQ/VerneMQ"
+  },
+  {
+   "id": "0d6ef8ee7ffe2687",
+   "type": "text",
+   "x": 760,
+   "y": 432,
+   "width": 420,
+   "height": 80,
+   "text": "对称 10 pub + 10 sub 场景，payload 150B，QoS 1"
+  },
+  {
+   "id": "0d844c749d06918d",
+   "type": "text",
+   "x": 760,
+   "y": 536,
+   "width": 420,
+   "height": 56,
+   "text": "MST 判据：消费落后发布 > 100 msg/s"
+  },
+  {
+   "id": "c6137a76b3d253c2",
+   "type": "text",
+   "x": 760,
+   "y": 616,
+   "width": 420,
+   "height": 56,
+   "text": "崩溃注入：杀 broker 进程看重连补偿"
+  },
+  {
+   "id": "bf4619f786851d27",
+   "type": "text",
+   "x": 760,
+   "y": 740,
+   "width": 420,
+   "height": 80,
+   "text": "MST：EMQX 28K / VerneMQ 10K / HiveMQ 8K msg/s"
+  },
+  {
+   "id": "d9393fc96297e0bc",
+   "type": "text",
+   "x": 760,
+   "y": 844,
+   "width": 420,
+   "height": 80,
+   "text": "崩溃丢消息：HiveMQ 0 / VerneMQ 82 / EMQX 580"
+  },
+  {
+   "id": "b5a3a73e73bd9a28",
+   "type": "text",
+   "x": 760,
+   "y": 948,
+   "width": 420,
+   "height": 80,
+   "text": "TLS 开销：EMQX 43% / VerneMQ 20%"
+  },
+  {
+   "id": "50045ab4587df819",
+   "type": "text",
+   "x": 760,
+   "y": 1052,
+   "width": 420,
+   "height": 80,
+   "text": "可靠性参数：inflight 1000 + offline queue 50000"
+  },
+  {
+   "id": "7f481050557cc328",
+   "type": "text",
+   "x": 760,
+   "y": 1200,
+   "width": 420,
+   "height": 80,
+   "text": "任务6 方法学：梯度加压/重复 3 次/95%CI/双源验证"
+  },
+  {
+   "id": "02fe15c5d44a6898",
+   "type": "text",
+   "x": 760,
+   "y": 1304,
+   "width": 420,
+   "height": 56,
+   "text": "崩溃判读三特征：重连耗时/补偿段/恢复基线"
+  },
+  {
+   "id": "eeca31eb4092bf7e",
+   "type": "text",
+   "x": 760,
+   "y": 1384,
+   "width": 420,
+   "height": 56,
+   "text": "autoscaling 只对新增连接生效（坑）"
+  },
+  {
+   "id": "09b7493345aadd28",
+   "type": "text",
+   "x": 760,
+   "y": 1508,
+   "width": 420,
+   "height": 56,
+   "text": "Ubuntu：docker 部署 EMQX 做对照组"
+  },
+  {
+   "id": "592f7ca65eea2c67",
+   "type": "text",
+   "x": 760,
+   "y": 1588,
+   "width": 420,
+   "height": 80,
+   "text": "HAProxy TCP 健康检查做 broker 切换"
+  },
+  {
+   "id": "50a9ee6fcfa06968",
+   "type": "text",
+   "x": 760,
+   "y": 1692,
+   "width": 420,
+   "height": 56,
+   "text": "kill -9 注入崩溃 + 持久会话验收"
+  },
+  {
+   "id": "d4f38e3216dc7cb2",
+   "type": "text",
+   "x": 20,
+   "y": 791,
+   "width": 310,
+   "height": 190,
+   "text": "# 分布式IoT边缘MQTT代理对比\nKoziolek et al.\nECSA 2020\nGQM 六维集群实测"
+  },
+  {
+   "id": "7871751695d36c36",
+   "type": "text",
+   "x": 380,
+   "y": 26,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "39c2b88ee7217475",
+   "type": "text",
+   "x": 380,
+   "y": 242,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "9aeb72c9d156d2be",
+   "type": "text",
+   "x": 380,
+   "y": 510,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "36831a9589cf97c4",
+   "type": "text",
+   "x": 380,
+   "y": 894,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "41a021eb43721f4c",
+   "type": "text",
+   "x": 380,
+   "y": 1278,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "2bf54371d5ea1843",
+   "type": "text",
+   "x": 380,
+   "y": 1586,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "40c002d1be7f0ec1",
+   "type": "file",
+   "x": 20,
+   "y": 1812,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/B代理实现与性能评测/论文6分布式IoT边缘MQTT代理对比/6分布式IoT边缘MQTT代理对比.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "ff254adc2832173d",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "right",
+   "toNode": "7871751695d36c36",
+   "toSide": "left"
+  },
+  {
+   "id": "0762cd21b896ab4b",
+   "fromNode": "7871751695d36c36",
+   "fromSide": "right",
+   "toNode": "45f1841087a16062",
+   "toSide": "left"
+  },
+  {
+   "id": "c82d63074353a229",
+   "fromNode": "7871751695d36c36",
+   "fromSide": "right",
+   "toNode": "c73c2858fc540fdc",
+   "toSide": "left"
+  },
+  {
+   "id": "3b178d78cb012cf8",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "right",
+   "toNode": "39c2b88ee7217475",
+   "toSide": "left"
+  },
+  {
+   "id": "3ae9ea9125d28741",
+   "fromNode": "39c2b88ee7217475",
+   "fromSide": "right",
+   "toNode": "6c4febff5efd18c8",
+   "toSide": "left"
+  },
+  {
+   "id": "0fc7706868d8f95d",
+   "fromNode": "39c2b88ee7217475",
+   "fromSide": "right",
+   "toNode": "bc5b7b843314233d",
+   "toSide": "left"
+  },
+  {
+   "id": "e32f1ae9e9a134b0",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "right",
+   "toNode": "9aeb72c9d156d2be",
+   "toSide": "left"
+  },
+  {
+   "id": "dcae0688d7aed43b",
+   "fromNode": "9aeb72c9d156d2be",
+   "fromSide": "right",
+   "toNode": "0d6ef8ee7ffe2687",
+   "toSide": "left"
+  },
+  {
+   "id": "037e91afba081d95",
+   "fromNode": "9aeb72c9d156d2be",
+   "fromSide": "right",
+   "toNode": "0d844c749d06918d",
+   "toSide": "left"
+  },
+  {
+   "id": "a3d3af78ad582c71",
+   "fromNode": "9aeb72c9d156d2be",
+   "fromSide": "right",
+   "toNode": "c6137a76b3d253c2",
+   "toSide": "left"
+  },
+  {
+   "id": "eb778a5f28646beb",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "right",
+   "toNode": "36831a9589cf97c4",
+   "toSide": "left"
+  },
+  {
+   "id": "f9499236d0fe9535",
+   "fromNode": "36831a9589cf97c4",
+   "fromSide": "right",
+   "toNode": "bf4619f786851d27",
+   "toSide": "left"
+  },
+  {
+   "id": "7e4b1a53852e4095",
+   "fromNode": "36831a9589cf97c4",
+   "fromSide": "right",
+   "toNode": "d9393fc96297e0bc",
+   "toSide": "left"
+  },
+  {
+   "id": "3fe30d5fda4c355d",
+   "fromNode": "36831a9589cf97c4",
+   "fromSide": "right",
+   "toNode": "b5a3a73e73bd9a28",
+   "toSide": "left"
+  },
+  {
+   "id": "6b4509767e3834fd",
+   "fromNode": "36831a9589cf97c4",
+   "fromSide": "right",
+   "toNode": "50045ab4587df819",
+   "toSide": "left"
+  },
+  {
+   "id": "caf59630c3116db4",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "right",
+   "toNode": "41a021eb43721f4c",
+   "toSide": "left"
+  },
+  {
+   "id": "624e8197ace7bf26",
+   "fromNode": "41a021eb43721f4c",
+   "fromSide": "right",
+   "toNode": "7f481050557cc328",
+   "toSide": "left"
+  },
+  {
+   "id": "2a4a6cd2fe496581",
+   "fromNode": "41a021eb43721f4c",
+   "fromSide": "right",
+   "toNode": "02fe15c5d44a6898",
+   "toSide": "left"
+  },
+  {
+   "id": "702236814ff34196",
+   "fromNode": "41a021eb43721f4c",
+   "fromSide": "right",
+   "toNode": "eeca31eb4092bf7e",
+   "toSide": "left"
+  },
+  {
+   "id": "a62549ab1ffd4363",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "right",
+   "toNode": "2bf54371d5ea1843",
+   "toSide": "left"
+  },
+  {
+   "id": "03d6375c3cf1d12a",
+   "fromNode": "2bf54371d5ea1843",
+   "fromSide": "right",
+   "toNode": "09b7493345aadd28",
+   "toSide": "left"
+  },
+  {
+   "id": "a3161a1273b63ad7",
+   "fromNode": "2bf54371d5ea1843",
+   "fromSide": "right",
+   "toNode": "592f7ca65eea2c67",
+   "toSide": "left"
+  },
+  {
+   "id": "3bd4a44f58e188a5",
+   "fromNode": "2bf54371d5ea1843",
+   "fromSide": "right",
+   "toNode": "50a9ee6fcfa06968",
+   "toSide": "left"
+  },
+  {
+   "id": "e8ddaeeb8e223501",
+   "fromNode": "d4f38e3216dc7cb2",
+   "fromSide": "bottom",
+   "toNode": "40c002d1be7f0ec1",
+   "toSide": "top"
+  }
+ ]
+}

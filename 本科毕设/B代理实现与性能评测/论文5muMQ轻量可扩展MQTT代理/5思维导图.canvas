@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "0b494027d8932023",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 56,
+   "text": "Mosquitto 单线程只用一核，堆硬件没用"
+  },
+  {
+   "id": "e947e7cb762f780a",
+   "type": "text",
+   "x": 760,
+   "y": 80,
+   "width": 420,
+   "height": 56,
+   "text": "内核 TCP 栈系统调用开销 + 多核资源竞争"
+  },
+  {
+   "id": "0320ed56abf1ed17",
+   "type": "text",
+   "x": 760,
+   "y": 204,
+   "width": 420,
+   "height": 80,
+   "text": "**每核一个 epoll 事件循环 + SO_REUSEPORT**"
+  },
+  {
+   "id": "077761d048894ad9",
+   "type": "text",
+   "x": 760,
+   "y": 308,
+   "width": 420,
+   "height": 80,
+   "text": "mTCP 用户态 TCP 栈（kernel bypass，可选路径）"
+  },
+  {
+   "id": "9a62fa12b8fd7797",
+   "type": "text",
+   "x": 760,
+   "y": 456,
+   "width": 420,
+   "height": 56,
+   "text": "预分配、fd 索引的 client 表"
+  },
+  {
+   "id": "24d94953cb387efb",
+   "type": "text",
+   "x": 760,
+   "y": 536,
+   "width": 420,
+   "height": 80,
+   "text": "topic 树 + 根节点读写锁（SUB 写锁 / PUB 读锁）"
+  },
+  {
+   "id": "7a0f405fe37c07a6",
+   "type": "text",
+   "x": 760,
+   "y": 640,
+   "width": 420,
+   "height": 80,
+   "text": "每核 1:1 的 App/TCP 线程对，跨核走消息队列"
+  },
+  {
+   "id": "431df8212386038b",
+   "type": "text",
+   "x": 760,
+   "y": 788,
+   "width": 420,
+   "height": 56,
+   "text": "约 3K 行 C，移植 mTCP 只改 90 行"
+  },
+  {
+   "id": "a4731d0200b3a5a0",
+   "type": "text",
+   "x": 760,
+   "y": 868,
+   "width": 420,
+   "height": 80,
+   "text": "50 对时 944K msg/s = 5.38 × Mosquitto"
+  },
+  {
+   "id": "974b872840801b12",
+   "type": "text",
+   "x": 760,
+   "y": 972,
+   "width": 420,
+   "height": 80,
+   "text": "Mosquitto 上限约 128K 订阅者（时延 1743 ms）"
+  },
+  {
+   "id": "80e42d6204621e2d",
+   "type": "text",
+   "x": 760,
+   "y": 1076,
+   "width": 420,
+   "height": 56,
+   "text": "mTCP 版 PMD 忙轮询恒占 1600% CPU"
+  },
+  {
+   "id": "6eac71a92b9d5797",
+   "type": "text",
+   "x": 760,
+   "y": 1200,
+   "width": 420,
+   "height": 56,
+   "text": "单机 broker 多核化的标准答案"
+  },
+  {
+   "id": "e8b4acadee805bbc",
+   "type": "text",
+   "x": 760,
+   "y": 1280,
+   "width": 420,
+   "height": 56,
+   "text": "多核可扩展是主因，mTCP 只是第二层增益"
+  },
+  {
+   "id": "a60f5f7024829d10",
+   "type": "text",
+   "x": 760,
+   "y": 1360,
+   "width": 420,
+   "height": 56,
+   "text": "忙轮询不适合电池网关 → 论证选内核 epoll"
+  },
+  {
+   "id": "086cdad8413066dc",
+   "type": "text",
+   "x": 760,
+   "y": 1484,
+   "width": 420,
+   "height": 80,
+   "text": "C++：epoll + SO_REUSEPORT + pthread 读写锁"
+  },
+  {
+   "id": "3604536aff3b0d43",
+   "type": "text",
+   "x": 760,
+   "y": 1588,
+   "width": 420,
+   "height": 56,
+   "text": "树莓派 4 核绑核压测（taskset）验证线性扩展"
+  },
+  {
+   "id": "5f9db4b8f9940239",
+   "type": "text",
+   "x": 760,
+   "y": 1668,
+   "width": 420,
+   "height": 56,
+   "text": "架构图画出跨核消息队列路径"
+  },
+  {
+   "id": "3f5df241a090bd54",
+   "type": "text",
+   "x": 20,
+   "y": 779,
+   "width": 310,
+   "height": 190,
+   "text": "# muMQ轻量可扩展MQTT代理\nPipatsakulroj et al.\nIEEE 2017\n多核 broker 实现论文"
+  },
+  {
+   "id": "680fdb03c736f726",
+   "type": "text",
+   "x": 380,
+   "y": 26,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "cdb150b392de8dc2",
+   "type": "text",
+   "x": 380,
+   "y": 254,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "6d3caca310f98dbe",
+   "type": "text",
+   "x": 380,
+   "y": 546,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "9f7f8707a45cf990",
+   "type": "text",
+   "x": 380,
+   "y": 918,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "41d0166eff5e24c6",
+   "type": "text",
+   "x": 380,
+   "y": 1266,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "79e49068f1e18fc7",
+   "type": "text",
+   "x": 380,
+   "y": 1562,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "683d532549812cca",
+   "type": "file",
+   "x": 20,
+   "y": 1788,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/B代理实现与性能评测/论文5muMQ轻量可扩展MQTT代理/5muMQ轻量可扩展MQTT代理.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "751cfb2eaa954eab",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "right",
+   "toNode": "680fdb03c736f726",
+   "toSide": "left"
+  },
+  {
+   "id": "8acce48fba20b0f8",
+   "fromNode": "680fdb03c736f726",
+   "fromSide": "right",
+   "toNode": "0b494027d8932023",
+   "toSide": "left"
+  },
+  {
+   "id": "fc5824698dca358b",
+   "fromNode": "680fdb03c736f726",
+   "fromSide": "right",
+   "toNode": "e947e7cb762f780a",
+   "toSide": "left"
+  },
+  {
+   "id": "9be14e54c655475f",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "right",
+   "toNode": "cdb150b392de8dc2",
+   "toSide": "left"
+  },
+  {
+   "id": "ec24b5bad57b1cd2",
+   "fromNode": "cdb150b392de8dc2",
+   "fromSide": "right",
+   "toNode": "0320ed56abf1ed17",
+   "toSide": "left"
+  },
+  {
+   "id": "fa6ec7634af17d4a",
+   "fromNode": "cdb150b392de8dc2",
+   "fromSide": "right",
+   "toNode": "077761d048894ad9",
+   "toSide": "left"
+  },
+  {
+   "id": "98a5a3c2811fc28c",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "right",
+   "toNode": "6d3caca310f98dbe",
+   "toSide": "left"
+  },
+  {
+   "id": "2e9b6635d617c408",
+   "fromNode": "6d3caca310f98dbe",
+   "fromSide": "right",
+   "toNode": "9a62fa12b8fd7797",
+   "toSide": "left"
+  },
+  {
+   "id": "00e3ac325207a2a2",
+   "fromNode": "6d3caca310f98dbe",
+   "fromSide": "right",
+   "toNode": "24d94953cb387efb",
+   "toSide": "left"
+  },
+  {
+   "id": "addb031c382a86b3",
+   "fromNode": "6d3caca310f98dbe",
+   "fromSide": "right",
+   "toNode": "7a0f405fe37c07a6",
+   "toSide": "left"
+  },
+  {
+   "id": "826df480615a4440",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "right",
+   "toNode": "9f7f8707a45cf990",
+   "toSide": "left"
+  },
+  {
+   "id": "47772af432a14d67",
+   "fromNode": "9f7f8707a45cf990",
+   "fromSide": "right",
+   "toNode": "431df8212386038b",
+   "toSide": "left"
+  },
+  {
+   "id": "87ca61d42f5fe34e",
+   "fromNode": "9f7f8707a45cf990",
+   "fromSide": "right",
+   "toNode": "a4731d0200b3a5a0",
+   "toSide": "left"
+  },
+  {
+   "id": "39a0b1e9e1396ef6",
+   "fromNode": "9f7f8707a45cf990",
+   "fromSide": "right",
+   "toNode": "974b872840801b12",
+   "toSide": "left"
+  },
+  {
+   "id": "8319c32c7d41025c",
+   "fromNode": "9f7f8707a45cf990",
+   "fromSide": "right",
+   "toNode": "80e42d6204621e2d",
+   "toSide": "left"
+  },
+  {
+   "id": "28a441b7f326c364",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "right",
+   "toNode": "41d0166eff5e24c6",
+   "toSide": "left"
+  },
+  {
+   "id": "32b2fc36709dcdd2",
+   "fromNode": "41d0166eff5e24c6",
+   "fromSide": "right",
+   "toNode": "6eac71a92b9d5797",
+   "toSide": "left"
+  },
+  {
+   "id": "8fe528996c6eb832",
+   "fromNode": "41d0166eff5e24c6",
+   "fromSide": "right",
+   "toNode": "e8b4acadee805bbc",
+   "toSide": "left"
+  },
+  {
+   "id": "ad8016b4ac211e0f",
+   "fromNode": "41d0166eff5e24c6",
+   "fromSide": "right",
+   "toNode": "a60f5f7024829d10",
+   "toSide": "left"
+  },
+  {
+   "id": "2368f5f98a091357",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "right",
+   "toNode": "79e49068f1e18fc7",
+   "toSide": "left"
+  },
+  {
+   "id": "41db2bb37394d24c",
+   "fromNode": "79e49068f1e18fc7",
+   "fromSide": "right",
+   "toNode": "086cdad8413066dc",
+   "toSide": "left"
+  },
+  {
+   "id": "c6932a03cf10b028",
+   "fromNode": "79e49068f1e18fc7",
+   "fromSide": "right",
+   "toNode": "3604536aff3b0d43",
+   "toSide": "left"
+  },
+  {
+   "id": "47ee34d8726263c4",
+   "fromNode": "79e49068f1e18fc7",
+   "fromSide": "right",
+   "toNode": "5f9db4b8f9940239",
+   "toSide": "left"
+  },
+  {
+   "id": "f479dbe61de26a1f",
+   "fromNode": "3f5df241a090bd54",
+   "fromSide": "bottom",
+   "toNode": "683d532549812cca",
+   "toSide": "top"
+  }
+ ]
+}

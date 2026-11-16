@@ -1,0 +1,991 @@
+
+
+===== p.1 =====
+The Price of Reliability: Stress-Testing
+MQTT in Practical IoT Communications
+Luis M. Gaspar
+, Jose N. Faria
+, Marco Domingues
+, Fernanda Fama
+, Lucia Martins
+, and David Portugal
+ABSTRACT
+The Message Queue Telemetry Transport (MQTT)
+protocol is widely adopted in IoT systems for its ver-
+satile and efﬁcient communication model, as well as
+its support for low-power devices and variable net-
+work conditions. In this work, we assess the reliabil-
+ity, resource constraints, resilience, and lightweight
+nature of MQTT communication, in particular the
+Eclipse Mosquitto implementation, under various
+combinations of parameters regulating bandwidth,
+scalability, broker operation, and delivery guaran-
+tees. A vertical study is presented to evaluate perfor-
+mance, draw insights, and discuss best practices
+using an experimental testbed with commonly used
+hardware. We analyze the impact of broker process-
+ing capabilities, message payload size, data publish-
+ing frequency, number of clients, publisher queue
+size, and TCP packet aggregation across different
+QoS levels. The goal is to understand how these fac-
+tors inﬂuence round-trip time (RTT), packet loss rate,
+and end-to-end publishing delay under various experi-
+mental conﬁgurations.
+I. INTRODUCTION
+The concept of the Internet of Things is based on the
+ability to connect any object or device to the Internet.
+This communication paradigm opens up a range of
+new possibilities in various application areas, includ-
+ing manufacturing [1], healthcare [2] and robotics
+[3]. In order to develop IoT systems with scalability in
+mind, the devices traditionally used are designed to
+cost as little as possible and therefore often have
+limited energy and computing resources available.
+Accordingly, specialized communication protocols
+have been developed to address these constraints
+and facilitate communication between IoT devices,
+based on machine-to-machine (M2M) communica-
+tion, such as MQTT [4], which has become one of
+the most popular messaging protocols for IoT.
+In this work, we propose to set up a real test envi-
+ronment to understand the suitability and practical
+aspects of MQTT communication for reliable and
+low-power IoT applications. Performance is evaluated
+in a carefully deﬁned experimental setup with differ-
+ent QoS levels. In particular, we perform a measure-
+ment methodology that considers different message
+rates, payload and queue sizes, broker hardware
+resources, package aggregation strategy and num-
+ber of clients to understand the overall impact on
+communication.
+A. RELATED WORK
+Over the years, the increase in the adoption of the
+MQTT protocol is noticeable, particularly when com-
+pared to the Advanced Message Queuing Protocol
+(AMQP) and CoAP [5], and seminal work on the
+MQTT protocol for IoT systems and applications has
+been conducted in the past. For instance, Toldinas
+et al. [6] study the energy consumption of different
+MQTT QoS levels, highlighting the trade-off between
+reliability and power usage. Using a Raspberry Pi 4 as
+broker and an ESP-WROOM-02 module as client,
+they show that higher QoS levels increase energy
+consumption, with QoS 0 consuming 87% less
+energy than QoS 2. This enables developers to select
+the most suitable QoS level based on application
+needs
+An evaluation of the RTT, jitter and throughput for
+different transmission rates and QoS levels in MQTT
+communications can be found in [7]. The authors
+conclude that the RTT and jitter is observed to be
+much higher in QoS 0 when compared to QoS 1 and
+QoS 2 (see Section II for details), and increases with
+the transmission rate.
+In [8], the authors compare the performance of
+MQTT, CoAP, and WebSockets using an STMicroe-
+lectronics board and an ESP8266 module. Metrics
+include average RTT and protocol efﬁciency, mea-
+sured as the ratio of payload size to total bytes
+exchanged at the application and transport layers.
+Results show that protocol efﬁciency remains consis-
+tent across different network types, while RTT signiﬁ-
+cantly increases in non-LAN environments. CoAP
+achieves higher efﬁciency but lacks delivery guaran-
+tees and presents well-known security issues.
+A hospital real-time monitoring system using Body
+Sensor Network (BSN) nodes is evaluated with MQTT
+and CoAP protocols in [9]. The study shows that
+MQTT offers higher throughput for packets over 4000
+bytes and better packet delivery rate (PDR) for packets
+under 2000 bytes. Also, PDR remains stable across
+packet sizes but increases signiﬁcantly with the number
+of BSN nodes.
+Luis M. Gaspar, Jose N. Faria, Marco Domingues, and Fernanda Fama are with the Institute of Systems and Robotics, University of Coimbra,
+3030-290 Coimbra, Portugal; Lucia Martins is with the Department of Electrical and Computer Engineering, University of Coimbra, 3030-290
+Coimbra, Portugal; David Portugal (corresponding author) is with the Institute of Systems and Robotics, University of Coimbra, 3030-290
+Coimbra, Portugal, and also with the Department of Electrical and Computer Engineering, University of Coimbra, 3030-290 Coimbra,
+Portugal (e-mail: davidbsp@isr.uc.pt).
+This work was supported by
+the wireless biomonitoring
+stickers and smart bed
+architecture: towards
+Untethered Patients (WoW)
+research project, ref.
+CENTRO-01-0247-FEDER-
+045931, in part by the
+“Ag^encia Nacional de
+Inovac¸~ao” within the CMU
+Portugal program, and in
+part by the Fundac¸~ao para a
+Ci^encia e a Tecnologia
+(Portuguese Foundation for
+Science and Technology)
+through the Scientific
+Employment Stimulus 5th
+Edition, under Contract
+2022.05726.CEECIND.
+Digital Object Identiﬁer: 10.1109/MIOT.2026.3681190
+Date of Current Version: 25 August 2026
+Date of Publication: 29 April 2026
+166
+2576-3180 © 2026 IEEE. All rights reserved, including rights for text and data mining,
+and training of artificial intelligence and similar technologies.
+IEEE Internet of Things Magazine  September 2026
+OPEN CALL ARTICLE
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.2 =====
+Thangavel et al. [10] propose a common pro-
+gramming interface for MQTT and CoAP to assess
+their suitability for WSNs, focusing on end-to-end
+delay and bandwidth use. Results show that MQTT
+has lower delay under light trafﬁc but is less effective
+than CoAP under heavy trafﬁc. Thus, the proposed
+middleware can be exploited to decide which proto-
+col to use to improve network performance. Seoane
+et al. [11] further compare both protocols under con-
+strained devices, highlighting MQTT’s higher band-
+width demand but improved reliability due to
+the different levels of QoS and running over TCP.
+The authors also show that secure communication
+increases bandwidth usage and latency for both
+protocols.
+In [12], Mishra et al. performed a deep stress-test
+comparison of six different MQTT brokers, both scal-
+able and non-scalable, through a simulated test sce-
+nario, to assess the following metrics: CPU usage,
+latency, and message rate. From their testing, the
+authors found Mosquitto to be the best overall per-
+former across the entire metric stack, despite being a
+non-scalable broker, i.e., limited to a singular host sys-
+tem core. Their experiments were conducted in two
+environments: one local and one cloud-based, both
+highly relevant to IoT contexts. While the comparison
+is insightful and reinforces our choice of broker (see
+Section III), the stress testing presented lacks a
+detailed analysis of broker performance with the vari-
+ation of key parameters, such as hardware resources
+and client conﬁgurations.
+Recently, Pawar et al. [13] introduce a deep neural
+network-based system to enhance security and QoS
+evaluation in MQTT-based industrial IoT environ-
+ments. The system evaluates standard QoS metrics
+while detecting security breaches such as unauthor-
+ized access or device spooﬁng. The neural network
+accurately classiﬁes trafﬁc as authenticated, unauthor-
+ized, or illegitimate. Combined with a two-way authen-
+tication scheme at the MQTT application layer, the
+approach ensures secure message delivery and reli-
+able performance, even in resource-constrained IoT
+environments.
+B. CONTRIBUTIONS
+In general, the literature provides an appropriate
+understanding of MQTT, namely its main features,
+advantages and drawbacks, showcasing its perfor-
+mance against other protocols such as CoAP and
+WebSockets. It also clariﬁes the beneﬁts and limitations
+particularly regarding energy consumption, security
+and reliability of adopting distinct QoS guarantees.
+Nevertheless, to the best of our knowledge, no
+existing work provides a comprehensive analysis of
+the protocol’s performance under a wide range of
+realistic conditions, including system resource con-
+straints, network load, and key operational parame-
+ters such as data transmission rate, message size,
+client queue capacity, and network scale.
+To summarize, the contributions of this work are:
+ A real-world evaluation using common IoT hard-
+ware, with performance assessed through standard
+metrics and a carefully designed experimental
+testbed;
+ A comparative analysis of different MQTT QoS
+reliability levels in a practical IoT application under
+various network conﬁgurations;
+ Empirical evidence that Round Trip Time (RTT)
+increases with higher QoS levels, i.e., QoS 2
+showing the highest RTT, followed by QoS 1 and
+then QoS 0, contradicting the ﬁndings reported
+in [7];
+ An in-depth investigation of how message delivery
+performance is inﬂuenced by varying system param-
+eters and broker hardware capabilities.
+Our test methodology is designed to stress the
+Eclipse Mosquitto implementation of the MQTT pro-
+tocol to its operational limits in order to address key
+questions relevant to the design and deployment of
+IoT applications. That is, how much data can be trans-
+mitted over MQTT without degrading network per-
+formance when using consumer hardware? To what
+extent does the number of clients affect system
+behavior? how does payload size affect the packet
+loss rate? How well do the different QoS levels bal-
+ance latency and reliability for IoT use cases? How
+minimal
+can
+the
+broker’s
+hardware
+resources
+be before message delivery becomes unreliable?
+Answering these questions provides further insight
+into the limitations of the protocol and allows the
+QoS level to be adapted to the requirements of the
+application, as well as adjusting the transmission rate
+or the size of the packets to achieve improved net-
+work stability.
+The work presented in [2], conducted by the
+same research group, served as the main motivation
+for this study. In that previous work, an e-Health sys-
+tem was developed for wireless biomonitoring of
+patients in hospital beds. The system used the MQTT
+protocol to transmit physiological sensor data on the
+patient’s chest to a centralized gateway within the
+hospital.
+During its implementation, questions arose regard-
+ing the appropriate QoS level to ensure both high
+delivery reliability and low latency, which motivated
+the present work. Building on this initial focus, the
+methodology was extended beyond QoS analysis to
+include a broader evaluation of factors inﬂuencing
+MQTT performance. This allowed us to pursue the
+overarching goal of identifying optimal broker con-
+ﬁgurations for the Eclipse Mosquitto implementation
+on the centralized gateway, while also assessing
+the system’s scalability under different operational
+conditions.
+In the next section, we provide an overview of the
+MQTT protocol and its Quality of Service (QoS) fea-
+ture. Section III describes the case study and the pro-
+posed experimental setup, i.e., the system used, its
+parameters, performance metrics and the test scenar-
+ios considered. The following section analyzes the
+experimental results obtained, and ﬁnally, Section V
+presents the ﬁndings and main conclusions from this
+work.
+II. QUALITY OF SERVICE LEVELS IN MQTT
+The MQTT protocol runs over the TCP/IP protocol
+using a Publish/Subscriber system. This lightweight
+messaging protocol is implemented in the application
+layer and aims to allow communication between
+devices with limited resources, using encryption,
+authentication, and authorization to ensure system
+security. In MQTT, there are three entities:
+i) the Publisher, responsible for sending data.
+ii) the Subscriber, which receive the data;
+iii) the Broker, that coordinates the exchange of data
+between publishers and subscribers to ensure reli-
+able communication.
+IEEE Internet of Things Magazine  September 2026
+167
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.3 =====
+Messages are published to a MQTT broker using
+a topic system, i.e. communication between a pub-
+lisher and a subscriber is conducted through the inter-
+mediary broker and is only established if they publish
+information or subscribe to receive it using the same
+topic [5].
+For typical failure scenarios, MQTT provides some
+counter-measures features, such as keep-alive/heart-
+beat, client take-over, message queuing and message
+delivery guarantees, which are the core focus of this
+study. Accordingly, the MQTT protocol includes dif-
+ferent Quality of Service (QoS) levels, which can be
+described as the degree of assurance that messages
+are delivered. This is speciﬁed between the entity
+sending a message, which can be the publisher or the
+broker, and the receiver, which can be the broker or
+the subscriber, respectively. These levels are usually
+adjusted based on the client solution and can be one
+of the following:
+ At most once (QoS 0), the sender transmits the
+data only once as the receiver does not acknowl-
+edge the reception of the message, thus does not
+attempt to send it again.
+ At least once (QoS 1), the receiver is guaranteed
+to get at least one message. The message is stored
+in the outbound queue until the sender receives a
+MQTT acknowledgment (called PUBACK) con-
+ﬁrming that the receiver got the message. Data
+can be retransmitted by the sender until messages
+are acknowledged, which can result in duplicated
+messages at the receiver side.
+ Exactly once (QoS 2), the highest QoS level avail-
+able, in which the message is guaranteed to only
+be delivered once. This is achieved by adding an
+additional step to the QoS 1 acknowledgement pro-
+cess. After receiving the MQTT acknowledgement,
+which in this case is called “Publish Received”
+(PUBREC), the sender informs the receiver that it
+deleted the message from the outbound queue
+through the “Publish Release” (PUBREL) message,
+and awaits for the receiver to acknowledge the
+PUBREL message with the “Publish Complete”
+(PUBCOMP) message to end the transmission.
+The choice of QoS level is tightly coupled to the
+use case scenario of application [14]. QoS 0 is usually
+recommended for low bandwidth usage on reliable
+networks, where occasionally lost messages can be
+tolerated. In cases where one needs to make sure
+that the messages reach the destination, QoS 1 can
+be used if the application receiving the data can han-
+dle occasional duplicated messages properly, or QoS
+2, if duplicated messages are not tolerated.
+III. CASE STUDY AND EXPERIMENTAL DESIGN
+We carry out a performance assessment with physical
+hardware to evaluate the suitability of using the
+MQTT protocol in systems with increased network
+load, analyzing in detail the impact of QoS levels, bro-
+ker processing capabilities, message payload size,
+transmission rate, number of clients, their respective
+queue sizes and TCP packet aggregation strategy.
+The experimental testbed comprises a total of
+eleven commonly used single board computers: Ten
+Raspberry Pi 4B (ARM Cortex-A72 64-bit 4-core pro-
+cessor at 1.8GHz, 8GB of LPDDR4 3200MHz
+RAM, 32GB microSDHC card for storage) and one
+Intel Up Board (Intel ATOM x5-Z8350 64-bit 4-core
+processor running up to 1.92GHz, 4GB of DDR3
+1600MHz RAM, 32GB of eMMC with write speeds
+of up to 2.5Gbps), as shown in Fig. 1.
+The MQTT broker and subscriber node are
+deployed on the Intel Up Board, while the Raspberry
+Pi devices operate as MQTT publisher clients. All
+devices run Ubuntu Linux LTS: the Up Board runs a
+more recent version (Ubuntu 22.04.3 LTS, Linux
+6.5.0-44-generic), while the Raspberry Pi devices run
+Ubuntu 20.04.5 LTS (Linux 5.4.0-1111-raspi). The
+Eclipse Mosquitto broker was chosen for the experi-
+ments because it is a lightweight and open-source
+server implementation of the MQTT protocol1. All
+devices use the Eclipse Paho MQTT Python Client2 to
+connect to the broker. They are wired to a 24-port
+Dell PowerConnect 2824 switch via CAT6 Ethernet
+cables, taking advantage of the full 1Gbps band-
+width. A wired connection is essential to minimize
+the impact of lost packets due to errors of the physical
+medium. Isolated from any public network, the switch
+manages a fully private network with no external con-
+nectivity. The experiments in this section were con-
+ducted under different conﬁgurations, including:
+ MQTT QoS levels: Quality of Service levels 0, 1,
+and 2 have been adopted.
+ CPU Performance: The Up Board CPU, which
+hosts the MQTT broker, was tested at three maxi-
+mum clock frequencies: 25%, 63%, and 100%.
+ Payload sizes: Messages have small (1.25kB),
+medium (12.5kB) and large (125kB) payloads.
+ Publishing Frequencies: Data was published at
+5Hz (low), 25Hz (medium) and 50Hz (high)
+frequency.
+ Number of Clients: Tests were conducted with 1,
+2, 5 and 10 concurrent publishers.
+ Queue size: The maximum queue size per pub-
+lisher was set to 10, 100 or 1000 messages.
+ TCP Nagle Algorithm: Tests were done both with
+and without the algorithm3 enabled.
+Each publisher client was preconﬁgured to trans-
+mit exactly 1000 messages in each test, and every
+conﬁguration of parameters was tested across ten
+repetitions.
+Performance is evaluated using three primary met-
+rics. For communication latency, we use the Round-
+Trip Time (RTT), deﬁned as the time elapsed between
+a client sending a message and receiving the ﬁnal
+acknowledgment for that message from the broker.
+For QoS 1 and QoS 2 this is measured at application-
+FIG. 1. Experimental evaluation testbed.
+1 Eclipse Mosquitto: An
+open-source MQTT broker,
+https://mosquitto.org/
+2 Paho Client, https://www.
+eclipse.org/paho
+3 The TCP Nagle algorithm
+reduces packet overhead by
+aggregating small messages
+into larger packets before
+transmission.
+168
+IEEE Internet of Things Magazine  September 2026
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.4 =====
+layer level, through the reception time of the
+PUBACK message for QoS 1 and the PUBCOMP
+message for QoS 2. However, QoS 0 does not have
+any sort of application-layer acknowledgment, and
+therefore, we measure RTT at a transport-layer level.
+To do so, the reception time of the TCP ACK packet
+is used. Relevant data was captured with Wireshark4,
+which enables detailed trafﬁc analysis.
+For analysis of message delivery, Packet Loss is
+considered, deﬁned as the percentage of messages
+sent by the publishers that were not received by the
+subscriber.
+To evaluate end-to-end publishing delay, we intro-
+duce the Time Factor, a metric deﬁned as the ratio of
+the actual time taken to publish all messages to the
+theoretical minimum time. The theoretical minimum
+is calculated as the total number of messages sent per
+client (1000 in our experiments) divided by the pub-
+lishing frequency (5, 25, or 50Hz). By deﬁnition, a
+Time Factor of 1 represents optimal performance,
+while higher values indicate additional overhead in
+the transmission process. This metric reﬂects the efﬁ-
+ciency of the message transmission process from the
+publisher clients to the broker.
+Given the e-Health inspiration for this study, spe-
+ciﬁcally real-time wireless patient biomonitoring, mes-
+sage delivery must be not only dependable but also
+timely. In this regard, we deﬁne reliability as encom-
+passing both the guarantee of successful message
+delivery and the ability to ensure minimal latency. In
+such systems, timely delivery is as critical as delivery
+assurance, particularly when clinical decision-making
+may depend on real-time data availability. Accord-
+ingly, the selected performance metrics were chosen
+to evaluate both aspects: packet loss reﬂects delivery
+success, while RTT and Time Factor capture delivery
+speed and latency. Furthermore, we consider a reli-
+able system to be one capable of maintaining perfor-
+mance under adverse or constrained operating
+conditions. To assess this, variable parameters were
+deliberately conﬁgured to overload the system in cer-
+tain scenarios, thereby enabling us to observe when
+reliability begins to degrade.
+IV. EXPERIMENTAL RESULTS
+Following the deﬁned design guidelines, a total of
+1944 unique test conﬁgurations were conducted,
+each repeated 10 times under the same circumstan-
+ces, resulting in a total of 19440 individual executions,
+and over 87 million transmitted MQTT messages.
+A. GENERAL RESULTS
+Overall, the results aligned well with the expected
+behavior of the MQTT protocol across its different
+Quality of Service (QoS) levels. This can be seen in
+Table I. As anticipated, higher QoS levels, due to their
+increased number of handshake operations, incurred
+in higher Round-Trip Times (RTT). The combined
+mean RTT increased from 3.38ms at QoS 0 to
+20.06ms at QoS 1, and further to 53.45ms at QoS 2.
+This progression was also evident in the corre-
+sponding standard deviations: 9.18 ms, 116.80 ms,
+and 236.48 ms, respectively. Packet loss consis-
+tently decreased with higher QoS levels, averaging
+0.77% at QoS 0, 0.36% at QoS 1, and 0.19% at
+QoS 2. This trend was even more pronounced in
+the standard deviation of packet loss: 4.89% at
+QoS 0, 2.18% at QoS 1, and 1.19% at QoS 2. As
+for the Time Factor, this metric showed some
+variation, although its impact was less pronounced
+compared to other performance indicators. QoS 0
+yielded a value of 1:02060:138, increasing slightly
+with QoS 1 to 1:03860:208, and more noticeably
+with QoS 2 to 1:10660:547. In a 50Hz scenario,
+this corresponds to an additional delay of approxi-
+mately 2.12 seconds.
+Regarding the Number of Clients, conﬁgurations
+with 1 and 2 publisher clients yielded near-optimal
+outcomes across all tests. The mean Time Factor for
+both was 1.001, with a standard deviation of 0.001,
+well within the margin of error. There were no packet
+losses and RTT values were low, with means of
+3:0566:19ms and 3:4466:22ms. This favorable
+behavior generally persisted with 5 clients. Except
+under the most demanding test conditions, no
+packet loss was observed, and the mean Time Fac-
+tor remained within acceptable bounds at 1.057
+(standard deviation: 0.263). For context, at a fre-
+quency of 50Hz, this corresponds to a publishing
+delay of approximately 1.14ms. The mean RTT was
+modestly higher for 5 clients at 12.81ms, with a
+standard deviation of 65.34ms, still within tolerable
+performance margins.
+Performance degradation became noticeable with
+10 publisher clients. The mean packet loss increased to
+1:7566:17%, and RTT rose signiﬁcantly to a mean of
+83:236292:93ms. The Time Factor also increased to
+a mean of 1.159 (equivalent to a 3.18ms publishing
+delay at 50Hz), with a 0.633 standard deviation.
+Although these averages remain within a manage-
+able range, subsequent analysis will reveal that
+RTT (ms)
+Mean 6 Std
+Packet Loss
+(%)
+Time Factor
+QoS 0
+3.384 6 9.181
+0.768 6 4.888
+1.020 6 0.138
+QoS 1
+20.060 6 116.800
+0.355 6 2.182
+1.038 6 0.208
+QoS 2
+53.451 6 236.480
+0.192 6 1.186
+1.106 6 0.547
+1 Client
+3.046 6 6.185
+0.000 6 0.000
+1.001 6 0.001
+2 Clients
+3.438 6 6.221
+0.000 6 0.000
+1.001 6 0.001
+5 Clients
+12.811 6 65.341
+0.000 6 0.000
+1.057 6 0.263
+10 Clients
+82.232 6 292.933
+1.754 6 6.167
+1.159 6 0.633
+Payload 1.25kB
+5.308 6 10.001
+0.002 6 0.038
+1.004 6 0.023
+Payload 12.5kB
+4.684 6 25.161
+0.038 6 0.346
+1.008 6 0.074
+Payload 125kB
+66.904 6 260.113
+1.276 6 5.391
+1.151 6 0.587
+Publishing Freq 5Hz
+3.982 6 4.089
+0.000 6 0.000
+1.000 6 0.000
+Publishing Freq 25Hz
+19.857 6 191.202
+0.348 6 2.838
+1.017 6 0.088
+Publishing Freq 50Hz
+53.056 6 243.796
+0.968 6 4.659
+1.147 6 0.587
+CPU 25%
+42.496 6 218.720
+0.897 6 4.792
+1.081 6 0.455
+CPU 63%
+18.889 6 129.032
+0.286 6 2.455
+1.034 6 0.301
+CPU 100%
+15.511 6 77.657
+0.132 6 0.964
+1.048 6 0.257
+Queue 10 msgs
+25.966 6 152.945
+0.534 6 3.569
+1.052 6 0.345
+Queue 100 msgs
+29.625 6 163.510
+0.506 6 3.447
+1.066 6 0.373
+Queue 1000 msgs
+21.305 6 144.184
+0.275 6 2.363
+1.046 6 0.326
+TCP Nagle On
+25.054 6 151.210
+0.399 6 3.032
+1.055 6 0.345
+TCP Nagle Off
+26.210 6 156.241
+0.478 6 3.310
+1.054 6 0.352
+TABLE I. Overview of the results (mean and standard deviation) for the different
+parameters analyzed.
+4 Wireshark, https://www.
+wireshark.org/
+IEEE Internet of Things Magazine  September 2026
+169
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.5 =====
+some test conﬁgurations experienced considerably
+higher values.
+Payload size had a substantial impact on system
+performance, particularly at the highest tested level.
+For small payloads (1.25kB), packet loss was nearly
+negligible with 0:00260:038% on average. Results
+for medium payloads (12.5kB) were similarly low,
+with a mean packet loss of 0:03860:346%. How-
+ever, when the payload size increased to 125kB,
+packet loss rose sharply to 1:27665:391%. This pat-
+tern was similar for the RTT and Time Factor. RTT
+increased from 5:31610:00ms for 1.25kB payloads
+to 66:916260:11ms for 125kB, while Time Factor
+followed a similar progression: 1:00460:023 for
+small payloads and 1:15160:587 for large payloads.
+Publishing frequency exhibited a related but dis-
+tinct trend. At 5Hz, no packet loss was observed. At
+25Hz, the mean packet loss was 0.35% (standard
+deviation: 2.83%), increasing to 0.97% (standard devi-
+ation: 4.66%) at 50Hz. RTT values increased accord-
+ingly: 3:9864:09ms at 5Hz, 19:866101:20ms at
+25Hz, and 53:066243:79ms at 50Hz. The Time
+Factor also showed increasing values with frequency,
+particularly between 25Hz and 50Hz. At 25Hz, the
+metric averaged 1.017 (0.088 standard deviation),
+while at 50Hz it rose to 1.147 (0.587 standard
+deviation).
+CPU performance had a relatively consistent
+impact across all metrics, with the most notable deg-
+radation observed between 63% and 25% capacity.
+RTT was most affected, increasing from 15:516
+77:66ms (100%) to 18:896129:03ms (63%) and
+42:496218:72ms (25%). Although mean values
+remained acceptable, the large standard deviations
+reﬂect processing delays and handshake inefﬁcien-
+cies under limited CPU resources. The Time Factor
+was least impacted, with results of 1:0560:26
+(100%), 1:0360:30 (63%), and 1:0860:46 (25%).
+Despite high variability, the marginal differences sug-
+gest limited inﬂuence from CPU availability. Packet
+Loss followed a similar trend to RTT, increasing from
+0:13%60:96% (100%) to 0:29%62:46% (63%)
+and 0:89%64:79% (25%). While notable, the impact
+was moderate compared to other parameters, indi-
+cating that CPU performance primarily affects overall
+system behavior rather than any single metric.
+Other parameters, such as message queue size
+and activation of the TCP Nagle algorithm, had mini-
+mal effect on performance metrics. In order to under-
+stand
+the
+impact
+of
+the
+system’s
+parameters
+considered, Fig. 2 presents a correlation heatmap
+between input parameters and output metrics. As illus-
+trated, the activation of the Nagle algorithm exhibited
+the lowest correlation with the performance metrics
+used, followed by queue size. For message queue
+sizes of 10, 100, and 1,000 messages, mean packet
+loss was 0.53% (standard deviation: 3.57%), 0.51%
+(3.45%), and 0.28% (2.36%), respectively. RTT results
+varied slightly, with means of 25:976152:95ms,
+29:636163:51ms, and 21:316144:18ms, and Time
+Factor values were similarly close: 1:05260:345,
+1:06660:373, and 1:04660:326, respectively.
+When the TCP Nagle algorithm was enabled,
+mean packet loss was 0.39% (3.03% standard devia-
+tion), compared to 0.48% (63:31%) when disabled.
+RTT averages were nearly identical at 25.05ms
+(6151:21ms) and 26.21ms (6156:24ms), respec-
+tively. Time Factor also showed minimal variation:
+1:05560:345 with the algorithm enabled and
+1:05460:352 when disabled.
+As anticipated, the QoS level has a negative corre-
+lation to packet loss, i.e., increasing the QoS level
+consistently reduces packet loss. It is also shown that
+time factor and RTT increases with higher QoS levels.
+Beyond this, the number of clients, payload size and
+publishing frequency emerge as the dominant factors
+inﬂuencing system performance, followed by broker
+CPU performance.
+For the complete set of detailed results for all
+tested conﬁgurations, the reader is referred to the
+supplementary tables available online5.
+B. PERFORMANCE UNDER LOAD
+Given the preceding analysis, this section focuses
+exclusively on the conﬁgurations involving 10 concur-
+rent publishers, as signiﬁcant performance degrada-
+tion was only observed under this condition. The
+impact of the TCP Nagle algorithm was excluded
+from further consideration, as its inﬂuence on the
+measured metrics was found to be negligible, as pre-
+viously observed.
+As seen before, payload size and publishing fre-
+quency exhibited comparable effects on system
+performance. Consequently, these variables were
+grouped into a new composite parameter, referred
+to as Bandwidth, to reﬂect their joint contribution.
+For the analysis of performance under increased sys-
+tem load, the bandwidths considered were: 12.5kB
+at 50Hz (50Mbps), 125kB at 25Hz (250Mbps),
+and 125kB at 50Hz (500Mbps) – see Fig. 3 – which
+represent the most demanding operating conditions
+evaluated with 10 publisher clients.
+Packet loss behavior generally followed expecta-
+tions, with QoS 0 exhibiting the highest loss rates in
+nearly all conﬁgurations. The most severe case was
+observed at a bandwidth of 500Mbps and the small-
+est queue size, reaching a peak average loss of
+22.71% across all broker CPU conﬁgurations. As
+anticipated, QoS 1 showed moderate improvement,
+while QoS 2 consistently achieved the lowest loss
+rates. A notable exception occurred at 50Mbps
+bandwidth, where QoS 1 resulted in an average
+FIG. 2. Correlation between parameters tested (inputs) and performance metrics
+(outputs). note that a negative correlation indicates that the input and output vary in
+opposite directions.
+5 MQTT Stress Testing
+Results: https://tinyurl.com/
+wow-isr
+170
+IEEE Internet of Things Magazine  September 2026
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.6 =====
+greater packet loss of 1.344% (equivalent to 134 lost
+messages out of 10,000) with a queue size of 100
+messages, when compared to QoS 0. Closer analysis
+revealed that packet loss occurred exclusively when
+the broker’s CPU was limited to 25% capacity,
+indicating that the degradation stemmed not from
+excessive bandwidth demand but from severely con-
+strained host system resources, which rendered the
+broker incapable of processing the incoming data
+under high-load conﬁgurations. This is further sup-
+ported by results obtained under different client
+counts and CPU performance levels. For instance, no
+packet loss was observed in experiments involving up
+to ﬁve clients. Conversely, increasing the host CPU
+performance from 25% to 100% in an extreme sce-
+nario (500Mbps bandwidth with 10 clients, queue
+size of 10, Nagle algorithm enabled, and QoS 0)
+reduced the average packet loss rate by two orders
+of magnitude, from 43.60% to 0.42%.
+These ﬁndings conﬁrm that the observed packet
+loss cannot be attributed to the MQTT implementa-
+tion of the Mosquitto broker itself, but rather to the
+stringent operating conditions imposed during test-
+ing, which would likely produce similar results in other
+brokers under comparable constraints.
+Round-trip time (RTT) increases proportionally
+with the QoS level. QoS 2 exhibited the highest
+latency, peaking at 1815ms. Although this value is
+considerably high, it is important to note that such
+behavior was only observed under deliberately
+demanding scenarios. Under the same conditions,
+QoS 0 maintained RTT values below 2ms, well within
+acceptable margins. These ﬁndings reﬂect the overall
+robustness of the MQTT protocol and the Mosquitto
+broker, even when executed on resource-constrained
+hardware.
+The Time Factor metric also highlights the efﬁ-
+ciency of both the MQTT protocol and the broker.
+Signiﬁcant deviations in end-to-end publishing delays
+were only observed under the most extreme condi-
+tions, either due to excessive bandwidth or severely
+limited CPU performance. As expected, QoS 2 pro-
+duced the highest Time Factor values, averaging
+5.35, i.e. the message transmission process took 107
+seconds instead of the theoretical 20 seconds for a
+bandwidth of 500Mbps and Broker CPU Perfor-
+mance at 25%. In contrast, other QoS remained
+within acceptable bounds, with the worst average
+value being 2.49 for QoS 1. These results again
+underscore that abnormal delays occurred only
+under stress test conditions that are unlikely to be
+encountered in typical MQTT applications.
+While the evaluated scenarios successfully stress
+the broker through bandwidth, typical IoT deploy-
+ments often involve a much larger number of low-
+bandwidth clients. In such cases, the broker CPU bot-
+tleneck may manifest differently, being driven primar-
+ily by client concurrency rather than aggregate
+throughput. This is consistent with our ﬁnding that cli-
+ent count correlates most strongly with RTT (Fig. 2).
+For comparable bandwidth (1.25kB payload, QoS 1,
+Nagle algorithm on, 100% CPU broker performance,
+1000 message queue size), 5 clients at 50 Hz yield an
+average RTT of 2.085s, whereas 10 clients at 25 Hz
+increase the RTT to 3.237s, indicating the growing
+cost of client management.
+Additionally, given the relevance of energy efﬁ-
+ciency in IoT systems, brief power consumption
+measurements were conducted to evaluate the
+operating range of the broker host system and to
+determine whether variations in test parameters
+(particularly CPU performance) signiﬁcantly affected
+energy usage. Measurements were taken under two
+extreme conﬁgurations: the lowest-consumption sce-
+nario, with the CPU limited to 25%, a single client
+publishing the smallest payload of 1.25kB at 5Hz;
+and the highest-consumption scenario, with ten cli-
+ents publishing the largest payload of 125kB at
+50Hz, with the CPU operating at full capacity
+(100%). Despite these contrasting conditions, the
+Intel Up Board exhibited a relatively narrow power
+range, with an average consumption of 3.560.5W
+on the lowest consumption scenario, and an average
+of 5.060.71W on the highest consumption scenario,
+reﬂecting its inherently low-power design and overall
+energy efﬁciency. Measured power consumption fell
+below the board’s typical value of 6.6W (and 13W
+under load), due to Eclipse Mosquitto’s limited single
+core utilization.
+Overall, the results demonstrate a high level of
+performance and resilience, particularly given the
+constrained hardware used for the broker and the
+FIG. 3. Analysis of packet loss, RTT and time factor
+under high load scenarios with 10 clients, and
+increased bandwidth.
+IEEE Internet of Things Magazine  September 2026
+171
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.7 =====
+intensity of the imposed bottlenecks. The MQTT pro-
+tocol, coupled with the Mosquitto broker, exhibits
+high efﬁciency and robustness when operating with
+limited computational resources. In practical deploy-
+ments, packet loss is more likely to result from wireless
+communication issues than from protocol inefﬁcien-
+cies or broker overload. Finally, the observed effects of
+QoS levels were consistent with the protocol’s design.
+Higher QoS values effectively reduced packet loss in
+congested conditions at the cost of increased round-
+trip time and end-to-end delay. However, this addi-
+tional latency is negligible in most real-world applica-
+tions, as such demanding conditions are uncommon.
+V. LESSONS LEARNED AND CONCLUSION
+This work presents an experimental evaluation of
+MQTT-based communication using a testbed com-
+posed of single-board computers. We assessed the
+practical implications of employing different QoS lev-
+els through a systematic performance analysis, focus-
+ing on key metrics such as round-trip time (RTT),
+packet loss, and the end-to-end publishing time fac-
+tor. The evaluation encompassed all possible conﬁgu-
+rations of seven relevant conﬁgurable parameters.
+Experimental results highlight the ﬂexibility and
+lightweight design of both the MQTT messaging pro-
+tocol and the Mosquitto broker, which together dem-
+onstrate
+robust
+adaptability
+under
+constrained
+computational resources and high data throughput.
+As expected, performance degrades consistently
+with the increase of system load, particularly under
+both bandwidth-intensive conditions and limited
+computational capabilities that extend well beyond
+typical IoT application scenarios. As an application-
+layer protocol, MQTT cannot ensure strict timeliness,
+as latency is inﬂuenced by factors such as broker load
+and network conditions. This dependency is evident
+in our ﬁndings, where consumer-grade hardware
+with severely artiﬁcially restricted processing capacity
+exhibited noticeable latency under stress. As such,
+the observed variations in performance metrics are
+primarily caused by limitations in the host system’s
+computational resources rather than by the speciﬁc
+MQTT implementation of the Eclipse Mosquitto
+broker.
+Results show that the reliability of transmissions is
+superior for QoS 2. For this reason, QoS 2 is an evi-
+dent choice for IoT applications with safety require-
+ments as it reduces the packet loss in transmissions.
+As a result, MQTT communications with QoS 2 are
+currently being employed for the transmission of criti-
+cal patient data, including vital signs such as ECG,
+Heart Rate, Body Temperature, in an e-Health con-
+text [2].
+Our results go in the opposite direction of the con-
+clusions drawn in [7], demonstrating that RTT indeed
+increases with the QoS level, as expected from exist-
+ing research literature. The use of an isolated Gigabit
+network ensures that measured RTT values are not
+inﬂuenced by external network effects. The average
+end-to-end latency between devices was 0.233 ms
+(233 ms), which is negligible compared to the
+observed RTT values.
+QoS 0 and QoS 1 are very popular for lightweight
+messaging, providing quick transmission with small
+footprint, especially in situations where the connection
+is mostly considered stable, and when it is acceptable
+for data to be lost occasionally or delivered multiple
+times. Our study shows that for small message rates
+and lower payload sizes, which is the case in the vast
+majority of resource-constrained communications for
+which MQTT is designed for, it is generally more
+appropriate to use QoS 0 and QoS 1.
+Energy efﬁciency is a key aspect of IoT systems. In
+a brief power consumption analysis, the broker host
+hardware drew between 3.5W and 5W under edge-
+case scenarios, a range consistent with typical IoT
+energy proﬁles.
+In conclusion, this study offers a novel examina-
+tion of how message delivery performance in MQTT
+systems is impacted by system parameters and broker
+hardware capabilities. By testing up to 10 MQTT pub-
+lisher clients on real-world hardware, we provide
+insights relevant to the deployment of MQTT-driven
+IoT systems, particularly from a practical, practitioner-
+focused perspective.
+REFERENCES
+[1] C.-S. Yeh, S.-L. Chen, and I.-C. Li, “Implementation of MQTT
+protocol based network architecture for smart factory,” Proc.
+Inst. Mech. Eng., B, J. Eng. Manuf., vol. 235, no. 13, pp.
+2132–2142, 2021.
+[2] D. Portugal, J. N. Faria, M. Domingues, and L. Gaspar,
+“Integration of a smart bed infrastructure with hospital infor-
+mation systems using fast health interoperability resources,”
+in Proc. IEEE 20th Consum. Commun. Netw. Conf. (CCNC),
+Piscataway, NJ, USA: IEEE Press, 2023, pp. 1–6.
+[3] M. Mukhandi, D. Portugal, S. Pereira, and M. S. Couceiro, “A
+novel solution for securing robot communications based on
+the MQTT protocol and ROS,” in Proc. IEEE/SICE Int. Symp.
+Syst. Integr. (SII), 2019, pp. 608–613.
+[4] A. S. Clark and A. Nipper, “Message Queue Telemetry Trans-
+port (MQTT),” 1999. [Online]. Available: http://mqtt.org
+[5] B. Mishra and A. Kertesz, “The use of MQTT in M2M and IoT
+systems: A survey,” IEEE Access, vol. 8, pp. 201071–201086,
+2020.
+[6] J. Toldinas, B. Lozinskis, E. Baranauskas, and A. Dobrovolskis,
+“MQTT quality of service versus energy consumption,” in
+Proc. 23rd Int. Conf. Electron., Piscataway, NJ, USA: IEEE
+Press, 2019, pp. 1–4.
+[7] F. Chen, Y. Huang, J. Zhu, S. Gao, Z. Sui, and M. Duan,
+“Measurement and analysis of network data based on MQTT
+protocol,” in Proc. 20th Int. Conf. Commun. Technol. (ICCT),
+Piscataway, NJ, USA: IEEE Press, 2020, pp. 92–96.
+[8] S. Mijovic, E. Shehu, and C. Buratti, “Comparing application
+layer protocols for the Internet of Things via experimentation,”
+in Proc. IEEE 2nd Int. Forum Res. Technol. Soc. Ind. Leveraging
+Better Tomorrow (RTSI), Piscataway, NJ, USA: IEEE Press, 2016,
+pp. 1–5.
+[9] P. Kumar Rath, N. Mahapatro, S. Sahoo, and S. Chinara,
+“Design and performance analysis of an IoT based health
+monitoring system for hospital management,” in Proc. Int.
+Conf. Comput., Commun., Intell. Syst. (ICCCIS), Piscataway,
+NJ, USA: IEEE Press, 2021, pp. 721–726.
+[10] D. Thangavel, X. Ma, A. Valera, H.-X. Tan, and C. K.-Y. Tan,
+“Performance evaluation of MQTT and CoAP via a common
+middleware,” in Proc. IEEE 9th Int. Conf. Intell. Sens., Sensor
+Netw. Inf. Process. (ISSNIP), Piscataway, NJ, USA: IEEE Press,
+2014, pp. 1–6.
+[11] V. Seoane, C. Garcia-Rubio, F. Almenares, and C. Campo,
+“Performance evaluation of CoAP and MQTT with security
+support for IoT environments,” Comput. Netw., vol. 197,
+2021, Art. no. 108338.
+[12] B. Mishra, B. Mishra, and A. Kertesz, “Stress-testing MQTT
+brokers: A comparative analysis of performance measurements,”
+Energies, vol. 14, no. 18, pp. 1–20, 2021, Art. no. 5817.
+[13] S. Pawar, D. B. Jadhav, M. Lokhande, P. Raskar, and M. Patil,
+“Evaluation of quality of service parameters for MQTT com-
+munication in IoT application by using deep neural network,”
+Int. J. Inf. Technol., vol. 16, no. 2, pp. 1123–1136, 2024.
+[14] Gaston, C Hillar, MQTT Essentials-A Lightweight IoT Protocol.
+Birmingham, U.K.: Packt Publishing, 2017.
+172
+IEEE Internet of Things Magazine  September 2026
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:55:09 UTC from IEEE Xplore.  Restrictions apply. 

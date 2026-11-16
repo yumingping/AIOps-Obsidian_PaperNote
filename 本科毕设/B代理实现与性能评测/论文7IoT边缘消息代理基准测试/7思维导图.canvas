@@ -1,0 +1,421 @@
+{
+ "nodes": [
+  {
+   "id": "519dbc332b7b1aa4",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 56,
+   "text": "MQ 生态跨度太大，缺可比条件的横评"
+  },
+  {
+   "id": "488a6377907ff10a",
+   "type": "text",
+   "x": 760,
+   "y": 80,
+   "width": 420,
+   "height": 56,
+   "text": "已有评测忽视 CPU/内存与资源约束"
+  },
+  {
+   "id": "88f4d3e1b0c7b411",
+   "type": "text",
+   "x": 760,
+   "y": 204,
+   "width": 420,
+   "height": 80,
+   "text": "Rust 版 mq-bench 统一框架横评 8 个 broker"
+  },
+  {
+   "id": "c99bdada4b3c4e30",
+   "type": "text",
+   "x": 760,
+   "y": 308,
+   "width": 420,
+   "height": 80,
+   "text": "1–4 vCPU 三档资源 × 并发 500→10000 对"
+  },
+  {
+   "id": "cd0e17be558162df",
+   "type": "text",
+   "x": 760,
+   "y": 456,
+   "width": 420,
+   "height": 56,
+   "text": "消息头内嵌 64-bit 纳秒时间戳"
+  },
+  {
+   "id": "8749e538b917ff7b",
+   "type": "text",
+   "x": 760,
+   "y": 536,
+   "width": 420,
+   "height": 56,
+   "text": "open-loop 令牌桶限速，暴露真实饱和点"
+  },
+  {
+   "id": "03fb60f141cc319e",
+   "type": "text",
+   "x": 760,
+   "y": 616,
+   "width": 420,
+   "height": 80,
+   "text": "Toxiproxy 注入 TCP RST（MTTF 30s / MTTR 5s）"
+  },
+  {
+   "id": "17a2d92456a59b7b",
+   "type": "text",
+   "x": 760,
+   "y": 720,
+   "width": 420,
+   "height": 56,
+   "text": "只报 p50/p95，吞吐只统计稳定期"
+  },
+  {
+   "id": "6b0aa21e59e19355",
+   "type": "text",
+   "x": 760,
+   "y": 844,
+   "width": 420,
+   "height": 80,
+   "text": "多线程 native（NATS/Zenoh）90K msg/s"
+  },
+  {
+   "id": "c46188c6e8ee67a1",
+   "type": "text",
+   "x": 760,
+   "y": 948,
+   "width": 420,
+   "height": 56,
+   "text": "单线程 Mosquitto 饱和 45K msg/s"
+  },
+  {
+   "id": "bd4e7f5eb8f79bf8",
+   "type": "text",
+   "x": 760,
+   "y": 1028,
+   "width": 420,
+   "height": 80,
+   "text": "QoS0 丢 6.3–6.6% vs QoS1/2 全部 0%"
+  },
+  {
+   "id": "e38e94e0b766bdfa",
+   "type": "text",
+   "x": 760,
+   "y": 1132,
+   "width": 420,
+   "height": 56,
+   "text": "JVM 系内存高 10–50 倍"
+  },
+  {
+   "id": "16b8938cbe5c0762",
+   "type": "text",
+   "x": 760,
+   "y": 1256,
+   "width": 420,
+   "height": 56,
+   "text": "任务6 指标口径的权威模板"
+  },
+  {
+   "id": "da9c0db2518b4a4b",
+   "type": "text",
+   "x": 760,
+   "y": 1336,
+   "width": 420,
+   "height": 56,
+   "text": "三档边缘硬件画像（网关/工控机/雾节点）"
+  },
+  {
+   "id": "75c42aeb0bc07dda",
+   "type": "text",
+   "x": 760,
+   "y": 1416,
+   "width": 420,
+   "height": 56,
+   "text": "按负载 × 资源选 broker 的部署指南"
+  },
+  {
+   "id": "6320240691c4b8b7",
+   "type": "text",
+   "x": 760,
+   "y": 1540,
+   "width": 420,
+   "height": 56,
+   "text": "树莓派 ≈ 1 vCPU/2GB 档做资源画像"
+  },
+  {
+   "id": "b3cdabc525a90e45",
+   "type": "text",
+   "x": 760,
+   "y": 1620,
+   "width": 420,
+   "height": 80,
+   "text": "docker stats 采 CPU/内存（1s 采样）"
+  },
+  {
+   "id": "df6541f486119f00",
+   "type": "text",
+   "x": 760,
+   "y": 1724,
+   "width": 420,
+   "height": 80,
+   "text": "C++：ACK 异步化，防 QoS2 串行阻塞（3.6×）"
+  },
+  {
+   "id": "199362fe3fdfb4ca",
+   "type": "text",
+   "x": 20,
+   "y": 819,
+   "width": 310,
+   "height": 190,
+   "text": "# IoT边缘消息代理基准测试\nPaul et al.\narXiv 2026\nmq-bench：8 broker 横评"
+  },
+  {
+   "id": "a5f6040052b12ce2",
+   "type": "text",
+   "x": 380,
+   "y": 26,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "f0c01006c88d8e3e",
+   "type": "text",
+   "x": 380,
+   "y": 254,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "0bb77974547261c1",
+   "type": "text",
+   "x": 380,
+   "y": 574,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "41699f345982eb04",
+   "type": "text",
+   "x": 380,
+   "y": 974,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "2c08189a7ac04067",
+   "type": "text",
+   "x": 380,
+   "y": 1322,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "75b5e8bf6aabf69a",
+   "type": "text",
+   "x": 380,
+   "y": 1630,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "a4951eb3c291de7d",
+   "type": "file",
+   "x": 20,
+   "y": 1868,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/B代理实现与性能评测/论文7IoT边缘消息代理基准测试/7IoT边缘消息代理基准测试.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "9de1052535af6719",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "right",
+   "toNode": "a5f6040052b12ce2",
+   "toSide": "left"
+  },
+  {
+   "id": "aa4c09b2f5b3bcbb",
+   "fromNode": "a5f6040052b12ce2",
+   "fromSide": "right",
+   "toNode": "519dbc332b7b1aa4",
+   "toSide": "left"
+  },
+  {
+   "id": "df19b48d049f0407",
+   "fromNode": "a5f6040052b12ce2",
+   "fromSide": "right",
+   "toNode": "488a6377907ff10a",
+   "toSide": "left"
+  },
+  {
+   "id": "57786f820214aff2",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "right",
+   "toNode": "f0c01006c88d8e3e",
+   "toSide": "left"
+  },
+  {
+   "id": "ddd95348c77dd4b5",
+   "fromNode": "f0c01006c88d8e3e",
+   "fromSide": "right",
+   "toNode": "88f4d3e1b0c7b411",
+   "toSide": "left"
+  },
+  {
+   "id": "57eb266ad0e95133",
+   "fromNode": "f0c01006c88d8e3e",
+   "fromSide": "right",
+   "toNode": "c99bdada4b3c4e30",
+   "toSide": "left"
+  },
+  {
+   "id": "4d2d7bd525bea005",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "right",
+   "toNode": "0bb77974547261c1",
+   "toSide": "left"
+  },
+  {
+   "id": "677772de3d2b36ae",
+   "fromNode": "0bb77974547261c1",
+   "fromSide": "right",
+   "toNode": "cd0e17be558162df",
+   "toSide": "left"
+  },
+  {
+   "id": "45f0517c15074bd2",
+   "fromNode": "0bb77974547261c1",
+   "fromSide": "right",
+   "toNode": "8749e538b917ff7b",
+   "toSide": "left"
+  },
+  {
+   "id": "49e6874fa020a683",
+   "fromNode": "0bb77974547261c1",
+   "fromSide": "right",
+   "toNode": "03fb60f141cc319e",
+   "toSide": "left"
+  },
+  {
+   "id": "4b57da1101e97b68",
+   "fromNode": "0bb77974547261c1",
+   "fromSide": "right",
+   "toNode": "17a2d92456a59b7b",
+   "toSide": "left"
+  },
+  {
+   "id": "1bb57a5506cde754",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "right",
+   "toNode": "41699f345982eb04",
+   "toSide": "left"
+  },
+  {
+   "id": "8ad2f983db156924",
+   "fromNode": "41699f345982eb04",
+   "fromSide": "right",
+   "toNode": "6b0aa21e59e19355",
+   "toSide": "left"
+  },
+  {
+   "id": "fb694ba0d920d293",
+   "fromNode": "41699f345982eb04",
+   "fromSide": "right",
+   "toNode": "c46188c6e8ee67a1",
+   "toSide": "left"
+  },
+  {
+   "id": "57e69e509a5df901",
+   "fromNode": "41699f345982eb04",
+   "fromSide": "right",
+   "toNode": "bd4e7f5eb8f79bf8",
+   "toSide": "left"
+  },
+  {
+   "id": "a3bc21b3e23edddd",
+   "fromNode": "41699f345982eb04",
+   "fromSide": "right",
+   "toNode": "e38e94e0b766bdfa",
+   "toSide": "left"
+  },
+  {
+   "id": "fe666cdef87a6649",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "right",
+   "toNode": "2c08189a7ac04067",
+   "toSide": "left"
+  },
+  {
+   "id": "6b375a23fdb30332",
+   "fromNode": "2c08189a7ac04067",
+   "fromSide": "right",
+   "toNode": "16b8938cbe5c0762",
+   "toSide": "left"
+  },
+  {
+   "id": "d0cdee05873f987a",
+   "fromNode": "2c08189a7ac04067",
+   "fromSide": "right",
+   "toNode": "da9c0db2518b4a4b",
+   "toSide": "left"
+  },
+  {
+   "id": "2929e6977cf0241e",
+   "fromNode": "2c08189a7ac04067",
+   "fromSide": "right",
+   "toNode": "75c42aeb0bc07dda",
+   "toSide": "left"
+  },
+  {
+   "id": "f777c90714aa9640",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "right",
+   "toNode": "75b5e8bf6aabf69a",
+   "toSide": "left"
+  },
+  {
+   "id": "89de29c6a2f56450",
+   "fromNode": "75b5e8bf6aabf69a",
+   "fromSide": "right",
+   "toNode": "6320240691c4b8b7",
+   "toSide": "left"
+  },
+  {
+   "id": "afe53cc0aefa83e1",
+   "fromNode": "75b5e8bf6aabf69a",
+   "fromSide": "right",
+   "toNode": "b3cdabc525a90e45",
+   "toSide": "left"
+  },
+  {
+   "id": "d9ab3597417bc7ba",
+   "fromNode": "75b5e8bf6aabf69a",
+   "fromSide": "right",
+   "toNode": "df6541f486119f00",
+   "toSide": "left"
+  },
+  {
+   "id": "bd671e80b7c04c4c",
+   "fromNode": "199362fe3fdfb4ca",
+   "fromSide": "bottom",
+   "toNode": "a4951eb3c291de7d",
+   "toSide": "top"
+  }
+ ]
+}

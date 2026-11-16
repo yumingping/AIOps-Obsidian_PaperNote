@@ -1,0 +1,1132 @@
+
+
+===== p.1 =====
+A Survey and Comparison of Publish/Subscribe Protocols for the
+Industrial Internet of Things (IIoT)
+Michael Nast
+michael.nast@uni-rostock.de
+University of Rostock
+Rostock, Germany
+Hannes Raddatz
+hannes.raddatz@uni-rostock.de
+University of Rostock
+Rostock, Germany
+Benjamin Rother
+benjamin.rother@uni-rostock.de
+University of Rostock
+Rostock, Germany
+Frank Golatowski
+frank.golatowski@uni-rostock.de
+University of Rostock
+Rostock, Germany
+Dirk Timmermann
+dirk.timmermann@uni-rostock.de
+University of Rostock
+Rostock, Germany
+ABSTRACT
+Publish/subscribe protocols have proven to be a very flexible, effi-
+cient, and scalable approach for machine-to-machine (M2M) com-
+munication in the Internet of Things (IoT). Due to the convergence
+of IoT and industry, and the evolving Industrial Internet of Things
+(IIoT), these protocols face new challenges and increasing commu-
+nication requirements. However, it is not known to what extent the
+protocols can fulfill these requirements. In this paper, we examined
+the most commonly used IoT protocols that are either based on pub-
+lish/subscribe or define the use of it through standard extensions.
+Based on a literature review, we derived concrete requirements
+for the use in the industrial domain, compared the characteristics
+of the protocols, and evaluated them with regard to these require-
+ments. Our results show that none of the examined protocols can
+completely fulfill all the requirements and therefore further modifi-
+cations are necessary.
+CCS CONCEPTS
+• Networks →Application layer protocols; Security protocols;
+Network reliability; • Computer systems organization →Client-
+server architectures; • Software and its engineering →Publish-
+subscribe / event-based architectures; Embedded software.
+KEYWORDS
+Industrial Internet of Things (IoT), Machine-to-Machine (M2M)
+communication, Publish/Subscribe
+ACM Reference Format:
+Michael Nast, Hannes Raddatz, Benjamin Rother, Frank Golatowski, and Dirk
+Timmermann. 2022. A Survey and Comparison of Publish/Subscribe Pro-
+tocols for the Industrial Internet of Things (IIoT). In Proceedings of the
+12th International Conference on the Internet of Things (IoT ’22), Novem-
+ber 7–10, 2022, Delft, Netherlands. ACM, New York, NY, USA, 8 pages.
+https://doi.org/10.1145/3567445.3571107
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than ACM
+must be honored. Abstracting with credit is permitted. To copy otherwise, or republish,
+to post on servers or to redistribute to lists, requires prior specific permission and/or a
+fee. Request permissions from permissions@acm.org.
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+© 2022 Association for Computing Machinery.
+ACM ISBN 978-1-4503-9665-3/22/11...$15.00
+https://doi.org/10.1145/3567445.3571107
+1
+INTRODUCTION
+The selection of suitable machine-to-machine (M2M) communica-
+tion protocols is a crucial task in the design of Internet of Things
+(IoT) applications. In contrast to the web, which mainly uses HTTP,
+there are hundreds of different protocols in the IoT, each of which
+fulfills different requirements [32]. The growing number of de-
+vices on the Internet and the associated increase in the degree
+of networking has resulted in a need for flexible, efficient, and
+scalable solutions. Here, request/response protocols quickly reach
+their limits, since they usually work synchronously and not event-
+based. Publish/subscribe has proven to be a suitable alternative
+for M2M communication. To overcome the problems of request/
+response communication, publish/subscribe relies on asynchronous
+and event-based communication, in which communication entities
+are strictly decoupled from each other [10]. By eliminating direct
+point-to-point communication, it enables flexible one-to-many (1:n),
+many-to-one (m:1), and many-to-many (m:n) communication. Pro-
+tocols such as MQTT and AMQP, which are based on publish/
+subscribe, are among the most widely used protocols in the IoT. Due
+to the evolution of Industry 4.0 and Industrial Internet of Things
+(IIoT), these protocols are also increasingly being used in industrial
+environments. However, this shift from the consumer-oriented IoT
+to the industrial sector also involves increasing requirements. In
+addition to the requirements already known from the IoT, such
+as energy efficiency, security, scalability, and interoperability, IIoT
+systems must also meet higher communication requirements, such
+as real-time capability or high reliability, depending on the critical-
+ity of the underlying processes [52]. Protocols that have already
+proven their applicability in the IoT do not necessarily have to meet
+the requirements in the IIoT. There are protocols, such as OPC UA
+and DDS, that have already been developed with a focus on the use
+in industrial applications. However, it is not clear to what extent
+they can fulfill the requirements.
+There are a large number of studies investigating IoT communi-
+cation protocols. Many of them are limited to a specific application
+area, such as smart grid [55], robotics [28] or wireless communi-
+cation [5], and evaluate a certain set of protocols accordingly. We
+notice that in most of these works the specific requirements for
+the industrial sector are not or only partially taken into account. In
+[32], the protocols MQTT, CoAP, AMQP, and HTTP are evaluated
+and compared with regard to various requirements. However, some
+important aspects such as scalability and real-time capability are
+193
+
+
+===== p.2 =====
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+Nast et al.
+not considered. In addition, only a small number of protocols is
+examined. The authors in [8] analyze the real-time capability of
+various technologies at all layers of communication. Again, only a
+few application layer protocols are examined, and only real-time
+capability and scalability are addressed. The aim of this survey is to
+identify the additional requirements in the industrial domain and
+to perform an evaluation of IoT protocols which are either based on
+publish/subscribe or can make use of it through extensions. Based
+on that, we attempt to find limitations in the specifications and to
+derive open research issues to pave the way for protocols that are
+suitable for the IIoT in the future. We contribute with a detailed
+literature research and evaluation of IoT protocols. Our goal is to
+cover a wide range of protocols with the restriction that we only
+investigate protocols that implement the publish/subscribe pattern.
+The remainder of this paper is structured as follows: Section 2
+deals with the definition of the requirements. In Section 3, follows
+a description of state-of-the-art technologies used at the individual
+layers of the IIoT protocol stack. Section 4 provides a more detailed
+view of publish/subscribe protocols and an evaluation with regard
+to the requirements. Finally, Section 5 concludes with a summary
+of our findings.
+2
+REQUIREMENTS
+Since IIoT is a subset of IoT, there are certain overlapping require-
+ments [52]. Both have in common that the communication needs
+to be interoperable, secure, and scalable in terms of the number
+of devices. IoT devices are often battery-powered and wirelessly
+connected and thus the focus is on energy and resource efficiency.
+The data volume is usually low to medium [52]. Accordingly, the
+performance and reliability requirements are lower compared to
+the IIoT. Typically, small amounts of data are transmitted with a
+low update frequency and packet loss is acceptable. In contrast, in
+the IIoT, data volume and data criticality, and consequently also
+performance requirements, are high. Industrial applications need
+to be highly scalable and often require high reliability, real-time
+capability, and low latency. On the basis of the findings in [1], [13],
+[31], [52], and [54], as well as our own prioritization, we derive
+the five key requirements interoperability (Req-1), security (Req-
+2), scalability (Req-3), real-time capability (Req-4), and reliability
+(Req-5), which are briefly discussed in the following:
+• Interoperability (Req-1) is defined as the ability of two or
+more systems or components to exchange information and
+to use the information that has been exchanged [18]. Here
+we refer to interoperability between applications based on
+common standards. A further distinction is made between
+technical, syntactical, and semantic interoperability [56]. For
+the mere ability to exchange data, it is necessary that the
+communication protocols are standardized (technical inter-
+operability) and that a uniform data format is used (syntacti-
+cal interoperability). In addition, the correct interpretation of
+the data is important (semantic interoperability), which must
+be ensured on the basis of common data and information
+models. To completely fulfill Req-1, each of the three criteria
+must be ensured.
+• Security (Req-2) needs to be ensured across all layers of
+the communication. Therefore, a holistic view of the entire
+communication is necessary. However, since the focus is
+only on the application layer and transport layer protocols,
+only a part of this can be considered here. As a minimum
+requirement for the transport layer, the protocol must specify
+the use of Transport Layer Security (TLS) in the case of TCP,
+or Datagram Transport Layer Security (DTLS) in the case
+of UDP to ensure data confidentiality and data integrity.
+Otherwise, additional mechanisms must be defined at the
+application layer.
+• Scalability (Req-3) is characterized as a system’s ability to
+manage the increasing number of devices and their informa-
+tion [54]. A protocol must scale for hundreds or thousands of
+devices (network scalability) and for larger amounts of data
+in the range of several megabytes (data volume scalability)
+[8] to fulfill Req-3.
+• Real-time capability (Req-4) needs to be ensured for mis-
+sion- and safety-critical applications to guarantee timely data
+acquisition and control [52]. This requires a deterministic
+transmission of messages within an exactly defined period
+of time. Req-4 is fulfilled if this is ensured for both the ap-
+plication layer protocol and the transport layer protocol it
+is based on. As with security, it is important that all layers
+are considered. Therefore, it is assumed that the underlying
+layers are real-time capable as well.
+• Reliability (Req-5) of a communication protocol means that
+the successful transmission of packets, their correct order,
+and the elimination of duplicates are ensured. Therefore, it
+is necessary that a reliable transport protocol, such as TCP,
+is used. Otherwise, additional mechanisms must be imple-
+mented on the application layer. The highest reliability is
+achieved by a combination of both transport and application
+layer reliability, which is necessary in order to completely
+fulfill Req-5.
+3
+THE IIOT PROTOCOL STACK
+Figure 1 shows a non-exhaustive IIoT protocol stack. Publish/sub-
+scribe protocols, such as MQTT or AMQP, are implemented on the
+application layer on top of a Transmission Control Protocol (TCP)
+or User Datagram Protocol (UDP) transport. Security is usually
+implemented on the transport layer as well by means of a Trans-
+port Layer Security (TLS) or a Datagram Transport Layer Security
+(DTLS) binding, respectively. Alternatively, Quick UDP Internet
+Connections (QUIC) can be used on the transport layer, which itself
+is based on UDP and complements it with additional features. On
+the network layer, the Internet Protocol (IP), or more precisely IPv4
+or IPv6, is used. Finally, the network interface can be implemented
+by means of IP-capable technologies, such as Ethernet (IEEE 802.3),
+Wi-Fi (802.11) or mobile communication, such as 5G. This section
+provides a more detailed view of the individual layers.
+3.1
+Application Layer Protocols
+Most application layer protocols in the IoT and IIoT domain are ei-
+ther based on the request/response or the publish/subscribe pattern.
+In this work, we focus on the publish/subscribe protocols. Pure re-
+quest/response protocols, such as HTTP, which is one of the most
+widely used protocols in the IoT, are therefore not investigated
+194
+
+
+===== p.3 =====
+A Survey and Comparison of Publish/Subscribe Protocols for the Industrial Internet of Things (IIoT)
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+MQTT, CoAP, AMQP, XMPP,
+MQTT-SN, OPC UA, DDS, DPWS
+Application Layer
+TCP (TLS), UDP (DTLS), QUIC
+Transport Layer
+IPv4, IPv6
+Network Layer
+IEEE 802.3, IEEE 802.11, 5G
+Network Interface
+Figure 1: Non-exhaustive IIoT protocol stack reflecting the
+surveyed publish/subscribe protocols and the underlying
+standards.
+further. A prerequisite for selection for this survey is therefore
+that the protocol supports publish/subscribe at least through an
+extension, which is the case for CoAP and OPC UA, for example.
+The publish/subscribe paradigm enables event-based and asynchro-
+nous communication between event producing publisher and event
+consuming subscriber clients. It achieves a strong decoupling of
+these clients in time, space, and synchronization. This means that
+they do not need to be available at the same time, they do not
+need to know each other (address, port), and they communicate
+asynchronously in a non-blocking manner [10]. This results in a
+very flexible and scalable approach. However, we do not want to
+imply that asynchronous communication and publish/subscribe are
+always the most appropriate choice. A very good counterexample
+for this is HTTP. The blocking behavior when loading a resource
+does not decrease the efficiency and is also easier to implement.
+Moreover, the communication can be triggered by the requesting
+client, which is not possible for subscribing clients.
+From an architectural point of view, a distinction can be made
+between centralized and decentralized publish/subscribe systems
+[10]. The centralized approach requires a central instance that dis-
+tributes the messages between publisher and subscriber. In practice,
+the central instance is usually a broker, which is why it is also often
+referred to as broker-based approach. Here, the data is distributed
+indirectly between publisher and subscriber on behalf of the broker
+while the broker maintains a direct connection to publisher and
+subscriber. The broker therefore represents a single point of failure
+in this approach. In the decentralized or broker-less approach, a
+central instance and thus also a single point of failure does not exist,
+which is why it is more efficient and scalable. The message distribu-
+tion in the decentralized approach is usually realized through (IP)
+multicasts [10]. A detailed description and evaluation of publish/
+subscribe protocols is given in Section 4.
+3.2
+Network and Transport Layer Protocols
+Since IoT protocols are based on Internet technologies, either IPv4
+or IPv6 is used at the network layer. On the transport layer there
+are typically the two options of UDP [42] and TCP [43]. In recent
+years, the UDP-based protocol QUIC [19] has also become estab-
+lished. UDP is a very simple packet-oriented protocol which does
+not provide any reliability features. In contrast, TCP is a reliable
+connection- and stream-oriented protocol. The use of sequence
+numbers, acknowledgements, and checksums guarantees the trans-
+mission, order, and deduplication of messages. In addition, TCP
+defines mechanisms for flow and congestion control. QUIC aims
+to combine the advantages of UDP, being based on it, and TCP to
+achieve a lightweight yet reliable communication. It provides mech-
+anisms for flow control, low-latency connection setup, network
+path migration, security, loss detection, and congestion control
+[19]. Although it is used successfully in HTTP/3 [2], it plays rather
+a minor role for the IIoT protocols surveyed in this paper. In sum-
+mary, protocols based on TCP or QUIC fulfill the requirement of
+a reliable transport layer (Req-5), whereas UDP-based protocols
+do not. From [8] we can further derive that TCP and QUIC are
+not real-time capable due to unpredictable behavior of flow and
+congestion control mechanisms. To put this statement in context,
+we would like to note that we are referring here only to the un-
+predictability of the mechanisms as described in the standards. We
+do not categorically disclaim real-time capability through further
+modification or replacement of these mechanisms. UDP, in contrast,
+is potentially real-time capable if it is supplemented with real-time
+capable technologies and mechanisms on the underlying layers and
+on the application layer.
+3.3
+Network Interface
+Since data link and physical layer are very closely related and are
+specified together in most standards, we group them together as
+network interface. In order to meet the high communication re-
+quirements, wired communication technologies are often preferred
+over wireless technologies. In the past, proprietary bus systems and
+Industrial Ethernet (IE) technologies were used almost exclusively
+for this purpose. However, the trend is increasingly towards open
+standards built on top of standard Ethernet, such as Time Sensitive
+Networking (TSN) and Software Defined Networking (SDN). In
+addition, the concepts of these technologies are also finding their
+way into the new generation of mobile communications (5G) and
+Wi-Fi (IEEE 802.11ax). However, as already pointed out before, the
+consideration of network technologies is beyond the focus of this
+work. Therefore, a real-time capable technology is assumed when
+evaluating the real-time capability of transport and application
+layer protocols.
+4
+EVALUATION
+To identify relevant protocols and their characteristics, we con-
+ducted a literature research for both IoT and IIoT protocols that are
+widely used and implement the publish/subscribe paradigm in some
+way, either broker-based or broker-less. This section deals with the
+description and evaluation of the protocols. Table 1 provides an
+overview of the coverage and occurrence of the protocols in the
+literature surveyed to gather the general characteristics. It is clearly
+recognizable that MQTT and CoAP are the protocols from the IoT
+domain that have been studied most frequently in the literature.
+Among the protocols from the industrial sector, it is noticeable
+that DDS occurs much more frequently than OPC UA. It should
+be mentioned, however, that the table reflects only the literature
+reviews and comparison of numerous protocols and not the actual
+amount of works on the individual protocols. The results of our
+evaluation are summarized in Table 2 at the end of this section.
+195
+
+
+===== p.4 =====
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+Nast et al.
+Table 1: Coverage and overall occurrence (Σ) of the protocols in the surveyed literature
+Source
+MQTT
+CoAP
+AMQP
+XMPP
+MQTT-SN
+DDS
+OPC UA
+DPWS
+[1]
+✓
+✓
+✓
+✓
+✗
+✓
+✗
+✗
+[5]
+✓
+✓
+✗
+✗
+✗
+✓
+✗
+✗
+[6]
+✓
+✓
+✓
+✓
+✓
+✓
+✗
+✗
+[8]
+✓
+✓
+✗
+✗
+✓
+✗
+✗
+✗
+[9]
+✓
+✓
+✓
+✓
+✓
+✓
+✗
+✗
+[12]
+✓
+✓
+✗
+✗
+✗
+✗
+✗
+✓
+[13]
+✓
+✓
+✗
+✗
+✗
+✓
+✗
+✗
+[28]
+✓
+✗
+✗
+✗
+✗
+✓
+✓
+✗
+[32]
+✓
+✓
+✓
+✗
+✗
+✗
+✗
+✗
+[44]
+✓
+✗
+✗
+✗
+✗
+✓
+✓
+✗
+[51]
+✓
+✓
+✓
+✗
+✗
+✓
+✓
+✗
+[54]
+✓
+✓
+✗
+✓
+✗
+✓
+✗
+✗
+[55]
+✓
+✓
+✓
+✓
+✗
+✓
+✓
+✓
+[59]
+✓
+✓
+✓
+✓
+✓
+✓
+✓
+✗
+Σ
+14
+12
+7
+6
+4
+11
+5
+2
+4.1
+MQTT
+The Message Queuing Telemetry Transport (MQTT) is a lightweight
+machine-to-machine (M2M) protocol, which implements broker-
+based publish/subscribe. It is standardized by the Organization for
+the Advancement of Structured Information Standards (OASIS)
+and available as versions 3.11 [33] and 5.0 [34]. MQTT is a data-
+agnostic protocol and therefore does not define data format or data
+modelling capabilities. Due to this characteristic it is possible to
+define both according to the specific use-case. Therefore, Req-1 is
+only partially fulfilled. MQTT builds on TCP at transport layer,
+enabling the use of TLS to secure the communication. In addition,
+the standard defines mechanisms for user and device authentication,
+authorization of server resource access as well as integrity and
+privacy of control packets and contained data [33]. Overall, MQTT
+fulfills Req-2. Studies with various broker implementations show
+that MQTT scales very well in terms of the number of devices
+[27] and can handle up to thousands of concurrent devices. For the
+HiveMQ1 broker and with the help of clustering methods, scalability
+could be shown for millions of devices [16]. The payload length
+of an MQTT packet is limited to 256 MB. Thus, MQTT fulfills
+Req-3 both in terms of devices and in terms of data volume. Due
+to low complexity and binary encoding, the protocol itself is very
+lightweight and potentially real-time capable. However, being based
+on TCP, MQTT cannot fulfill Req-4. In contrast, this is an advantage
+in terms of reliability. MQTT defines three levels of Quality of
+Service (QoS), which allow messages to be sent at most once (QoS-
+0), at least once (QoS-1) or exactly once (QoS-2). Through this and
+the use of TCP, MQTT fulfills Req-5.
+4.2
+CoAP
+The Constrained Application Protocol (CoAP) is a lightweight
+RESTful protocol, which is designed for the use in resource con-
+strained environments. It is specified as RFC 7252 [50]. In contrast
+to MQTT, the base standard of CoAP describes request/response
+1https://www.hivemq.com
+communication and only supports publish/subscribe communica-
+tion via standard extensions. The CoAP Observe extension [15]
+provides a broker-less publish/subscribe mechanism, which en-
+ables observation of CoAP resources and notification of subscribers
+upon resource state changes. Additionally, a broker-based publish/
+subscribe mechanism for CoAP is defined in [26], which is currently
+in draft status. Since all parts of CoAP are available as RFC specifica-
+tions, CoAP fulfills the requirement of being technical interoperable.
+CoAP defines several media types and can make use of Sensor Mea-
+surement Lists (SenML) [20] in combination with JavaScript Object
+Notation (JSON), Concise Binary Object Representation (CBOR),
+Extensible Markup Language (XML), and Efficient XML Interchange
+(EXI) and a common data model for sensors. However, this model
+is not very mature compared to the data modeling capabilities of
+OPC UA, which is why Req-1 is only partly fulfilled. CoAP is based
+on UDP and thus can make use of DTLS. Furthermore, with Object
+Security for Constrained RESTful Environments (OSCORE) [49]
+and Authentication and Authorization for Constrained Environ-
+ments (ACE) [40], there are additional mechanisms for ensuring
+security at the application layer. Overall, CoAP fulfills Req-2. Due
+to its low complexity and as pointed out in [8], CoAP is scalable in
+terms of the number of devices. The block-wise transfer option [3]
+can be used to send larger amounts of data over UDP. Hence, CoAP
+scales both in terms of the number of devices and in terms of data
+volume and completely fulfills Req-3. With regard to real-time capa-
+bility, CoAP being based on UDP, is potentially real-time capable if
+complemented with a time-slot mechanism on top of the transport
+layer. As shown in [23–25], it is possible to implement an appli-
+cation layer Time Division Multiple Access (TDMA) mechanism
+to achieve real-time communication. However, this needs also to
+be applied to the publish/subscribe extensions of CoAP. Therefore,
+CoAP only partially fulfills Req-4. To compensate the unreliable
+UDP transport, the CoAP reliability layer defines message IDs and
+reliable and unreliable messages, which guarantee message receipt,
+deduplication and message order. Altogether, Req-5 is only partially
+fulfilled.
+196
+
+
+===== p.5 =====
+A Survey and Comparison of Publish/Subscribe Protocols for the Industrial Internet of Things (IIoT)
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+4.3
+AMQP
+The Advanced Message Queuing Protocol (AMQP), which is stan-
+dardized by OASIS [14], is another lightweight M2M protocol.
+AMQP supports both request/response and publish/subscribe com-
+munication. Besides binary encoding, AMQP supports XML and
+JSON and has an own type system, which is, compared to OPC UA
+for example, not as powerful. Thus, AMQP only partially fulfills
+Req-1 and needs further extensions. AMQP is based on TCP, and
+hence, can make use of TLS. Additionally, Simple Authentication
+and Security Layer (SASL) [60], which provides additional means
+for application layer encryption and authentication, can be used. As
+a result, AMQP fulfills Req-2. Due to its simplicity AMQP can scale
+for a large number of devices. As pointed out in [29], scalability
+can further be improved by using a clustering approach, which
+eliminates the broker being a single point of failure. Since AMQP
+uses TCP as transport, it is theoretically well scalable in terms of
+data volumes. As pointed out in [32], the actual message size limit
+is a matter of the specific broker implementation. Overall, however,
+AMQP fulfills Req-3. Similar to MQTT, AMQP is a very lightweight
+and efficient protocol, however, being based on TCP, it is not real-
+time capable and thus cannot fulfill Req-4. In terms of reliability this
+is an advantage. Being based on TCP and through the definition of
+at-least-once message transmission guarantee, AMQP fulfills Req-5.
+4.4
+XMPP
+The eXtensible Messaging and Presence Protocol (XMPP) is an In-
+ternet protocol that was initially developed for instant messaging
+systems rather than for M2M communication [57]. It is used to
+exchange XML data based on a client/server architecture. The core
+of specification in RFC 6120 only defines a request/response pattern.
+Publish/subscribe communication, however, is available through
+the standard extension XEP-0060 [30]. This and other extensions,
+such as for service discovery, make it better suitable for M2M com-
+munication. The extensibility itself is a major advantage of the
+protocol. XMPP does not define its own data modelling capabilities.
+Therefore, XMPP only ensures technical and syntactical interoper-
+ability and thus only partially fulfills Req-1. In terms of security, the
+core specification defines the use of TLS, which is further described
+in RFC 7590 [48], and SASL. Additional mechanisms for end-to-
+end signing and object encryption are described in RFC 3923 [47].
+Hence, XMPP fulfills Req-2. Due to its decentralized architecture,
+XMPP is scalable in terms of the number of devices. To send larger
+amounts of data, there are different options. In order to achieve
+data volume scalability in the range of megabytes, for example, the
+in-band bytestream extension can be used, which is specified in
+XEP-0047 [21] and allows to send data in smaller chunks. Overall,
+XMPP fulfills Req-3. As indicated before, the initial focus on instant
+messaging comes with some drawbacks regarding M2M communi-
+cation. The authors in [13] point out that XMPP has a rather low
+performance due to its high overhead and is thus not real-time ca-
+pable in the sense of M2M communication. In [55] additionally the
+parsing of XML and the high complexity of XMPP are mentioned,
+which make time-critical applications impossible. Finally, XMPP
+is based on TCP and thus does not fulfill Req-4 altogether. The
+XMPP specification does not provide any mechanisms to guarantee
+message delivery, besides being based on TCP on transport layer.
+Thus, Req-5 is only partly fulfilled.
+4.5
+MQTT-SN
+MQTT for Sensor Networks (MQTT-SN) is a very lightweight M2M
+and publish/subscribe protocol for the use in wireless sensor net-
+works. The current protocol specification version 1.2 was developed
+and published by IBM. There is an effort to standardize MQTT-SN
+as OASIS standard, which is currently in progress. As described in
+[53], MQTT-SN was developed with the aim to be a lightweight ver-
+sion of MQTT with the focus on wireless sensor networks, which
+is agnostic to the underlying layers. One fundamental difference is
+that MQTT-SN devices must be connected to an MQTT broker via
+a gateway, which is implemented either as standalone gateway or
+as integrated gateway in the MQTT broker. Therefore, MQTT-SN
+cannot operate independently from MQTT. MQTT-SN is also a
+data-agnostic protocol. Thus, it can also only partly fulfill Req-1.
+Although being agnostic to the underlying transport and network-
+ing technologies, most implementations are built on top of UDP/IP,
+and hence, can make use of DTLS. Detailed guidelines on security
+and additional mechanisms are missing in the current specification,
+which is why MQTT-SN can only partly fulfill Req-2. However, this
+is likely to be an issue in the current standardization as security is
+a key requirement for the acceptance of a standard. Since MQTT-
+SN works the same way as MQTT from a protocol perspective, it
+should also scale as well as MQTT does. However, a problem arises
+due to the gateway architecture. A standalone gateway, which has
+to maintain one or multiple TCP connections to the broker, creates
+another single point of failure. A distinction must also be made
+between a transparent and an aggregating gateway. A transparent
+gateway establishes one connection per device, while an aggregat-
+ing gateway establishes exactly one connection for all devices. As
+stated in [17], a transparent gateway, which is easier to implement,
+scales worse than an aggregating gateway, since a very high num-
+ber of devices also requires a very high number of parallel TCP
+connections to be kept open. The maximum encodable payload size
+is 65,535 octets. As MQTT-SN does not support fragmentation and
+reassembly, the actual value is limited by the underlying technology
+[53]. Thus, MQTT-SN can only partly fulfill Req-3. Since MQTT-SN
+is an extremely lightweight protocol and is also based on UDP, it is
+in principle real-time capable. However, as indicated in [8], it has
+to be complemented by time-slot mechanism, like TDMA. Req-4
+is therefore only partially fulfilled, but can be fulfilled by further
+extension. To compensate the unreliable transport, there are QoS
+levels, as with MQTT. In addition to the three already described
+QoS levels, there is a fourth one, which allows publishing without
+connection setup and without any guarantee on message delivery.
+Thus, it does not provide further reliability. Overall, Req-5, is only
+partly fulfilled.
+4.6
+OPC UA
+The Open Platform Communications Unified Architecture (OPC
+UA) is an industrial standard that defines an architecture for inter-
+operable and secure communication, which is driven by the OPC
+Foundation and published as standard series IEC 62541. It is com-
+posed of currently over 20 specification parts. The base standard
+197
+
+
+===== p.6 =====
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+Nast et al.
+described in Part 1 [38] specifies request/response communication
+based on a client/server architecture. It defines a basic publish/
+subscribe mechanism on the basis of a subscribe/notify pattern.
+Part 14 [39] of the standard extends the basic specification with
+broker-less and broker-based transport mechanisms. For the broker-
+based approach, the standard defines AMQP and MQTT as possible
+options. The applicability of an MQTT protocol binding for OPC UA
+was demonstrated in [45], for example. It is also conceivable that
+OPC UA will be expanded in the future to include other protocol
+bindings, such as MQTT-SN or CoAP. The feasibility of integrat-
+ing CoAP into OPC UA based on the request/response pattern has
+been shown in [58]. Since we have already discussed the individual
+protocols, we will concentrate on the broker-less transport using
+OPC UA UDP or OPC UA Ethernet. In this approach, messages are
+distributed to subscriber based on multicast groups. The UA Data-
+gram Protocol (UADP), which is based on OPC UA binary, is used
+for data encoding. On top of that, OPC UA defines a very powerful
+data and information model that can be extended with regard to
+organizational and vendor-specific requirements, which is unique
+for all the surveyed protocols. In addition, the standard is driven
+by a strong international and industrial consortium. Consequently,
+OPC UA fully complies with Req-1. OPC UA provides a rich set of
+security mechanisms and policies and was developed with security
+in mind. Part 2 of the specification describes mechanisms for au-
+thentication, authorization, and encryption. A role-based security
+concept is defined in Part 18. In addition, the standard has been
+classified by the German Federal Office for Information Security
+(BSI) as fundamentally secure [11]. However, this does not apply
+or only partially applies to part 14. First of all, being based on mul-
+ticast, the use of DTLS is not possible, which is why securing the
+transport layer is also not possible. On application layer, end-to-end
+security is ensured based on signing and encryption of messages
+with compliance to Part 2. Thus, publish/subscribe based on OPC
+UA UDP does not completely fulfill Req-2. Therefore, security is an
+open research issue for this approach. The use of multicasts makes
+the system very scalable in terms of the number of devices due to
+its simplicity and the absence of a single point of failure in the form
+of a broker. However, we have found that there is a lack of practical
+investigations on this topic. Moreover, the use of multicasts and
+UDP is a limitation in terms of Internet-wide communication and
+data volume scalability. The latter we have already pointed out for
+MQTT-SN. Thus, also Req-3 can only partially be fulfilled. In con-
+trast, the approach is real-time capable and thus fulfills Req-4. This
+could be shown exemplarily in [41] on the basis of the open625412
+reference implementation and TSN. For future research, the config-
+uration of TSN via OPC UA seems also to be promising. As stated in
+[39], with OPC UA UDP there is no guarantee of timeliness, deliv-
+ery, ordering, or duplicate protection. However, there are sequence
+numbers and retransmission mechanisms to compensate for this.
+This means that Req-5 is only incompletely fulfilled.
+4.7
+DDS
+The Data Distribution Service (DDS) [36] is a standard that is de-
+veloped by the Object Management Group (OMG). The base stan-
+dard specifies a publish/subscribe model, which does not describe
+2http://www.open62541.org
+the actual communication protocol for message exchange. Thus,
+to ensure interoperability between different implementations, the
+Real-time Publish-Subscribe Protocol DDS Interoperability Wire
+Protocol (DDSI-RTPS) specification was developed, which is based
+on UDP transport using IP multicasts. DDS provides an own XML-
+based type system to ensure syntactical interoperability. However,
+with regard to semantic and organizational interoperability, DDS is
+not comparable with the capabilities of OPC UA. Thus, DDS only
+partially fulfills Req-1. As with OPC UA, UDP transport over IP mul-
+ticasts prevents the use of DTLS. To compensate for this, there is a
+separate specification [37] that allows various security mechanisms
+to be included as application layer plugins. These include authenti-
+cation, authorization, encryption, signing, logging and data tagging.
+However, due to the lack of transport layer security, DDS fulfills
+Req-2 only partially. As stated in [51], DDS provides a low-latency
+data connectivity, extreme reliability, and a scalable architecture for
+mission critical applications. Due to its decentralized approach and
+being based on multicasts, DDS is highly scalable with regard to the
+number of devices. However, as pointed out in [7], the latter is also
+an obstacle in scalability of point-to-point scenarios and Internet-
+wide deployments where multicasts are not applicable. Although
+it might not seem to be as important in the IIoT as compared to
+the IoT, it is a limiting factor. It is noticeable that, as with OPC UA,
+there are few practical evaluations of scalability in the literature.
+In terms of data volume scalability, DDS is also limited due to UDP
+on transport. In order to address this limitation, DDS specifies a
+mechanism for data fragmentation. Overall, DDS fulfills Req-3 only
+partly. DDSI-RTPS was developed with the focus on real-time ca-
+pability, which is achieved through the use of UDP and multicasts.
+In addition, the use of DDS and TSN (DDS-TSN) is currently being
+standardized by OMG. Overall, DDS fulfills Req-4. To counteract un-
+reliable UDP transport, the standard defines unreliable and reliable
+message transmission. Reliable transmission guarantees message
+transmission and message order. Altogether, Req-5 is only partially
+fulfilled.
+4.8
+DPWS
+The Devices Profile for Web Services (DPWS) is an M2M protocol
+which implements the Service-Oriented Architecture (SOA) para-
+digm. It was designed to enable communication between resource
+constrained devices based on web services. DPWS is standardized
+by OASIS in [35]. The standard defines mechanisms for secure web
+service communication, web service discovery and web service
+description. Publish/subscribe communication is possible through
+a broker-less eventing mechanism based on a subscribe/notify pat-
+tern similar to CoAP Observe. DPWS is not as common in the IoT
+and IIoT as the previously described protocols. However, it has been
+successfully used in the medical domain and been further devel-
+oped as Medical DPWS (MDPWS), which is standardized by the
+IEEE [22]. DPWS uses the Simple Object Access Protocol (SOAP)
+for exchanging XML-based structured data. On top of that, there is
+no data modeling capability to achieve semantic interoperability.
+Thus, interoperability (Req-1) can only be ensured in terms of tech-
+nical and syntactical interoperability. The standard provides a set
+of mechanisms to achieve secure communication, including TLS,
+message signing and authentication. Therefore, it fulfills Req-2. The
+198
+
+
+===== p.7 =====
+A Survey and Comparison of Publish/Subscribe Protocols for the Industrial Internet of Things (IIoT)
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+Table 2: Summary of the Requirements Evaluation Results (✓means that the requirement is fulfilled, ⋄means that the
+requirement is only partly fulfilled or that it can potentially be fulfilled by expanding the protocol and ✗means that the
+requirement cannot be fulfilled)
+Requirement
+MQTT
+CoAP
+AMQP
+XMPP
+MQTT-SN
+OPC UA
+DDS
+DPWS
+Interoperability
+⋄
+⋄
+⋄
+⋄
+⋄
+✓
+⋄
+⋄
+Security
+✓
+✓
+✓
+✓
+⋄
+⋄
+⋄
+✓
+Scalability
+✓
+✓
+✓
+✓
+⋄
+⋄
+⋄
+⋄
+Real-time capability
+✗
+⋄
+✗
+✗
+⋄
+✓
+✓
+✗
+Reliability
+✓
+⋄
+✓
+⋄
+⋄
+⋄
+⋄
+⋄
+SOAP protocol can be run on top of UDP, TCP and HTTP transport.
+As pointed out in [4], DPWS and especially the eventing mecha-
+nism suffers from device scalability issues. Moreover, the maximum
+length of a SOAP envelope is limited to 32,767 octects. The proto-
+col itself is potentially real-time capable, which was shown in the
+medical domain, on the basis of MDPWS and TSN in [46]. However,
+as the default transport protocol is TCP, the authors of [46] also
+state that a real-time capable protocol would be required on the
+transport layer as well, such as UDP. Therefore, Req-3 is not fulfilled.
+Reliability is only guaranteed on the basis of TCP and there are
+no additional mechanisms on the application layer to ensure this.
+Hence, DPWS can only fulfill Req-5 on transport layer.
+5
+CONCLUSION AND OUTLOOK
+In this survey, we investigated commonly used publish/subscribe
+protocols from the IoT and IIoT domain. For this purpose, we con-
+ducted a literature research and performed an evaluation with
+regard to the requirements interoperability, security, scalability,
+real-time capability, and reliability. The evaluation results are sum-
+marized in Table 2. None of the investigated protocols could fulfill
+all requirements. However, this is in line with our expectations, as
+it is obvious that a trade-off between the individual requirements
+has to be made in many cases. The fulfillment of the requirements
+is often closely related to the choice of the transport mechanism
+on which the protocol is based on. TCP is necessary, for example,
+to ensure reliable transport, but it is not real-time capable. In con-
+trast, the UDP-based protocols are potentially real-time capable.
+However, they must implement additional mechanisms to ensure
+reliability on the application layer. Only OPC UA and DDS were de-
+veloped with real-time capability in mind. However, being based on
+multicasts, they lack the possibility of a secured transport layer and
+do not scale with regard to data volume. Due to its strong data mod-
+elling capabilities, OPC UA can completely fulfill the requirements
+for technical, synctactical, and semantic interoperability, which is
+unique for the investigated protocols.
+Since the evaluation has shown that the protocols do not ade-
+quately meet the requirements, new research issues arise. Besides
+OPC UA and DDS, which are already developed with the focus on
+real-time, also the real-time capability of MQTT-SN and CoAP ap-
+pears to be an interesting challenge. For this purpose, the protocols
+must be extended to include additional real-time capable mecha-
+nisms. In this context, investigating synergies with technologies
+such as TSN and SDN also seems very promising. To take advan-
+tage of the strong data modeling capabilities of OPC UA, it may
+be useful to integrate other protocols into OPC UA, as is already
+specified for MQTT and AMQP by the standard. From the evalua-
+tion process we can further conclude that in many cases there is a
+lack of practical performance investigations in real-world setups.
+This applies for example to scalability, particularly for the proto-
+cols based on multicast such as OPC UA and DDS, and should be
+addressed in future work. In addition, the performance evaluation
+based on other parameters, such as throughput, round-trip time
+and latency, is necessary to further assess the suitability of the
+protocols in industrial applications. Another open issue we want
+to address in future work is the integration of QUIC, as it is a very
+promising alternative to the established standards TCP and UDP.
+Further, as already mentioned, it is not yet considered in the current
+specifications of the protocols.
+ACKNOWLEDGMENTS
+This work has been partly achieved in the European ITEA project
+Intelligent, IoT-based Port Artefacts Communication, Administration
+and Maintenance (I2PANEMA) and has been funded by the German
+Federal Ministry of Education and Research (BMBF) under reference
+number 01IS18058H.
+REFERENCES
+[1] Eyhab Al-Masri, Karan Raj Kalyanam, John Batts, Jonathan Kim, Sharanjit Singh,
+Tammy Vo, and Charlotte Yan. 2020. Investigating Messaging Protocols for the
+Internet of Things (IoT). IEEE Access 8 (2020), 94880–94911. https://doi.org/10.
+1109/ACCESS.2020.2993363
+[2] Mike Bishop. 2022. HTTP/3. RFC 9114. https://doi.org/10.17487/RFC9114
+[3] Carsten Bormann and Zach Shelby. 2016. Block-Wise Transfers in the Constrained
+Application Protocol (CoAP). RFC 7959. https://doi.org/10.17487/RFC7959
+[4] Filipe Campos and José Pereira. 2014. Improving the Scalability of DPWS-Based
+Networked Infrastructures. CoRR abs/1407.8546 (2014). arXiv:1407.8546 http:
+//arxiv.org/abs/1407.8546
+[5] Yuang Chen and Thomas Kunz. 2016. Performance Evaluation of IoT Protocols
+under a Constrained Wireless Access Network. In 2016 International Conference
+on Selected Topics in Mobile & Wireless Networking (MoWNeT). 1–7. https://doi.
+org/10.1109/MoWNet.2016.7496622
+[6] Alem Čolaković and Mesud Hadžialić. 2018. Internet of Things (IoT): A Review
+of Enabling Technologies, Challenges, and Open Research Issues. Computer
+Networks 144 (jul 2018). https://doi.org/10.1016/j.comnet.2018.07.017
+[7] Antonio Corradi, Luca Foschini, and Luca Nardelli. 2010. A DDS-Compliant
+Infrastructure for Fault-Tolerant and Scalable Data Dissemination. In The IEEE
+symposium on Computers and Communications. 489–495. https://doi.org/10.1109/
+ISCC.2010.5546756
+[8] Peter Danielis, Henning Puttnies, Eike Schweißguth, and Dirk Timmermann.
+2018. Real-Time Capable Internet Technologies for Wired Communication in the
+Industrial IoT - a Survey. In 2018 IEEE 23rd International Conference on Emerging
+Technologies and Factory Automation (ETFA), Vol. 1. 266–273. https://doi.org/10.
+1109/ETFA.2018.8502528
+[9] Praveen Kumar Donta, Satish Narayana Srirama, Tarachand Amgoth, and Chan-
+dra Sekhara Rao Annavarapu. 2021. Survey on recent advances in IoT application
+199
+
+
+===== p.8 =====
+IoT ’22, November 7–10, 2022, Delft, Netherlands
+Nast et al.
+layer protocols and machine learning scope for research directions. Digital
+Communications and Networks (2021). https://doi.org/10.1016/j.dcan.2021.10.004
+[10] Patrick Th. Eugster, Pascal A. Felber, Rachid Guerraoui, and Anne-Marie Kermar-
+rec. 2003. The Many Faces of Publish/Subscribe. ACM Comput. Surv. 35, 2 (jun
+2003), 114–131. https://doi.org/10.1145/857076.857078
+[11] Federal Office for Information Security (BSI). 2017. OPC UA Security Analysis.
+Technical Report. OPC Foundation.
+[12] Konstantinos Fysarakis, Ioannis Askoxylakis, Othonas Soultatos, Ioannis Pa-
+paefstathiou, Charalampos Manifavas, and Vasilios Katos. 2016. Which IoT
+Protocol? Comparing Standardized Approaches over a Common M2M Appli-
+cation. In 2016 IEEE Global Communications Conference (GLOBECOM). 1–7.
+https://doi.org/10.1109/GLOCOM.2016.7842383
+[13] Alasdair Gilchrist. 2016. Industry 4.0. Apress, Berkeley, CA. https://doi.org/10.
+1007/978-1-4842-2047-4
+[14] Robert Godfrey, David Ingham, and Rafael Schloming. [n. d.].
+OASIS Ad-
+vanced Message Queuing Protocol (AMQP) Version 1.0.
+http://docs.oasis-
+open.org/amqp/core/v1.0/amqp-core-overview-v1.0.html. Accessed on: 2020-03-
+19.
+[15] Klaus Hartke. 2015. Observing Resources in the Constrained Application Protocol
+(CoAP). RFC 7641. https://doi.org/10.17487/RFC7641
+[16] HiveMQ. 2017. HiveMQ Cluster Benchmark Paper: 10,000,000 MQTT Clients. Tech-
+nical Report. dc-square.
+[17] Urs Hunkeler, Hong Linh Truong, and Andy Stanford-Clark. 2008. MQTT-S – A
+publish/subscribe protocol for Wireless Sensor Networks. In 2008 3rd International
+Conference on Communication Systems Software and Middleware and Workshops
+(COMSWARE ’08). 791–798. https://doi.org/10.1109/COMSWA.2008.4554519
+[18] IEEE. 1991. IEEE Standard Computer Dictionary: A Compilation of IEEE Standard
+Computer Glossaries. , 217 pages. https://doi.org/10.1109/IEEESTD.1991.106963
+[19] Jana Iyengar and Martin Thomson. 2021. QUIC: A UDP-Based Multiplexed and
+Secure Transport. RFC 9000. https://doi.org/10.17487/RFC9000
+[20] Cullen Jennings, Zach Shelby, Jari Arkko, Ari Keränen, and Carsten Bormann.
+2018. Sensor Measurement Lists (SenML). RFC 8428. https://doi.org/10.17487/
+RFC8428
+[21] Justin Karneges and Peter Saint-Andre. 2021. XEP-0047: In-Band Bytestreams.
+https://xmpp.org/extensions/xep-0047.html.
+[22] Martin Kasparick, Stefan Schlichting, Frank Golatowski, and Dirk Timmermann.
+2015. Medical DPWS: New IEEE 11073 Standard for safe and interoperable
+Medical Device Communication. In 2015 IEEE Conference on Standards for Com-
+munications and Networking (CSCN). 212–217. https://doi.org/10.1109/CSCN.
+2015.7390446
+[23] Björn Konieczek, Martin Kasparick, Michael Rethfeldt, Frank Golatowski, and
+Dirk Timmermann. 2016. Towards a TDMA-based Real-Time Extension for the
+Constrained Application Protocol. In 2016 IEEE World Conference on Factory Com-
+munication Systems (WFCS). 1–4. https://doi.org/10.1109/WFCS.2016.7496529
+[24] Björn Konieczek, Michael Rethfeldt, Frank Golatowski, and Dirk Timmermann.
+2015. Real-Time Communication for the Internet of Things Using jCoAP. In 2015
+IEEE 18th International Symposium on Real-Time Distributed Computing. 134–141.
+https://doi.org/10.1109/ISORC.2015.35
+[25] Björn Konieczek, Michael Rethfeldt, Frank Golatowski, and Dirk Timmermann.
+2016. A Distributed Time Server for the Real-Time Extension of CoAP. In 2016
+IEEE 19th International Symposium on Real-Time Distributed Computing (ISORC).
+84–91. https://doi.org/10.1109/ISORC.2016.21
+[26] Michael Koster, Ari Keränen, and Jaime Jimenez. 2019. Publish-Subscribe Broker
+for the Constrained Application Protocol (CoAP). Internet-Draft draft-ietf-core-
+coap-pubsub-09. Internet Engineering Task Force. https://datatracker.ietf.org/
+doc/html/draft-ietf-core-coap-pubsub-09 Work in Progress.
+[27] Heiko Koziolek, Sten Grüner, and Julius Rückert. 2020. A Comparison of MQTT
+Brokers for Distributed IoT Edge Computing. In Software Architecture, Anton
+Jansen, Ivano Malavolta, Henry Muccini, Ipek Ozkaya, and Olaf Zimmermann
+(Eds.). Springer International Publishing, Cham, 352–368.
+[28] Hsien-I Lin and Yu-Che Hwang. 2019. Integration of Robot and IIoT over the
+OPC Unified Architecture. In 2019 International Automatic Control Conference
+(CACS). IEEE, 1–6.
+[29] G Marsh et al. 2009. Scaling Advanced Message Queuing Protocol (AMQP)
+Architecture with Broker Federation and InfiniBand. Department of Computer
+Science and Engineering, The Ohio State University (2009).
+[30] Peter Millard, Peter Saint-Andre, and Ralph Meijer. 2019. XEP-0060: Publish-
+Subscribe. https://xmpp.org/extensions/xep-0060.html.
+[31] Akseer Ali Mirani, Gustavo Velasco-Hernandez, Anshul Awasthi, and Joseph
+Walsh. 2022. Key Challenges and Emerging Technologies in Industrial IoT Archi-
+tectures: A Review. Sensors 22, 15 (2022). https://doi.org/10.3390/s22155836
+[32] Nitin Naik. 2017. Choice of Effective Messaging Protocols for IoT Systems:
+MQTT, CoAP, AMQP and HTTP. In 2017 IEEE International Systems Engineering
+Symposium (ISSE). 1–7. https://doi.org/10.1109/SysEng.2017.8088251
+[33] OASIS Message Queuing Telemetry Transport (MQTT) TC. 2014. MQTT Version
+3.1.1.
+[34] OASIS Message Queuing Telemetry Transport (MQTT) TC. 2019. MQTT Version
+5.0.
+[35] OASIS Web Services Discovery and Web Services Devices Profile (WS-DD) TC.
+2009. Devices Profile for Web Services Version 1.1.
+[36] Object Management Group (OMG). 2015.
+Data Distribution Service (DDS).
+https://www.omg.org/spec/DDS/1.4/PDF.
+[37] Object
+Management
+Group
+(OMG).
+2018.
+DDS
+Security.
+https://www.omg.org/spec/DDS-SECURITY/1.1/PDF.
+[38] OPC Foundation. 2017. OPC 10000-1 - UA Specification Part 1 - Overview and
+Concepts 1.04.
+[39] OPC Foundation. 2022. OPC 10000-14 - UA Specification Part 14 - PUBSUB 1.04.
+[40] Francesca Palombini, Ludwig Seitz, Göran Selander, and Martin Gunnarsson.
+2021. OSCORE Profile of the Authentication and Authorization for Constrained
+Environments Framework. Internet-Draft draft-ietf-ace-oscore-profile-19. Internet
+Engineering Task Force.
+https://datatracker.ietf.org/doc/html/draft-ietf-ace-
+oscore-profile-19 Work in Progress.
+[41] Julius Pfrommer, Andreas Ebner, Siddharth Ravikumar, and Bhagath Karunakaran.
+2018. Open Source OPC UA PubSub Over TSN for Realtime Industrial Commu-
+nication. In 2018 IEEE 23rd International Conference on Emerging Technologies
+and Factory Automation (ETFA), Vol. 1. 1087–1090. https://doi.org/10.1109/ETFA.
+2018.8502479
+[42] Jon Postel. 1980. User Datagram Protocol. RFC 768. https://doi.org/10.17487/
+RFC0768
+[43] Jon Postel. 1981. Transmission Control Protocol. RFC 793. https://doi.org/10.
+17487/RFC0793
+[44] Stefan Profanter, Ayhun Tekat, Kirill Dorofeev, Markus Rickert, and Alois Knoll.
+2019. OPC UA versus ROS, DDS, and MQTT: Performance Evaluation of Industry
+4.0 Protocols. In 2019 IEEE International Conference on Industrial Technology (ICIT).
+955–962. https://doi.org/10.1109/ICIT.2019.8755050
+[45] Hannes Raddatz, Eman Mahmoud, Fabian Hölzke, Peter Danielis, Dirk Timmer-
+mann, and Frank Golatowski. 2020. Evaluation and Extension of OPC UA Pub-
+lish/Subscribe MQTT Binding. In 2020 IEEE Conference on Industrial Cyberphysical
+Systems (ICPS), Vol. 1. 543–548. https://doi.org/10.1109/ICPS48405.2020.9274696
+[46] Benjamin Rother, Martin Kasparick, Eike Schweißguth, Frank Golatowski, and
+Dirk Timmermann. 2020. Automatic Configuration of a TSN Network for SDC-
+based Medical Device Networks. In 2020 16th IEEE International Conference on Fac-
+tory Communication Systems (WFCS). 1–8. https://doi.org/10.1109/WFCS47810.
+2020.9114471
+[47] Peter Saint-Andre. 2004. End-to-End Signing and Object Encryption for the
+Extensible Messaging and Presence Protocol (XMPP). RFC 3923. https://doi.org/
+10.17487/RFC3923
+[48] Peter Saint-Andre and Thijs Alkemade. 2015. Use of Transport Layer Security
+(TLS) in the Extensible Messaging and Presence Protocol (XMPP). RFC 7590.
+https://doi.org/10.17487/RFC7590
+[49] Göran Selander, John Preuß Mattsson, Francesca Palombini, and Ludwig Seitz.
+2019. Object Security for Constrained RESTful Environments (OSCORE). RFC
+8613. https://doi.org/10.17487/RFC8613
+[50] Zach Shelby, Klaus Hartke, and Carsten Bormann. 2014. The Constrained Appli-
+cation Protocol (CoAP). RFC 7252. https://doi.org/10.17487/RFC7252
+[51] Daniel Silva, Liliana I. Carvalho, José Soares, and Rute C. Sofia. 2021. A Per-
+formance Analysis of Internet of Things Networking Protocols: Evaluating
+MQTT, CoAP, OPC UA. Applied Sciences 11, 11 (2021). https://doi.org/10.3390/
+app11114879
+[52] Emiliano Sisinni, Abusayeed Saifullah, Song Han, Ulf Jennehag, and Mikael
+Gidlund. 2018. Industrial Internet of Things: Challenges, Opportunities, and
+Directions. IEEE Transactions on Industrial Informatics 14, 11 (2018), 4724–4734.
+https://doi.org/10.1109/TII.2018.2852491
+[53] Andy Stanford-Clark and Hong Linh Truong. 2013. MQTT for Sensor Networks
+(MQTT-SN) Protocol Specification. IBM Corporation version 1, 2 (2013).
+[54] S. Narasimha Swamy and Solomon Raju Kota. 2020. An Empirical Study on
+System Level Aspects of Internet of Things (IoT). IEEE Access 8 (2020), 188082–
+188134. https://doi.org/10.1109/ACCESS.2020.3029847
+[55] Lilia Tightiz and Hyosik Yang. 2020. A Comprehensive Review on IoT Protocols’
+Features in Smart Grid Communication. Energies 13 (jun 2020), 2762.
+https:
+//doi.org/10.3390/en13112762
+[56] Hans Van Der Veer and Anthony Wiles. 2008. Achieving Technical Interoper-
+ability. European telecommunications standards institute (2008).
+[57] Heng Wang, Daijin Xiong, Ping Wang, and Yuqiang Liu. 2017. A Lightweight
+XMPP Publish/Subscribe Scheme for Resource-Constrained IoT Devices. IEEE
+Access 5 (2017), 16393–16405. https://doi.org/10.1109/ACCESS.2017.2742020
+[58] Yi Wang, Chenggen Pu, Ping Wang, and Junrui Wu. 2020. A CoAP-based OPC
+UA Transmission Scheme for Resource-Constrained Devices. In 2020 Chinese
+Automation Congress (CAC). 6089–6093. https://doi.org/10.1109/CAC51589.2020.
+9326995
+[59] Jacek Wytrębowicz, Krzysztof Cabaj, and Jerzy Krawiec. 2021.
+Messaging
+Protocols for IoT Systems — A Pragmatic Comparison. Sensors 21, 20 (2021).
+https://doi.org/10.3390/s21206904
+[60] Kurt Zeilenga and Alexey Melnikov. 2006. Simple Authentication and Security
+Layer (SASL). RFC 4422. https://doi.org/10.17487/RFC4422
+200

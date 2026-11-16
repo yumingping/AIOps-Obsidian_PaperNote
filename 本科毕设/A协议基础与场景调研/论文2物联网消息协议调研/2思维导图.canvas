@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "abdf07aaf61e0935",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 56,
+   "text": "IoT 协议几十种、选型困难，系统常多协议并存"
+  },
+  {
+   "id": "6865eb1cce8eba4f",
+   "type": "text",
+   "x": 760,
+   "y": 80,
+   "width": 420,
+   "height": 80,
+   "text": "HTTP 头 200B–2KB，MQTT 最小包 2 字节——差两个数量级"
+  },
+  {
+   "id": "70e7cca01cdf9cc8",
+   "type": "text",
+   "x": 760,
+   "y": 184,
+   "width": 420,
+   "height": 56,
+   "text": "已有综述只看单层协议，缺 OSI 全栈串联"
+  },
+  {
+   "id": "3c849329da418116",
+   "type": "text",
+   "x": 760,
+   "y": 308,
+   "width": 420,
+   "height": 80,
+   "text": "按 Eclipse 采用率 + 10 大云平台支持选定 6 协议"
+  },
+  {
+   "id": "7465723d8c866ba0",
+   "type": "text",
+   "x": 760,
+   "y": 412,
+   "width": 420,
+   "height": 56,
+   "text": "九个维度横向比较（互操作/性能/可靠性/安全…）"
+  },
+  {
+   "id": "f09919672129435c",
+   "type": "text",
+   "x": 760,
+   "y": 536,
+   "width": 420,
+   "height": 80,
+   "text": "MQTT：broker 居中 + QoS 0/1/2，D2C 型"
+  },
+  {
+   "id": "b5daae1ed04d6fd7",
+   "type": "text",
+   "x": 760,
+   "y": 640,
+   "width": 420,
+   "height": 80,
+   "text": "AMQP：exchange → binding → queue 三级路由"
+  },
+  {
+   "id": "19226f1766935b3f",
+   "type": "text",
+   "x": 760,
+   "y": 744,
+   "width": 420,
+   "height": 80,
+   "text": "DDS：全局数据空间、无 broker、23 种 QoS"
+  },
+  {
+   "id": "25bd98056059415a",
+   "type": "text",
+   "x": 760,
+   "y": 892,
+   "width": 420,
+   "height": 56,
+   "text": "功耗 HTTP = 5.3 × MQTT"
+  },
+  {
+   "id": "d883f45f044144d0",
+   "type": "text",
+   "x": 760,
+   "y": 972,
+   "width": 420,
+   "height": 80,
+   "text": "订阅扇出 trans_msg = n×topic_avg，最坏 n²"
+  },
+  {
+   "id": "deebccf43e2a6e41",
+   "type": "text",
+   "x": 760,
+   "y": 1076,
+   "width": 420,
+   "height": 80,
+   "text": "实现体积差 3 个数量级：CoAP 14KB vs DDS 640MB+"
+  },
+  {
+   "id": "f868354a89a3ef40",
+   "type": "text",
+   "x": 760,
+   "y": 1224,
+   "width": 420,
+   "height": 56,
+   "text": "「为什么选 MQTT」的四条证据链"
+  },
+  {
+   "id": "dd3111a38d5943f2",
+   "type": "text",
+   "x": 760,
+   "y": 1304,
+   "width": 420,
+   "height": 56,
+   "text": "九维评估表改造成第 2 章协议对比表"
+  },
+  {
+   "id": "5d7e855b02b30edd",
+   "type": "text",
+   "x": 760,
+   "y": 1384,
+   "width": 420,
+   "height": 80,
+   "text": "界定 MQTT 边界：大 payload 最差、broker 是 SPoF"
+  },
+  {
+   "id": "3a57c8c8274da55f",
+   "type": "text",
+   "x": 760,
+   "y": 1532,
+   "width": 420,
+   "height": 56,
+   "text": "topic 命名要短，网关做缩写映射"
+  },
+  {
+   "id": "c1fea57984b02152",
+   "type": "text",
+   "x": 760,
+   "y": 1612,
+   "width": 420,
+   "height": 80,
+   "text": "broker 入口校验 topic/UTF-8 防 DoS"
+  },
+  {
+   "id": "a1bad1e73c26a364",
+   "type": "text",
+   "x": 760,
+   "y": 1716,
+   "width": 420,
+   "height": 56,
+   "text": "payload 大小必须作为测试变量（结论会反转）"
+  },
+  {
+   "id": "4e3a981cef054ba6",
+   "type": "text",
+   "x": 20,
+   "y": 803,
+   "width": 310,
+   "height": 190,
+   "text": "# 物联网消息协议调研\nAl-Masri et al.\nIEEE Access 2020\n六协议九维横评"
+  },
+  {
+   "id": "f231830c2adf6eb9",
+   "type": "text",
+   "x": 380,
+   "y": 78,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "b4293b016d751869",
+   "type": "text",
+   "x": 380,
+   "y": 346,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "163cc9cf4b08dd16",
+   "type": "text",
+   "x": 380,
+   "y": 638,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "351f7da64b465ee4",
+   "type": "text",
+   "x": 380,
+   "y": 982,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "7e52db510c762604",
+   "type": "text",
+   "x": 380,
+   "y": 1302,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "8f5bd4f795f0e4d2",
+   "type": "text",
+   "x": 380,
+   "y": 1610,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "9cfdfe312c5c1246",
+   "type": "file",
+   "x": 20,
+   "y": 1836,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/A协议基础与场景调研/论文2物联网消息协议调研/2物联网消息协议调研.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "c40995d8bae1fc8d",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "right",
+   "toNode": "f231830c2adf6eb9",
+   "toSide": "left"
+  },
+  {
+   "id": "f94caaff121bd2f8",
+   "fromNode": "f231830c2adf6eb9",
+   "fromSide": "right",
+   "toNode": "abdf07aaf61e0935",
+   "toSide": "left"
+  },
+  {
+   "id": "9f47b0504289228d",
+   "fromNode": "f231830c2adf6eb9",
+   "fromSide": "right",
+   "toNode": "6865eb1cce8eba4f",
+   "toSide": "left"
+  },
+  {
+   "id": "62b871c5bd78dff6",
+   "fromNode": "f231830c2adf6eb9",
+   "fromSide": "right",
+   "toNode": "70e7cca01cdf9cc8",
+   "toSide": "left"
+  },
+  {
+   "id": "c7bccf02123fbaaf",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "right",
+   "toNode": "b4293b016d751869",
+   "toSide": "left"
+  },
+  {
+   "id": "de384e2738aed2c1",
+   "fromNode": "b4293b016d751869",
+   "fromSide": "right",
+   "toNode": "3c849329da418116",
+   "toSide": "left"
+  },
+  {
+   "id": "692b4548b204e65d",
+   "fromNode": "b4293b016d751869",
+   "fromSide": "right",
+   "toNode": "7465723d8c866ba0",
+   "toSide": "left"
+  },
+  {
+   "id": "4fa0d2226a5506b2",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "right",
+   "toNode": "163cc9cf4b08dd16",
+   "toSide": "left"
+  },
+  {
+   "id": "e6f9a590091c156a",
+   "fromNode": "163cc9cf4b08dd16",
+   "fromSide": "right",
+   "toNode": "f09919672129435c",
+   "toSide": "left"
+  },
+  {
+   "id": "95d627c692212234",
+   "fromNode": "163cc9cf4b08dd16",
+   "fromSide": "right",
+   "toNode": "b5daae1ed04d6fd7",
+   "toSide": "left"
+  },
+  {
+   "id": "dae7127a65a7ccae",
+   "fromNode": "163cc9cf4b08dd16",
+   "fromSide": "right",
+   "toNode": "19226f1766935b3f",
+   "toSide": "left"
+  },
+  {
+   "id": "27ec5edab42fe784",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "right",
+   "toNode": "351f7da64b465ee4",
+   "toSide": "left"
+  },
+  {
+   "id": "6aae911e6f881de8",
+   "fromNode": "351f7da64b465ee4",
+   "fromSide": "right",
+   "toNode": "25bd98056059415a",
+   "toSide": "left"
+  },
+  {
+   "id": "314d33981bbbe52a",
+   "fromNode": "351f7da64b465ee4",
+   "fromSide": "right",
+   "toNode": "d883f45f044144d0",
+   "toSide": "left"
+  },
+  {
+   "id": "aa65d3fc477afa41",
+   "fromNode": "351f7da64b465ee4",
+   "fromSide": "right",
+   "toNode": "deebccf43e2a6e41",
+   "toSide": "left"
+  },
+  {
+   "id": "aaf40f40f288a8d1",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "right",
+   "toNode": "7e52db510c762604",
+   "toSide": "left"
+  },
+  {
+   "id": "2f0f78d6f51714f1",
+   "fromNode": "7e52db510c762604",
+   "fromSide": "right",
+   "toNode": "f868354a89a3ef40",
+   "toSide": "left"
+  },
+  {
+   "id": "0b1abb15413e3fe4",
+   "fromNode": "7e52db510c762604",
+   "fromSide": "right",
+   "toNode": "dd3111a38d5943f2",
+   "toSide": "left"
+  },
+  {
+   "id": "31198d13c32963b6",
+   "fromNode": "7e52db510c762604",
+   "fromSide": "right",
+   "toNode": "5d7e855b02b30edd",
+   "toSide": "left"
+  },
+  {
+   "id": "6fd4091d638f65e2",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "right",
+   "toNode": "8f5bd4f795f0e4d2",
+   "toSide": "left"
+  },
+  {
+   "id": "eb0ee9e71e49397e",
+   "fromNode": "8f5bd4f795f0e4d2",
+   "fromSide": "right",
+   "toNode": "3a57c8c8274da55f",
+   "toSide": "left"
+  },
+  {
+   "id": "04a54ac97b3fc9bb",
+   "fromNode": "8f5bd4f795f0e4d2",
+   "fromSide": "right",
+   "toNode": "c1fea57984b02152",
+   "toSide": "left"
+  },
+  {
+   "id": "ee138415b7d29a94",
+   "fromNode": "8f5bd4f795f0e4d2",
+   "fromSide": "right",
+   "toNode": "a1bad1e73c26a364",
+   "toSide": "left"
+  },
+  {
+   "id": "0a2d33440c685e73",
+   "fromNode": "4e3a981cef054ba6",
+   "fromSide": "bottom",
+   "toNode": "9cfdfe312c5c1246",
+   "toSide": "top"
+  }
+ ]
+}

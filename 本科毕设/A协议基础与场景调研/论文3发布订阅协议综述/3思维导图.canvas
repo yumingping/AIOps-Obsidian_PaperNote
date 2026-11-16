@@ -1,0 +1,389 @@
+{
+ "nodes": [
+  {
+   "id": "35acefb5091c52a1",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 80,
+   "text": "IIoT 新增实时 + 高可靠要求，IoT 协议未必满足"
+  },
+  {
+   "id": "cb2b0480b3475791",
+   "type": "text",
+   "x": 760,
+   "y": 104,
+   "width": 420,
+   "height": 56,
+   "text": "已有综述缺工业需求视角"
+  },
+  {
+   "id": "e80d7d6c49a238ea",
+   "type": "text",
+   "x": 760,
+   "y": 228,
+   "width": 420,
+   "height": 56,
+   "text": "先立 5 条需求：互操作/安全/可扩展/实时/可靠"
+  },
+  {
+   "id": "d065ab883b057c00",
+   "type": "text",
+   "x": 760,
+   "y": 308,
+   "width": 420,
+   "height": 56,
+   "text": "再给 8 个 pub/sub 协议逐条打分"
+  },
+  {
+   "id": "3748f12c82c85bb2",
+   "type": "text",
+   "x": 760,
+   "y": 432,
+   "width": 420,
+   "height": 80,
+   "text": "**TCP 保可靠不实时；UDP 潜在实时但可靠性要自建**"
+  },
+  {
+   "id": "3e948e73d64d74f7",
+   "type": "text",
+   "x": 760,
+   "y": 536,
+   "width": 420,
+   "height": 56,
+   "text": "OPC UA：唯一完全满足三层互操作（数据建模强）"
+  },
+  {
+   "id": "dec1e2d0b50ed186",
+   "type": "text",
+   "x": 760,
+   "y": 616,
+   "width": 420,
+   "height": 56,
+   "text": "broker-based 架构天生带 SPOF"
+  },
+  {
+   "id": "7b3c9a6c14bb00c5",
+   "type": "text",
+   "x": 760,
+   "y": 740,
+   "width": 420,
+   "height": 80,
+   "text": "15 篇综述中 MQTT 出现 14 次（关注度第一）"
+  },
+  {
+   "id": "9ce4f166a945aa8c",
+   "type": "text",
+   "x": 760,
+   "y": 844,
+   "width": 420,
+   "height": 56,
+   "text": "HiveMQ 集群验证到百万级设备"
+  },
+  {
+   "id": "603fa3b8da705a64",
+   "type": "text",
+   "x": 760,
+   "y": 924,
+   "width": 420,
+   "height": 56,
+   "text": "**没有任何协议全部满足 5 条需求**"
+  },
+  {
+   "id": "c5830a5b5f829b21",
+   "type": "text",
+   "x": 760,
+   "y": 1048,
+   "width": 420,
+   "height": 56,
+   "text": "五需求矩阵 = 毕设选型评估框架"
+  },
+  {
+   "id": "9ba0ffdfff98674d",
+   "type": "text",
+   "x": 760,
+   "y": 1128,
+   "width": 420,
+   "height": 56,
+   "text": "引 Table 2 论证选 MQTT 并声明实时边界"
+  },
+  {
+   "id": "626e8a1a20c553dd",
+   "type": "text",
+   "x": 760,
+   "y": 1208,
+   "width": 420,
+   "height": 56,
+   "text": "「缺真实性能评估」支撑任务6 必要性"
+  },
+  {
+   "id": "19d24dffea779848",
+   "type": "text",
+   "x": 760,
+   "y": 1332,
+   "width": 420,
+   "height": 56,
+   "text": "架构图按协议栈四层画（应用/传输/网络/接口）"
+  },
+  {
+   "id": "6233f5c226dc39a1",
+   "type": "text",
+   "x": 760,
+   "y": 1412,
+   "width": 420,
+   "height": 56,
+   "text": "默认 TCP+TLS：接受时延换可靠，写明取舍"
+  },
+  {
+   "id": "f4fb212127deab78",
+   "type": "text",
+   "x": 760,
+   "y": 1492,
+   "width": 420,
+   "height": 80,
+   "text": "架构图标注单点（MQTT-SN gateway 教训）"
+  },
+  {
+   "id": "9eecc9d820cb9b4e",
+   "type": "text",
+   "x": 20,
+   "y": 703,
+   "width": 310,
+   "height": 190,
+   "text": "# 发布订阅协议综述\nNast et al.\nIoT '22 (ACM)\n8 协议 × 5 条工业需求"
+  },
+  {
+   "id": "6a18f833a8fa8459",
+   "type": "text",
+   "x": 380,
+   "y": 38,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "07bb37f9d2aa4e76",
+   "type": "text",
+   "x": 380,
+   "y": 254,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "03e9a22d6591b957",
+   "type": "text",
+   "x": 380,
+   "y": 510,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "de48a6f845b84f25",
+   "type": "text",
+   "x": 380,
+   "y": 818,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "9d1a84fa4c2fa676",
+   "type": "text",
+   "x": 380,
+   "y": 1114,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "242634b9e8e7fbbf",
+   "type": "text",
+   "x": 380,
+   "y": 1410,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "8ef1d3a889cbcaf0",
+   "type": "file",
+   "x": 20,
+   "y": 1636,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/A协议基础与场景调研/论文3发布订阅协议综述/3发布订阅协议综述.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "69aa2b8ebf755eb3",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "right",
+   "toNode": "6a18f833a8fa8459",
+   "toSide": "left"
+  },
+  {
+   "id": "9fd828f513e862fc",
+   "fromNode": "6a18f833a8fa8459",
+   "fromSide": "right",
+   "toNode": "35acefb5091c52a1",
+   "toSide": "left"
+  },
+  {
+   "id": "bc91fb83dbaaf7c2",
+   "fromNode": "6a18f833a8fa8459",
+   "fromSide": "right",
+   "toNode": "cb2b0480b3475791",
+   "toSide": "left"
+  },
+  {
+   "id": "effe12911bb2f522",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "right",
+   "toNode": "07bb37f9d2aa4e76",
+   "toSide": "left"
+  },
+  {
+   "id": "1ddc28fe8e93b9d6",
+   "fromNode": "07bb37f9d2aa4e76",
+   "fromSide": "right",
+   "toNode": "e80d7d6c49a238ea",
+   "toSide": "left"
+  },
+  {
+   "id": "d0719e53db39b911",
+   "fromNode": "07bb37f9d2aa4e76",
+   "fromSide": "right",
+   "toNode": "d065ab883b057c00",
+   "toSide": "left"
+  },
+  {
+   "id": "011be5b10537eb2f",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "right",
+   "toNode": "03e9a22d6591b957",
+   "toSide": "left"
+  },
+  {
+   "id": "09c515ce440bbc66",
+   "fromNode": "03e9a22d6591b957",
+   "fromSide": "right",
+   "toNode": "3748f12c82c85bb2",
+   "toSide": "left"
+  },
+  {
+   "id": "5001f195dd117f8b",
+   "fromNode": "03e9a22d6591b957",
+   "fromSide": "right",
+   "toNode": "3e948e73d64d74f7",
+   "toSide": "left"
+  },
+  {
+   "id": "fd1c34ba2a624558",
+   "fromNode": "03e9a22d6591b957",
+   "fromSide": "right",
+   "toNode": "dec1e2d0b50ed186",
+   "toSide": "left"
+  },
+  {
+   "id": "1d5547389518617f",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "right",
+   "toNode": "de48a6f845b84f25",
+   "toSide": "left"
+  },
+  {
+   "id": "7dfcbc8278eb5c4b",
+   "fromNode": "de48a6f845b84f25",
+   "fromSide": "right",
+   "toNode": "7b3c9a6c14bb00c5",
+   "toSide": "left"
+  },
+  {
+   "id": "b20cfaf0ae560b22",
+   "fromNode": "de48a6f845b84f25",
+   "fromSide": "right",
+   "toNode": "9ce4f166a945aa8c",
+   "toSide": "left"
+  },
+  {
+   "id": "3c97a550f57d21a8",
+   "fromNode": "de48a6f845b84f25",
+   "fromSide": "right",
+   "toNode": "603fa3b8da705a64",
+   "toSide": "left"
+  },
+  {
+   "id": "3cd16e02e46be0a6",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "right",
+   "toNode": "9d1a84fa4c2fa676",
+   "toSide": "left"
+  },
+  {
+   "id": "96d46a1bd45b49b1",
+   "fromNode": "9d1a84fa4c2fa676",
+   "fromSide": "right",
+   "toNode": "c5830a5b5f829b21",
+   "toSide": "left"
+  },
+  {
+   "id": "dfecc7281659e75b",
+   "fromNode": "9d1a84fa4c2fa676",
+   "fromSide": "right",
+   "toNode": "9ba0ffdfff98674d",
+   "toSide": "left"
+  },
+  {
+   "id": "3ec235ac4f3afb77",
+   "fromNode": "9d1a84fa4c2fa676",
+   "fromSide": "right",
+   "toNode": "626e8a1a20c553dd",
+   "toSide": "left"
+  },
+  {
+   "id": "60f930f2d44a5c1a",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "right",
+   "toNode": "242634b9e8e7fbbf",
+   "toSide": "left"
+  },
+  {
+   "id": "2aa11995186d5f4f",
+   "fromNode": "242634b9e8e7fbbf",
+   "fromSide": "right",
+   "toNode": "19d24dffea779848",
+   "toSide": "left"
+  },
+  {
+   "id": "a5cdc5cf3ba553ca",
+   "fromNode": "242634b9e8e7fbbf",
+   "fromSide": "right",
+   "toNode": "6233f5c226dc39a1",
+   "toSide": "left"
+  },
+  {
+   "id": "2c91219901a50117",
+   "fromNode": "242634b9e8e7fbbf",
+   "fromSide": "right",
+   "toNode": "f4fb212127deab78",
+   "toSide": "left"
+  },
+  {
+   "id": "b492fc114148c3e0",
+   "fromNode": "9eecc9d820cb9b4e",
+   "fromSide": "bottom",
+   "toNode": "8ef1d3a889cbcaf0",
+   "toSide": "top"
+  }
+ ]
+}

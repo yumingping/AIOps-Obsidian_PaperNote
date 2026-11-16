@@ -1,0 +1,441 @@
+
+
+===== p.1 =====
+Improving Fault Tolerance and Tackling Broker
+Failure in MQTT through Blockchain
+Gita Alekhya Paul
+Networking and Communications Department
+SRM Institute of Science and Technology
+Chennai, India
+gp9979@srmist.edu.in
+Yashvardhan Jagnani
+Networking and Communications Department
+SRM Institute of Science and Technology
+Chennai, India
+yj8024@srmist.edu.in
+P Supraja
+Networking and Communications Department
+SRM Institute of Science and Technology
+Chennai, India
+suprajap@srmist.edu.in
+Abstract—MQTT is a widely used Publisher-Subscriber pro-
+tocol in IoT and Edge Computing. Its lightweight, minimal
+overhead nature has aided real-time data exchange between the
+Publishers and the Subscribers. As of MQTT 5, the protocol
+has fault-tolerance and fault detection implemented through
+QoS Levels 1 and 2 in the form of ‘Retained Messages,’
+‘Persistent Sessions,’ and ‘LWT’ (‘Last Will’ and ‘Testament’).
+Many researchers have dived deep into securing this protocol
+by using Blockchain, using multiple Fog and Mist Computing
+infrastructures, and they have accomplished faster, more efficient,
+and more secure implementations of the MQTT protocol. Often,
+the less explored scope of optimization is the fault tolerance of
+MQTT, which has its limitations. The current specification of
+MQTT allows the broker to only store one retained message per
+client ID, which becomes a limitation in the application use cases
+where the newly subscribed devices are supposed to get an array
+of data points instead of one. The current specification of MQTT
+does not implement fault tolerance on the broker end, which can
+disrupt the network on broker failure. The paper explores how
+we can use Blockchain Technology to overcome the limitations
+of ‘Retained Messages’ in MQTT and improve the Dead Letter
+Exchanges in QoS levels 1 and 2 through Blockchain Technology.
+In addition, the paper explores and implements dynamic load
+balancing using Blockchain Naming Services to tackle broker
+failure in the MQTT protocol, which will allow brokers to be
+hosted under decentralized domain names on the Blockchain,
+monitored by a load balancer.
+Index Terms—MQTT, Blockchain, Broker, Fault Tolerance
+I. INTRODUCTION
+MQTT or MQ Telemetry Transport is the most commonly
+used messaging protocol of IoT (Internet of Things) and IIoT
+(Industrial Internet of Things) devices and networks. MQTT
+utilizes an event-driven ’Publisher-Subscriber’ architecture for
+the exchange of data over the network [1] [2] [3]. There are
+three types of such architectures
+1) Topic-based
+2) Content-based
+3) Type-based
+The scope of this paper only extends to the ’Topic-based’
+implementation of MQTT.
+MQTT implements fault tolerance in its clients through QoS
+(Quality of Service) levels. There are three active QoS levels
+1) QoS 0 (at most once): There is no guarantee of delivery
+as the recipient does not acknowledge the messages and
+there is no provision for ’re-transmitting’ the messages.
+2) QoS 1 (at least once): Guarantees at least one time de-
+livery to the receiver using a PUBACK acknowledgment
+packet. It is possible the same message can be delivered
+multiple times.
+3) QoS 2 (exactly once): The messages are received only
+once.
+It can even set Retained Messages and Last Will and Testa-
+ment messages to handle client failure. The unacknowledged
+messages in the QoS 1 and 2 systems are often stored in dead
+letter queues (also called dead letter exchanges), which are
+maintained by the broker.
+These fault tolerance methods are limited by system mem-
+ory. This results in limited fault tolerance of the broker
+systems, which are not powerful enough to store large amounts
+of data to be either retained, dead letter queued, or the last
+wills of connected clients and brokers. This paper focuses on
+improving the QoS and Retained Messages implementations
+of the MQTT protocol using Blockchain. Furthermore, the
+paper focuses on implementing an enhanced load balancer to
+tackle broker failure, which is an improvement over the current
+MQTT protocol specification.
+The paper proposes a 3-layer architecture for maintaining
+a decentralized broker layer that interacts with a blockchain
+smart contract layer, to disseminate information topic-wise to
+the subscribed and published clients and brokers. The pro-
+posed system architecture ensures a broker-less, decentralized,
+novel implementation of a brokerful, centralized protocol like
+MQTT.
+2023 Third International Conference on Advances in Electrical, Computing, Communication and Sustainable Technologies (ICAECT) | 978-1-6654-9400-7/23/$31.00 ©2023 IEEE | DOI: 10.1109/ICAECT57570.2023.10118032
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:52:07 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.2 =====
+II. RELATED WORK
+A. Internet of Things (IoT)
+IoT is being utilized more with every passing day. It is
+used as an embedded technology that the manufacturers use
+in multiple applications around every industry. This increase
+in industrial and personal use of IoT is directly proportional
+to the use of several lightweight networking protocols like
+MQTT, AMQP, and RCS.
+MQTT is one of the highest used messaging protocols in
+IoT networks. MQTT has different levels of fault tolerance
+implemented via several features like LWT, QoS, and Retained
+Messages which can tackle network and connection failure
+on the receivers end, but none for broker failure. Although
+being a lightweight, fast IoT protocol, MQTT does have
+memory constraints when brokers being deployed on the edge,
+especially on low-powered devices, are considered.
+B. Blockchain
+Blockchain provides a decentralized, public and immutable
+list of records. The logs of a blockchain are encrypted (or
+hashed). Blockchain is built on a hash function that chains
+all of its nodes using the information from the previous block
+for one-way encryption. This can thus act as a decentralized,
+storage mechanism with lesser memory constraint than edge
+broker system memories. Blockchain smart contracts not only
+store the data in an immutable manner, but they also ensure
+data integrity, non-repudiation, and security, the three factors
+often missing in most implementations of IoT protocols.
+With the decentralized implementation, the earlier central-
+ized broker will be migrated to a decentralized architecture as
+well. There will be multiple nodes for a broker system that
+will operate under a single domain name that is provided by a
+Blockchain Naming Service (BNS) [4] [5]. This BNS will have
+the whole network of nodes for the broker encapsulated by
+it, subsequently load-balancing the entire network of brokers
+operating under the load balancer.
+C. Previous Work
+In previous studies conducted, the authors have noticed a
+pattern of research where researchers focused on the improve-
+ment of the consensus algorithms in the blockchain-backed
+MQTT system [6], or focused on creating a hybrid architecture
+using fog-computed devices [7], or even explore CoAP as
+an alternative to MQTT to interact with the blockchain [8].
+The main focus was always to secure the transactions taking
+place in an MQTT broker using algorithms like Byzantine
+fault tolerance and ensure data security and integrity [9] [10]
+[11] [12] [13] [14]. The focus of this paper lies in removing
+the centralized modules in an MQTT connection system and
+replacing them with decentralized technologies.
+III. ARCHITECTURE
+The proposed solution this paper presents has a 3-layer
+architecture [15] [16] [17], comprising three major modules
+following a decentralized computation approach. The modules
+as shown in Figure [1].
+Fig. 1. Architecture Diagram.
+A. Blockchain Smart Contract Layer
+This module can be thought of as the backend for
+blockchain computation, consisting of a network of smart
+contracts deployed on a blockchain. This is where separate
+smart contracts compute and interact with each other and the
+decentralized broker layer to run queries and iterations over
+the blockchain for the required features and functionalities.
+The broker layers execute RPC calls to the Blockchain APIs
+to initiate transactions, and bring changes to the data stored
+in the blockchain.
+The implementation proposed has three separate contracts,
+each having a specific implementation for the desired reme-
+dies.
+1) Handling Multiple Retained Messages: The current im-
+plementation of Retained Messages in MQTT has a
+shortcoming. As per the specification, the broker has
+required to only store the last retained message it
+has received from the client. This is unfavorable for
+implementations where the newly subscribed client is
+supposed to receive an array of multiple data points. This
+can be improved by implementing distributed ledger
+technology to store the blocks of retained message data.
+The transition of storage from the broker hardware to
+a blockchain has removed the storage limitation. This
+enables multiple messages with the ’retained’ flag set as
+true to be linked with the blockchain. This smart contract
+appends, retrieves, and purges the stated messages for
+the subscribers. These operations are focused on ’Topic-
+based’ MQTT networks.
+2) Handling Dead Letter Queues for Broker Failures: The
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:52:07 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.3 =====
+QoS Level 1 and 2 in MQTT ensures fault tolerance
+and re-sending of unacknowledged messages. But the
+dead letter queue is maintained in the system memory
+of the broker, which becomes a system limitation. This
+can be overcome by storing the data in Blockchain. This
+paper proposes a Dead Letter Exchange (DLX) for every
+message pushed from the publisher. The messages after
+being pushed from the publisher are stored in a DLX, if
+the subscriber does not acknowledge, from which they
+are retrieved via a smart contract and then pushed to
+the subscriber, as soon as it connects with an unclean
+session. This acts as a replacement for the stated system
+memory problem, which enables brokers to store large
+amounts of unacknowledged messages.
+3) Handling Domain Name Resolution: The current im-
+plementation has no support for broker failure [18].
+In a situation, the publisher pushes the messages to
+the broker for its specified topics and the broker is
+inactive, the messages will be lost. The paper presents
+a feature to handle multiple decentralized brokers via
+a load-balancing layer. Utilizing the naming services
+provided by blockchains, this smart contract will act as a
+resolution between the various nodes of a decentralized
+naming service [19] [20] [21]. On top of that, it can also
+act as a smart load balancer, which can migrate topics
+and handle broker failures so that the clients never lose
+any data due to broker failure.
+B. Decentralised Broker Layer
+The module represents multiple brokers, which are edge-
+computed, and low-powered, operating under a common load
+balancer. This ensures that the entire architecture is not de-
+pendent on a single point of failure, and the load balancer
+ensures that all the brokers operate in such a way that they
+never cross their bandwidth constraints. The load balancer is
+backed by the smart contract layer for all the computations
+and is also exposed to the public via the Blockchain Naming
+Services (BNS).
+C. Client Application Layer
+In this module, the client entities reside, and this module is
+independent of the backend architecture. The entities include:
+1) Publisher
+2) Pub/Sub
+3) Subscriber
+The paper ensures that the backend architecture is always
+backward-compatible with earlier versions of MQTT as well as
+it should support native client applications. There need not be
+any modifications on the client applications for them to adapt
+to this improved implementation of MQTT. The clients are
+expected to operate in all three modes: Publisher, Subscriber,
+and Pub/Sub Client as well. All the clients are expected to
+connect to the BNS-provided address, instead of the individual
+brokers.
+IV. ALGORITHMS
+This paper presents the novelty of its implementations
+through the following algorithms
+A. Retaining Messages in MQTT
+Figure[2] shows how the retained messages are tackled
+in the system. Message packets sent via publication to the
+subscribers go through the broker. As soon as the brokers
+receive a publication request, they will check the MQTT
+packet for the ’retained’ flag to see if the publisher wants
+it published as a retained message. If the broker receives a
+retained message, it then calls the smart contract layer to
+store the retained message under that specific topic. The smart
+contracts maintain a queue of retained messages per topic, so
+when a new client joins the network and subscribes to the
+specific topic, the broker calls the contract state to retrieve the
+queue of the retained messages for that topic and publishes it
+to the newly connected client.
+Fig. 2. Algorithm for retained messages.
+B. Implementing a Dead Letter Exchanges
+In Figure[3], to tackle unacknowledged messages, in cases
+where the subscribers are offline or have been disconnected
+abruptly, the message is pushed to a Dead Letter Queue
+(DLQ). In a case where the subscriber is unavailable or
+disconnected, the message will not be popped out of the DLQ.
+The DLQ is responsible for storing all the unacknowledged
+messages sent with a QoS ¿ 0. As soon as the subscribing
+client reconnects with the network, the brokers fetch and pop
+the queue to send the previously unacknowledged data back
+to the clients. This ensures that for topics where packets are
+being transferred with QoS ¿ 0, the clients receive all the
+unacknowledged messages, how bandwidth-consuming it may
+be, without any hiccups on the system memory of the brokers
+via the power of blockchain.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:52:07 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.4 =====
+Fig. 3. Algorithm for dead letter exchange of messages.
+C. Blockchain Naming Services for Broker Failure
+Figure[4] shows how the load balancer maintains a persis-
+tent address on the BNS and all other brokers under that BNS.
+Instead of putting a single URL for the broker connection,
+encapsulating the broker in a load balancing layer that is
+connected to a smart contract with a Blockchain Naming
+Service (BNS) URL dedicated to it. The MQTT clients will
+connect to the BNS URL, and the smart contract will balance
+the load between the decentralized servers. It acts as a DNS
+registrar as well, pointing each client toward the appropriate
+broker. In case of broker failure or overload, the load balancer
+is supposed to migrate the affected topics to another available
+broker so that the end clients do not face any problems.
+Fig. 4. Algorithm for Blockchain Naming Services implementation.
+Fig. 5. Experimental setup for PoC demonstration.
+V. RESULTS
+The Proof of Concept prepared for the paper demonstrates
+a network of one publisher, say P1, and two subscribers,
+say S1 and S2, as per Figure[5]. Let’s assume that S1 has
+a good connection, whereas S2 has a bad connection and
+disconnects frequently. The custom broker for this implemen-
+tation is written in Node.JS, while the smart contract layer is
+written in SCILLA, which is used to deploy smart contracts
+on the Zilliqa blockchain. In order to set up the publishing
+and subscribing clients, the software ’MQTTX’ was used to
+connect to the custom broker over the MQTT protocol.
+Figure[6] shows a sample smart contract where the state of
+the contracts stores the retained messages on a topic basis in
+a dictionary format. The keys of the dictionary are the topic
+names, and the values are the array of the retained messages
+for the said topic.
+Figure[7] shows the server output logs
+Fig. 6. State storage in Smart Contracts
+from a deployed custom broker. It is visible that the broker
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:52:07 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.5 =====
+Fig. 7. Server output logs
+simply passes the publication request for normal publications,
+but when it comes to retained messages, it calls a blockchain
+smart contract transition to store the retained messages.
+In Figure [8], [9], and [10], a setup of two subscribers
+and a publisher connected to the network is demonstrated.
+The publisher P1 publishes both retained, and non-retained
+messages to both the clients S1 and S2, but one of them, S2,
+mentioned in Figure [10] disconnects due to some problem in
+between the transmissions. Although this time, due to some of
+the messages having QoS ¿ 0 and the retained flag set to ’true’
+for the retained messages, the broker retains those messages
+which were sent by the publisher by calling transactions on
+the blockchain and then transmits them to the reconnected
+subscriber as soon as possible after fetching it from the
+blockchain by fetching the smart contract state.
+This Proof of Concept demonstrates the capability of utiliz-
+ing a much more elastically scalable solution to the retained
+messages in the MQTT protocol. It does away with the system
+limitations of the current implementations of the broker sys-
+tems in MQTT. In a similar fashion, the algorithms proposed
+in the paper can be implemented.
+Fig. 8. Publisher sending retained and non-retained publications
+Fig. 9. Subscriber receiving retained and non-retained publications.
+VI. CONCLUSION
+The paper serves as a Proof of Concept for integration be-
+tween IoT and blockchain over the commonly used networking
+protocol, MQTT. The storage and memory limitation of the
+hardware IoT devices is eliminated by the blockchain. With
+the use of Dead Letter Queues, the memory limitation of QoS
+levels 1 and 2 was also removed.
+Fig. 10. Disconnected subscriber receiving retained publications.
+Broker failure in a transmission of a topic-based message
+from the publisher to the subscriber is handled by a load-
+balancing layer that encapsulates a BNS network. If a single
+broker fails, there will be other nodes connected and load
+balanced as a fallback mechanism.
+The current research opens up a new path for exploration,
+and further work can be done on this implementation. The
+brokers can be replaced with a network of smart contracts
+deployed on the blockchain, which interact with each other via
+message passing and create a broker-less virtual architecture
+for the publishers and subscribers to connect to, compared
+to the current hybrid architecture that involves software layer
+as well as a hardware layer. The serverless and virtual archi-
+tecture can then be compared to the current implementation
+to see the performance, latency, and bandwidth consumption
+comparisons.
+REFERENCES
+[1] Silva, D., Carvalho, L.I., Soares, J. and Sofia, R.C., 2021. A performance
+analysis of internet of things networking protocols: Evaluating MQTT,
+CoAP, OPC UA. Applied Sciences, 11(11), p.4879.
+[2] Sadeq, A.S., Hassan, R., Al-rawi, S.S., Jubair, A.M. and Aman, A.H.M.,
+2019, September. A qos approach for Internet of Things (Iot) en-
+vironment using mqtt protocol. In 2019 International Conference on
+Cybersecurity (ICoCSec) (pp. 59-63). IEEE.
+[3] Yassein, M.B., Shatnawi, M.Q., Aljwarneh, S. and Al-Hatmi, R., 2017,
+May. Internet of Things: Survey and open issues of MQTT protocol. In
+2017 international conference on engineering and MIS (ICEMIS) (pp.
+1-6). Ieee.
+[4] Liu, Y., Zhang, Y., Zhu, S. and Chi, C., 2019, December. A comparative
+study of blockchain-based dns design. In Proceedings of the 2019 2nd
+International Conference on Blockchain Technology and Applications
+(pp. 86-92).
+[5] Cohn, J.M., Finn, P.G., Nair, S.P., Panikkar, S.B. and Pureswaran, V.S.,
+International Business Machines Corp, 2019. Autonomous decentralized
+peer-to-peer telemetry. U.S. Patent 10,257,270.
+[6] Sagirlar, G., Carminati, B., Ferrari, E., Sheehan, J.D. and Ragnoli, E.,
+2018, July. Hybrid-iot: Hybrid blockchain architecture for internet of
+things-pow sub-blockchains. In 2018 IEEE International Conference on
+Internet of Things (iThings) and IEEE Green Computing and Commu-
+nications (GreenCom) and IEEE Cyber, Physical and Social Computing
+(CPSCom) and IEEE Smart Data (SmartData) (pp. 1007-1016). IEEE.
+[7] Sharma, P.K., Chen, M.Y. and Park, J.H., 2017. A software defined
+fog node based distributed blockchain cloud architecture for IoT. Ieee
+Access, 6, pp.115-124.
+[8] Novo, O., 2018. Blockchain meets IoT: An architecture for scalable
+access management in IoT. IEEE internet of things journal, 5(2),
+pp.1184-1195.
+[9] Katende, M.M., 2019. Combining MQTT and Blockchain to improve
+data security.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:52:07 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.6 =====
+[10] Abdullah, M.A. and Alhazmi, O.H., 2021. A Triumvirate Approach of
+Blockchain MQTT and Edge Computing Toward Efficient and Secure
+IoT. In Proceedings of International Conference on Communication and
+Computational Technologies (pp. 541-550). Springer, Singapore.
+[11] Zhang, Y., Kasahara, S., Shen, Y., Jiang, X. and Wan, J., 2018. Smart
+contract-based access control for the internet of things. IEEE Internet
+of Things Journal, 6(2), pp.1594-1605.
+[12] Lao, L., Li, Z., Hou, S., Xiao, B., Guo, S. and Yang, Y., 2020. A survey
+of IoT applications in blockchain systems: Architecture, consensus, and
+traffic modeling. ACM Computing Surveys (CSUR), 53(1), pp.1-32.
+[13] Sagirlar, G., Carminati, B. and Ferrari, E., 2018. Decentralizing privacy
+enforcement for Internet of Things smart objects. Computer Networks,
+143, pp.112-125.
+[14] Buchman, E., 2016. Tendermint: Byzantine fault tolerance in the age of
+blockchains (Doctoral dissertation, University of Guelph).
+[15] Croman, K., Decker, C., Eyal, I., Gencer, A.E., Juels, A., Kosba, A.,
+Miller, A., Saxena, P., Shi, E., G¨un Sirer, E. and Song, D., 2016, Febru-
+ary. On scaling decentralized blockchains. In International conference on
+financial cryptography and data security (pp. 106-125). Springer, Berlin,
+Heidelberg.
+[16] Li, C. and Zhang, L.J., 2017, June. A blockchain based new secure multi-
+layer network model for internet of things. In 2017 IEEE international
+congress on internet of things (ICIOT) (pp. 33-41). IEEE.
+[17] Driscoll, K., Hall, B., Sivencrona, H. and Zumsteg, P., 2003, September.
+Byzantine fault tolerance, from theory to reality. In International Con-
+ference on Computer Safety, Reliability, and Security (pp. 235-248).
+Springer, Berlin, Heidelberg.
+[18] Conoscenti, M., Vetro, A. and De Martin, J.C., 2016, November.
+Blockchain for the Internet of Things: A systematic literature review.
+In 2016 IEEE/ACS 13th International Conference of Computer Systems
+and Applications (AICCSA) (pp. 1-6). IEEE.
+[19] Panarello, A., Tapas, N., Merlino, G., Longo, F. and Puliafito, A., 2018.
+Blockchain and iot integration: A systematic survey. Sensors, 18(8),
+p.2575.
+[20] Uddin, M.A., Stranieri, A., Gondal, I. and Balasubramanian, V., 2021.
+A survey on the adoption of blockchain in iot: Challenges and solutions.
+Blockchain: Research and Applications, 2(2), p.100006.
+[21] Dedeoglu, V., Jurdak, R., Putra, G.D., Dorri, A. and Kanhere, S.S., 2019,
+November. A trust architecture for blockchain in IoT. In Proceedings of
+the 16th EAI international conference on mobile and ubiquitous systems:
+computing, networking and services (pp. 190-199).
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:52:07 UTC from IEEE Xplore.  Restrictions apply. 

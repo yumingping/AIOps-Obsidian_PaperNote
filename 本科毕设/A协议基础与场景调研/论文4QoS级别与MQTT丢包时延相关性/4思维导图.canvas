@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "e6a8efc01e8e17d1",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 56,
+   "text": "QoS 越高越可靠但越慢——代价差异没有定量依据"
+  },
+  {
+   "id": "2184c48d1952ad5f",
+   "type": "text",
+   "x": 760,
+   "y": 80,
+   "width": 420,
+   "height": 56,
+   "text": "OMNeT++ 仿真结果不可信"
+  },
+  {
+   "id": "4fa178276c6ba30e",
+   "type": "text",
+   "x": 760,
+   "y": 204,
+   "width": 420,
+   "height": 56,
+   "text": "真实商业网络抓包实测（非仿真）"
+  },
+  {
+   "id": "622d30c3fbe5cade",
+   "type": "text",
+   "x": 760,
+   "y": 284,
+   "width": 420,
+   "height": 56,
+   "text": "有线 / 无线 3G 双对照组"
+  },
+  {
+   "id": "2f747b147ac29f20",
+   "type": "text",
+   "x": 760,
+   "y": 364,
+   "width": 420,
+   "height": 80,
+   "text": "payload 1k–16k × QoS 0/1/2 全组合"
+  },
+  {
+   "id": "2c7537aa17d06a46",
+   "type": "text",
+   "x": 760,
+   "y": 512,
+   "width": 420,
+   "height": 80,
+   "text": "QoS0 一报文 / QoS1 两报文 / QoS2 四次握手"
+  },
+  {
+   "id": "0ba12b54273cb34b",
+   "type": "text",
+   "x": 760,
+   "y": 616,
+   "width": 420,
+   "height": 56,
+   "text": "时延 = 沿途时间戳累差；丢包 = 重传请求计数"
+  },
+  {
+   "id": "4a930be29cd90eda",
+   "type": "text",
+   "x": 760,
+   "y": 696,
+   "width": 420,
+   "height": 56,
+   "text": "测量窗口固定 5 分钟"
+  },
+  {
+   "id": "7400c4c3e181e055",
+   "type": "text",
+   "x": 760,
+   "y": 820,
+   "width": 420,
+   "height": 80,
+   "text": "有线时延 0.03–0.14 s，无线 3G 0.4–1.0 s"
+  },
+  {
+   "id": "79db771987881b34",
+   "type": "text",
+   "x": 760,
+   "y": 924,
+   "width": 420,
+   "height": 80,
+   "text": "QoS2 丢包 ≈0.15% vs QoS0/1 ≈1.4%"
+  },
+  {
+   "id": "f3bb1d14c62bc16b",
+   "type": "text",
+   "x": 760,
+   "y": 1028,
+   "width": 420,
+   "height": 80,
+   "text": "时延与丢包强相关：r >0.77（QoS2 达 0.991）"
+  },
+  {
+   "id": "22d9bd4e4eda6313",
+   "type": "text",
+   "x": 760,
+   "y": 1132,
+   "width": 420,
+   "height": 56,
+   "text": "payload >4000B 分片推高时延"
+  },
+  {
+   "id": "bcf3c37d71e372ed",
+   "type": "text",
+   "x": 760,
+   "y": 1256,
+   "width": 420,
+   "height": 56,
+   "text": "任务3 的 QoS 选型依据"
+  },
+  {
+   "id": "adc8397a286e0627",
+   "type": "text",
+   "x": 760,
+   "y": 1336,
+   "width": 420,
+   "height": 56,
+   "text": "任务6 实验设计可直接照搬"
+  },
+  {
+   "id": "6aed2ef442e8a4ca",
+   "type": "text",
+   "x": 760,
+   "y": 1460,
+   "width": 420,
+   "height": 80,
+   "text": "Ubuntu：mosquitto + tcpdump + Wireshark 复现"
+  },
+  {
+   "id": "2d0fbb7a0b977f81",
+   "type": "text",
+   "x": 760,
+   "y": 1564,
+   "width": 420,
+   "height": 56,
+   "text": "小消息用 QoS0/1，关键告警用 QoS2"
+  },
+  {
+   "id": "f3c30fd1ae97f235",
+   "type": "text",
+   "x": 760,
+   "y": 1644,
+   "width": 420,
+   "height": 80,
+   "text": "订阅端按 packet id 去重（QoS1 会重复）"
+  },
+  {
+   "id": "add76dcc1d6162cc",
+   "type": "text",
+   "x": 20,
+   "y": 779,
+   "width": 310,
+   "height": 190,
+   "text": "# QoS级别与MQTT丢包时延相关性\nLee et al.\nICOIN 2013\n三级 QoS 真网实测"
+  },
+  {
+   "id": "19d7333fc268837d",
+   "type": "text",
+   "x": 380,
+   "y": 26,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "05ba1597fdfcf5a4",
+   "type": "text",
+   "x": 380,
+   "y": 282,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "65dc0776ec3b91c1",
+   "type": "text",
+   "x": 380,
+   "y": 590,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "72101af9ef3c29b2",
+   "type": "text",
+   "x": 380,
+   "y": 962,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "6e40774860a35ef5",
+   "type": "text",
+   "x": 380,
+   "y": 1282,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "1c8eb7e61b4b65af",
+   "type": "text",
+   "x": 380,
+   "y": 1550,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "58522085d45db052",
+   "type": "file",
+   "x": 20,
+   "y": 1788,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/A协议基础与场景调研/论文4QoS级别与MQTT丢包时延相关性/4QoS级别与MQTT丢包时延相关性.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "b092ec1534275094",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "right",
+   "toNode": "19d7333fc268837d",
+   "toSide": "left"
+  },
+  {
+   "id": "4108910d577f0ef9",
+   "fromNode": "19d7333fc268837d",
+   "fromSide": "right",
+   "toNode": "e6a8efc01e8e17d1",
+   "toSide": "left"
+  },
+  {
+   "id": "eb9b5459780b1cb8",
+   "fromNode": "19d7333fc268837d",
+   "fromSide": "right",
+   "toNode": "2184c48d1952ad5f",
+   "toSide": "left"
+  },
+  {
+   "id": "4edec9d5d0aeaee8",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "right",
+   "toNode": "05ba1597fdfcf5a4",
+   "toSide": "left"
+  },
+  {
+   "id": "49b833982fdd2a2d",
+   "fromNode": "05ba1597fdfcf5a4",
+   "fromSide": "right",
+   "toNode": "4fa178276c6ba30e",
+   "toSide": "left"
+  },
+  {
+   "id": "777cdd0533bd6ea9",
+   "fromNode": "05ba1597fdfcf5a4",
+   "fromSide": "right",
+   "toNode": "622d30c3fbe5cade",
+   "toSide": "left"
+  },
+  {
+   "id": "9ce46bd36a49a6b4",
+   "fromNode": "05ba1597fdfcf5a4",
+   "fromSide": "right",
+   "toNode": "2f747b147ac29f20",
+   "toSide": "left"
+  },
+  {
+   "id": "f35abc66db209be3",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "right",
+   "toNode": "65dc0776ec3b91c1",
+   "toSide": "left"
+  },
+  {
+   "id": "a6f93eba6b011194",
+   "fromNode": "65dc0776ec3b91c1",
+   "fromSide": "right",
+   "toNode": "2c7537aa17d06a46",
+   "toSide": "left"
+  },
+  {
+   "id": "36fbab492067bbbd",
+   "fromNode": "65dc0776ec3b91c1",
+   "fromSide": "right",
+   "toNode": "0ba12b54273cb34b",
+   "toSide": "left"
+  },
+  {
+   "id": "7148c677b19dbdac",
+   "fromNode": "65dc0776ec3b91c1",
+   "fromSide": "right",
+   "toNode": "4a930be29cd90eda",
+   "toSide": "left"
+  },
+  {
+   "id": "627027e1bf9a0bef",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "right",
+   "toNode": "72101af9ef3c29b2",
+   "toSide": "left"
+  },
+  {
+   "id": "05791c50099531ea",
+   "fromNode": "72101af9ef3c29b2",
+   "fromSide": "right",
+   "toNode": "7400c4c3e181e055",
+   "toSide": "left"
+  },
+  {
+   "id": "a25603a7a0f54a06",
+   "fromNode": "72101af9ef3c29b2",
+   "fromSide": "right",
+   "toNode": "79db771987881b34",
+   "toSide": "left"
+  },
+  {
+   "id": "aa32dea3f072adac",
+   "fromNode": "72101af9ef3c29b2",
+   "fromSide": "right",
+   "toNode": "f3bb1d14c62bc16b",
+   "toSide": "left"
+  },
+  {
+   "id": "5cc204d3ba733b85",
+   "fromNode": "72101af9ef3c29b2",
+   "fromSide": "right",
+   "toNode": "22d9bd4e4eda6313",
+   "toSide": "left"
+  },
+  {
+   "id": "b4d5eb7ce149e242",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "right",
+   "toNode": "6e40774860a35ef5",
+   "toSide": "left"
+  },
+  {
+   "id": "52eb1b139e331ee0",
+   "fromNode": "6e40774860a35ef5",
+   "fromSide": "right",
+   "toNode": "bcf3c37d71e372ed",
+   "toSide": "left"
+  },
+  {
+   "id": "14496b1c62ae4a90",
+   "fromNode": "6e40774860a35ef5",
+   "fromSide": "right",
+   "toNode": "adc8397a286e0627",
+   "toSide": "left"
+  },
+  {
+   "id": "362941f03da01868",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "right",
+   "toNode": "1c8eb7e61b4b65af",
+   "toSide": "left"
+  },
+  {
+   "id": "1b2a3548c62eb52a",
+   "fromNode": "1c8eb7e61b4b65af",
+   "fromSide": "right",
+   "toNode": "6aed2ef442e8a4ca",
+   "toSide": "left"
+  },
+  {
+   "id": "ed9b08fd943a9f37",
+   "fromNode": "1c8eb7e61b4b65af",
+   "fromSide": "right",
+   "toNode": "2d0fbb7a0b977f81",
+   "toSide": "left"
+  },
+  {
+   "id": "6cbcebd44ed912ca",
+   "fromNode": "1c8eb7e61b4b65af",
+   "fromSide": "right",
+   "toNode": "f3c30fd1ae97f235",
+   "toSide": "left"
+  },
+  {
+   "id": "eab9e22ba65b76d1",
+   "fromNode": "add76dcc1d6162cc",
+   "fromSide": "bottom",
+   "toNode": "58522085d45db052",
+   "toSide": "top"
+  }
+ ]
+}

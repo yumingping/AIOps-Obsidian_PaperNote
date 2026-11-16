@@ -1,0 +1,645 @@
+
+
+===== p.1 =====
+muMQ: A Lightweight and Scalable MQTT Broker 
+ 
+Wiriyang Pipatsakulroj1, Vasaka Visoottiviseth1, and Ryousei Takano2 
+1Faculty of Information and Communication Technology (ICT), Mahidol University 
+ 2National Institute of Advanced Industrial Science and Technology (AIST) 
+wiriyang@gmail.com, vasaka.vis@mahidol.ac.th, takano-ryousei@aist.go.jp 
+ 
+ 
+Abstract—A message broker is an imperative component in 
+IoT systems, and it works as a gateway between IoT devices and 
+application platforms. With the growth of IoT devices today, 
+these systems can easily overwhelm message brokers unless the 
+software can fully utilize hardware resources such as multi-core 
+facility. This paper presents muMQ, a high-performance MQTT 
+broker running on Commercial-Off-The-Shelf hardware. It 
+tackles the challenge to improve the performance of message 
+brokering on a single machine by efficiently utilizing multi-core 
+CPUs. First, muMQ exploits an event-driven I/O mechanism for 
+multi-core scalability. Each CPU core equally handles dispatched 
+TCP connections and locally processes MQTT logic. Second, 
+muMQ adopts a user-level TCP/IP stack, mTCP with DPDK, to 
+avoid the overhead of the in-kernel TCP/IP stack, including 
+system call overhead and resource contention. We evaluate the 
+effectiveness of our approach through experiments. The results 
+show that muMQ can handle 512K or greater long-lived 
+subscribers with no message loss; muMQ achieves a publish 
+messaging rate at 930K messages per second, which is 5.38 times 
+faster than an existing MQTT broker. We also confirm mTCP 
+accelerates the performance by 1.8 times compared with muMQ 
+using the in-kernel TCP/IP stack. 
+Keywords—user-level TCP/IP stack; multi-core system; MQTT; 
+message broker; high performance computing 
+I. INTRODUCTION 
+Today the Internet of Things (IoT) is widespread in every 
+industry. The mobile sensor market grew exponentially over 
+200% per year between 2007 and 2012, and some 
+organizations forecast a continued growth of sensor devices to 
+trillion within a decade [1]. The IoT platform, e.g., Amazon 
+AWS IoT, allows such physical devices to exchange data and 
+be controlled from applications via a message broker, which is 
+an intermediate node residing in clouds or data centers. A 
+message broker provides communication channels for both 
+things and a platform, which helps to improve the scalability 
+and reliability of the IoT systems. From a topological point of 
+view, a message broker can be considered as a hub in the star 
+architecture. Every device and application are loosely-coupled 
+through a central message broker and they communicate with 
+each other indirectly. This kind of messaging paradigm is 
+known as publish/subscribe (pub/sub). 
+MQ Telemetry Transport (MQTT) [2] is an OASIS 
+standard lightweight messaging protocol for IoT systems. It is 
+designed as a topic-based, pub/sub messaging transport for 
+constrained devices and networks. A message broker, called an 
+MQTT broker, is a crucial component for the performance and 
+scalability of IoT systems. 
+To increase the capacity of a message broker running on a 
+single machine, vertical scalability is an inefficient approach if 
+software cannot optimally utilize hardware resources. For 
+instance, a popular MQTT broker implementation, Mosquitto 
+[3], exploits only one CPU core to handle TCP connections and 
+find matching subscribers in a topic hierarchy. This is a reason 
+for a lack of increased performance even as more CPU cores 
+are available. Moreover, prior research works show that the in-
+kernel TCP/IP stack is a burden on network packet processing 
+because it does not make use of  multi-core systems completely 
+[4][5]. To overcome this problem, many user-level networking 
+stacks have been proposed for specific networking systems 
+[6][7][8][9]. mTCP [6] is a scalable user-level TCP/IP stack for 
+multicore systems. 
+This paper proposes muMQ, a lightweight and scalable 
+MQTT broker. The design of muMQ conforms to two main 
+ideas regarding the C10M problem [10], which is described as 
+how one server machine handles 10 million simultaneous 
+connections. First, multi-core scalability can improve the speed 
+of network packet processing by equally distributing TCP 
+connections among CPU cores. Each core processes its own 
+socket events and looks up subscribers in the topic tree. 
+Second, kernel bypass is an approach where a data plane is 
+separated from a control plane by being moved from the kernel 
+space into user space. A user-space TCP/IP stack can then 
+reduce the overhead of the in-kernel networking stack as prior 
+studies show the system call overhead [4] and resources 
+contention on multi-core systems [5] of the operating system. 
+muMQ employs, a state-of-the-art user-level TCP/IP stack, 
+mTCP on the top of Data Plane Development Kit (DPDK) 
+[11]. 
+There are three main contributions of this work as follows: 
+First, we design a lightweight and scalable MQTT broker that 
+employs multi-core scalability and kernel bypass techniques. 
+muMQ can be configured to run with two TCP/IP 
+implementations, i.e., Linux kernel TCP/IP stack and mTCP 
+user-space TCP/IP stack. Second, we compare the end-to-end 
+latency and throughput between Mosquitto and muMQ through 
+experiments under heavy workload where multiple clients 
+deliver messages. Third, we reveal the effectiveness and issues 
+of a user-level and an application-specific TCP/IP stack 
+especially for pub/sub message brokering. 
+The rest of the paper is organized into the following 
+sections: Section II briefly describes the related work. Section 
+III presents the design and implementation of our MQTT 
+broker in detail. Section IV shows our experimental results on 
+978-1-5386-0728-2/17/$31.00 ©2017 IEEE.
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:59:34 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.2 =====
+a 10 Gigabit Ethernet environment. In Section V, we discuss 
+lessons learnt from our experiment. Finally, Section VI 
+summarizes the paper.  
+II. RELATED WORK 
+A. MQTT broker 
+ 
+At present there are many message brokers supporting 
+MQTT. Most of them use different techniques to handle client 
+connections. Mosquitto [3] uses an event-driven technique by 
+using poll system call to handle multiple network sockets 
+within a single thread. To utilize multi-core capability, clusters 
+consisting of multiple brokers is a possible solution. However, 
+the deployment and configuration are not trivial. Apache 
+ActiveMQ [12] creates a thread pool and assigns one thread to 
+handle a corresponding connection. The disadvantage of this 
+technique is that it involves heavy context switching when 
+handling many connections. Moreover, the cost of context 
+switching itself is considerable. RabbitMQ [13] is a message 
+broker written in Erlang language. The Erlang virtual machine 
+uses a lightweight thread pool to perform asynchronous I/O 
+operations. Nevertheless, the number of CPU cores utilized 
+depends on the Erlang VM not the application itself. muMQ is 
+built to utilize multiple CPU cores and each core handles 
+connections evenly by using epoll-like event notification and 
+OS bypass techniques.  
+B. Scalable I/O multiplexing 
+Message brokers adapt the pub/sub messaging pattern for 
+communication between publishers and subscribers. However, 
+from the system architecture perspective, it is the server side of 
+a client-server system. In building server applications, there are 
+many techniques, but the most popular technique is I/O 
+multiplexing using epoll notification. The advantage of I/O 
+multiplexing is that one thread or process can handle many 
+socket descriptors at the same time. Socket operations like 
+read, write, connect and close do not block a thread or process 
+to wait for their completion that avoids wasting CPU cycles. 
+The application will be notified which socket becomes 
+readable by the kernel. This mechanism is called readiness 
+model. 
+Many different event dispatch mechanisms were used such 
+as select, poll, and epoll system calls. However, epoll 
+event notification is designed to scale for larger numbers of 
+connections rather than select and poll. The problem of select 
+and poll is that they return all interest connections rather than 
+active connections. This can cause significant increase in 
+overheads when the number of interest connections is much 
+larger than that of events occurring. On the contrary, epoll 
+mechanism separates active connections from interest 
+connections. Furthermore, epoll can reduce the number of 
+generated events by using edge-triggered mode. This mode 
+returns events only when there is a state change of socket 
+descriptors. Unlike level-triggered mode, it will keep returning 
+events until the state of socket descriptors becomes inactive. 
+To leverage multi-core processors in I/O multiplexing, 
+Linux kernel 3.9 introduced SO_REUSEPORT socket option 
+[14]. This option allows multiple sockets to be bound to the 
+same port. This technique enables multiple threads or processes 
+to have their own listening sockets for accepting incoming 
+connections and process network packets according to the 
+events. 
+C. User-level TCP/IP networking 
+Moving a TCP/IP stack from the kernel to the user space 
+can benefit high-performance networking systems in many 
+ways. First, the TCP/IP stack can be optimized for an 
+individual application without modifying the kernel. Second, it 
+enables the use of recently available, mature, user-level 
+networking development libraries, e.g., DPDK. They alleviate 
+the difficulty of high-performance networking programming. 
+Some TCP/IP stack implementations on top of DPDK have 
+been proposed. 
+ 
+mTCP is a user-level TCP/IP stack that achieves high 
+performance of short-lived TCP connections on multi-core 
+machines. It performs best when the message size is less than 1 
+KB. It also provides BSD-like socket and epoll-like event-
+driven interfaces so as to reduce effort in porting existing 
+applications. mTCP is implemented as a dynamic library and 
+an application can use it by linking to the mTCP library. mTCP 
+runs on the top of several packet I/O engines, including 
+PacketShader [15], DPDK, and netmap [7]. 
+ 
+By using Intel DPDK, mTCP sends and receives packets 
+via DPDK APIs such as rte_eth_tx_burst and 
+rte_eth_rx_burst. DPDK is a set of libraries and user-
+space optimized network drivers for fast packet processing. 
+The framework creates a set of libraries through the creation of 
+an Environment Abstraction Layer (EAL) for a specific 
+platform. The set of libraries includes queue, buffer and 
+memory management as well as packet-processing helpers. 
+The Poll Mode Driver (PMD) is a user-space driver that 
+directly accesses the hardware resources of Network Interface 
+Card (NIC), including reception and transmission descriptors, 
+without any interventions by the kernel. In addition to taking 
+advantage of a fast packet I/O engine, mTCP has its own 
+designs to enhance the performance of the TCP/IP stack: 
+batched packet processing, flow-level core affinity, and per-
+core data structure. 
+A previous study [16] ports existing KVS systems such as 
+Redis and memcached to mTCP rather than the in-kernel 
+TCP/IP stack. However, the study shows that porting 
+memcached to use mTCP is difficult because an event loop 
+waits for events of file descriptors, some of which are not TCP 
+sockets. muMQ also utilizes the advantages of mTCP, but the 
+message pattern is different because a published message and 
+its corresponding published message can be run over a 
+different TCP connection. 
+III. DESIGN & IMPLEMENTATION 
+This section describes the design of muMQ and the 
+implementation to address the challenges described as below: 
+• High single-node throughput: muMQ is mainly aimed 
+at handling a large number of IoT devices. A high-
+throughput node can reduce the number of replications 
+because one machine can handle more connections. 
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:59:34 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.3 =====
+• Low end-to-end latency: The end-to-end latency affects 
+the performance of connected clients as well as the 
+system because the client must wait for their response 
+in case the subsequent request matters. 
+• MQTT standard compliance: In order to guarantee 
+interoperability with a diverse number of client 
+implementations, MQTT is used as a communication 
+protocol. 
+• Commercial-Off-The-Shelf (COTS) hardware: muMQ 
+can run on general-purpose, multi-core systems without 
+hardware customization. 
+A. Design 
+As shown in Fig. 1, there are three main components in 
+muMQ at application level. The first component is the socket 
+event loops that process MQTT logic in response to socket 
+events. The second component is a single-instance topic tree, 
+which stores subscription topics for performing subscription 
+matching. The third component is an in-memory table to keep 
+memory pointers of client structure. The structure holds 
+client information like socket descriptors, MQTT states, 
+timestamps, client Id and so on. The memory pointer is 
+indexed by using its socket descriptor. The table is pre-
+allocated at the program startup; the details of which will be 
+described below. For the transport layer, muMQ supports both 
+the standard Linux kernel TCP/IP stack and mTCP user-level 
+TCP/IP stack. 
+muMQ adopts the event-driven technique by using epoll 
+notification mechanism to handle multiple connections within a 
+single thread. Moreover, it makes use of multi-threading by 
+running multiple event loops for processing incoming 
+connections and TCP packets in parallel. The event loop waits 
+for socket events from the TCP/IP stack and checks whether 
+there are available sending packets on message queues. When 
+an event loop gets notified with an EPOLLIN event from the 
+TCP/IP stack, it reads data from the receive socket buffer. 
+Then, it interprets TCP packets into an MQTT packet. After 
+that the packet is passed to MQTT process logic following the 
+MQTT standard. For a CONNECT packet, when a client 
+establishes a TCP connection with muMQ, the connection is 
+dispatched to one of event loops. After the TCP connection is 
+established and muMQ receives a CONNECT packet, muMQ 
+stores the client information in the in-memory table by using 
+its socket descriptor returned by the TCP stack to access the 
+element in the table. Later if muMQ receives a DISCONNECT 
+packet, it disconnects the TCP connection and removes the 
+disconnecting client information from the table by setting the 
+client structure to zero. 
+muMQ uses a topic hierarchy for storing subscription 
+topics. In the MQTT protocol, the topic name can be divided 
+into many levels with ‘/’. In other words, the topic name is 
+represented in the logical tree. The data structure of the topic 
+hierarchy is a dynamic tree. Each node represents a level-
+divided topic name and holds matching subscriber’s memory 
+pointers located in the in-memory table. Furthermore, when 
+wildcard characters (#, +) are applied to the subscription, an 
+event loop creates nodes holding ‘#’ and ‘+’ respectively 
+before nodes containing an exact topic name whose a parent 
+node is same. This technique helps subscribers registering 
+topics with wildcards get published messages first. When 
+receiving a SUBSCRIBE packet, an event loop applies a write 
+lock on the root node to prevent other event loops from 
+modifying the topic tree. It divides the subscription topic name 
+into topic levels. Traversing topic nodes in the tree always 
+starts at the root node and descends to lower levels until 
+finding a leaf node. At a lower level, the event loop checks 
+whether the topic name matches a subscription topic or not. If a 
+topic name is found, it appends a memory pointer of the 
+registering subscriber into a linked list of that node. If a topic 
+name does not exist, a new node is created. After finishing, the 
+event loop releases the write lock on the root node. For a 
+PUBLISH packet, an event loop applies a read lock on the root 
+node and searches matching subscribers by using the same 
+method in traversing the topic tree. After knowing subscribers’ 
+memory pointers, the event loop pushes the published message 
+into message queues of matching subscribers. Finally, it 
+releases the read lock on the root node. 
+Fig. 1 shows the overview of muMQ utilizing both mTCP 
+and the in-kernel TCP/IP stack. In case the mTCP is selected, 
+muMQ bypasses the in-kernel protocol stack. At the packet I/O 
+level, interrupts are distributed to specific CPU cores with 
+receive-side scaling (RSS) and the PMD reads packets from the 
+NIC directly. At the TCP/IP level, a TCP thread retrieves 
+batched packets from a reception descriptor of the NIC and 
+performs TCP/IP processing. When the work is done, the 
+ 
+Fig. 1 The overview of muMQ 
+Fig. 2 muMQ thread model 
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:59:34 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.4 =====
+thread signals muMQ that there are incoming packets. At the 
+application level, muMQ calls mTCP-epoll API to poll the 
+events from the TCP thread. When muMQ is notified, it reads 
+data from socket buffer to process MQTT messages. If the 
+packet is a published message, muMQ pushes the message on a 
+matching subscriber’s message queue. The application thread 
+that handles the matching subscriber sends the message out to 
+the TCP level. Lastly, the TCP thread pushes data out in batch 
+to a transmission descriptor of the NIC. 
+B. Thread model 
+As mentioned above, muMQ is a single-process and event-
+driven application with multi-threading. The thread model on 
+muMQ is 1:1, which represents a relationship between one 
+TCP thread and one application thread. This means one TCP 
+thread interacts with only its counterpart or an application 
+thread pinned at the same CPU core. These two threads pass 
+data to each other via shared buffer located at their context as 
+shown in Fig. 2. We choose this thread model because an 
+mTCP context (mtcp_manager structure) can hold just one 
+mtcp_epoll descriptor. It also facilitates porting muMQ to 
+use mTCP with no mTCP modification. 
+The thread relationship on muMQ is not only between 
+mTCP and application threads, but application threads 
+themselves as well. TCP connections of publishers and 
+matching subscribers can be dispatched into different 
+application threads. This can incur a race condition if the 
+application thread puts an MTCP_EPOLLOUT event into a job 
+queue on a different mTCP context. We avoid this issue by 
+creating message queues on the application context. Every 
+socket has its own message queue whose data structure is a 
+FIFO linked list. To send the data out, event loops call 
+mtcp_write() directly. 
+C. Implementation 
+muMQ is written in ~3K line of C code, which includes 
+socket event loop, subscription matching logic and MQTT 
+parser. It complies with the subset of the MQTT standard 
+version 3.1.1. For example, topic filtering with wildcard 
+characters and QoS 0 are supported. 
+We use the epoll API for waiting socket events and 
+running the event loop. For Linux kernel TCP/IP stack, we use 
+SO_REUSEPORT socket option to allow multiple listening 
+sockets to bind to the same port. We use a standard POSIX 
+thread library, pthread and the read-write lock to manage 
+thread synchronization. Subscription matching logic is 
+implemented in the representation of a dynamic tree. The logic 
+is similar to that of Mosquitto, but muMQ does not support 
+retained messages. Last, we port muMQ to mTCP by changing 
+~90 LoC to use mTCP-event and socket function calls as well 
+as modify the logic in socket descriptor semantic since we use 
+socket descriptors to locate memory pointers of client 
+structures.  
+IV. EVALUATION 
+We answer the following three questions through the 
+performance 
+evaluation 
+comparing 
+with 
+muMQ 
+and 
+Mosquitto: 
+1. Does muMQ provide a good end-to-end latency while 
+handling a large number of clients? 
+2. How many transactions does muMQ handle even 
+under high-load condition? 
+3. How does muMQ utilize CPU when handling long-
+lived subscribers? 
+Experimental setup: We conduct the performance evaluation 
+on a machine, called broker machine, equipped with 20-core 
+CPU (Intel Xeon E5-2650 @ 2.30 GHz), 252 GB RAM and an 
+Intel 10 GbE NIC. We disable Hyper-Threading and reserve 2 
+GiB in both NUMA domains for mTCP (commit hash: 
+2052a3df6f1a). Debian GNU/Linux 8.5 with kernel v.3.16.0-4 
+is running on the broker machine. As for client machines where 
+publishers and subscribers are running, we use virtual 
+machines on a machine equipped with 8-core CPU (Intel Xeon 
+E620 @ 2.4 GHz) and 20 GB RAM. CentOS 6.8 with kernel 
+v.2.6.32-642.1.1 is running on each VM instance. The number 
+of virtual machines depends on the generating workloads. Last, 
+the broker machine and client machines are connected through 
+10 Gigabit Ethernet. 
+We compared the performance of muMQ using Linux 
+kernel TCP/IP stack (muMQ-k) and mTCP (muMQ-m) as well 
+as Mosquitto. muMQ was configured to utilize not 20 CPU 
+cores but 16 CPU cores, since we found TCP connections were 
+distributed unevenly among CPU cores in the case of muMQ-
+m. Note that this limitation comes from mTCP implementation. 
+We also configure Mosquitto based on the revision b6385d3 
+for fair comparison with muMQ. Mosquitto offers extra rich 
+capabilities, some of which affect the overall performance. For 
+example, persistent database can keep published messages in a 
+secondary storage but incurs an I/O cost. In addition, $SYS 
+topic hierarchy containing broker states requires additional 
+memory allocation and increases the time in traversing the 
+topic tree. This evaluation focuses on network packet 
+processing performance, so the additional capabilities are 
+excluded. 
+Workloads: Since muMQ is intended to especially focus on 
+improving network packet processing, we use only QoS 0 
+publish messages for all tests. Each topic has three levels and 
+the size is 6 bytes. The payload size of the message is 64 bytes, 
+where it contains a 32-byte timestamp and 32 random ASCII 
+characters. 
+In the experiment, publishers generate a series of messages 
+and send them to the broker; the broker processes and forwards 
+the messages to subscribers according to the topics as fast as 
+possible. The benchmark tool is built from scratch by using 
+epoll notification and an MQTT client library provided by 
+the Mosquitto distribution. It runs with the Linux kernel 
+TCP/IP stack.  
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:59:34 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.5 =====
+A. End-to-end Latency 
+To ensure the broker can process messages while handing a 
+large number of subscribers, we measure the end-to-end 
+latencies of muMQ and Mosquitto with the number of 
+subscribers varying from 1K to 512K. The end-to-end latency 
+is defined as a period of time that a message goes from a 
+publisher to a corresponding subscriber via the broker. A 
+publisher sends five continuous messages, where publishers 
+and subscribers run on the same VM instance so as to use the 
+same clock. At the receiver side, a subscriber calculates the 
+round trip latency by comparing the current timestamp and the 
+previous timestamp inside the message published. The number 
+of VM instances used is ten. The relationship between 
+publishers and subscribers is one-to-many, and the topic for 
+each VM instance is unique. 
+As shown in Fig. 3, the average latency of muMQ and 
+Mosquitto are significantly different when the number of 
+subscribers is up to 32K or greater. On the other hand, muMQ-
+k and muMQ-m are generally the same while there is little 
+variation. With 64K subscribers, the latency of Mosquitto 
+increases to 1743 milliseconds, which is 4.3 times and 13 times 
+higher than muMQ-k and muMQ-m, respectively. This result 
+leads to the optimistic conclusion that both muMQ-k and 
+muMQ-m have sufficient capability to handle about four times 
+more subscribers than Mosquitto. 
+B. Throughput 
+We compare the messaging throughput between muMQ 
+and Mosquitto under several conditions. In this measurement, 
+publishers send messages to the broker at the maximum rate 
+possible. We also increase the size of receive/send socket 
+buffers from a default value to 4 and 32 MB respectively on 
+the broker machine to prevent socket buffers from being 
+overwhelmed. The publisher and subscriber exchange 
+messages on a one-to-one basis. Therefore, the number of 
+topics is equal to the number of pub/sub pairs. The number of 
+VM instances used is 1 for 1 and 2 pub/sub pairs and 10 for 10, 
+20, and 50 pub/sub pairs.  
+Fig. 4 shows the performance of muMQ and Mosquitto 
+under five workloads. The performance is separated into two 
+metrics: subscribe rate and publish rate. The subscribe rate is 
+the number of messages per second that an MQTT broker can 
+receive from publishers. The publish rate is the number of 
+messages per second that an MQTT broker can send to 
+subscribers. With 20 pub/sub pairs, the performance of muMQ-
+m is higher when compared with those of muMQ-k and 
+Mosquitto by up to 154% and 397%, respectively. With 50 
+pub/sub pairs, the subscribe rate of muMQ-m is 944,017 
+messages/second 
+and 
+the 
+publish 
+rate 
+is 
+930,275 
+messages/second. It is 1.8 times and 5.38 times and higher than 
+that of muMQ-k and Mosquitto respectively. 
+The result also demonstrates the performance of muMQ-k 
+saturated at the workload of 10 pub/sub pairs. The performance 
+decreases slightly when handling 20 pub/sub pairs meanwhile 
+Mosquitto’s performance is saturated at 10 pub/sub pairs and 
+decreases when the number of pub/sub pairs increases. The 
+subscribe rate of muMQ appears higher than the publish rate of 
+muMQ because there is a lock contention incurring between 
+threads. 
+At the 1 pub/sub pair the performance of Mosquitto is 
+slightly higher than muMQ-k and muMQ-m by up to 110% 
+and 104% respectively. This is because Mosquitto uses poll 
+rather than epoll system calls. For the poll mechanism, the 
+Fig. 4 Throughput under five workloads (1, 2, 10, 20 and 50 
+pub/sub pairs) 
+ 
+Fig. 3 End-to-end latency 
+Fig. 5 CPU usage when handling large numbers of  
+Subscribers 
+ 
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:59:34 UTC from IEEE Xplore.  Restrictions apply. 
+
+
+===== p.6 =====
+kernel performs more efficiently where the number of interest 
+connections is small. Another reason is that there is no lock 
+contention between two threads since Mosquitto is a single-
+thread process. 
+C. CPU utilization 
+We present the CPU usages of muMQ and Mosquitto while 
+they handle the number of subscribers varying from 1K to 
+512K. The CPU usage is measured by using Linux top 
+command after subscribers finish establishing their connections 
+at the MQTT layer. The number of VM instances used is ten; 
+and subscribers equally run on those instances. 
+Fig. 5 shows muMQ-k and muMQ-m can handle up to 
+512K subscribers. Conversely, Mosquitto can handle up to 
+about 128K subscribers. Greater than 128K subscribers, 
+Mosquitto cannot process other incoming TCP connections. 
+The CPU usage of mosquito never reaches over 100% because 
+Mosquitto utilizes only one CPU core. Note that 100% means 
+one CPU core is fully working without idle time. On the other 
+hand, the CPU usage of muMQ-k exponentially increases as 
+the number of subscribers does. Its CPU usage reaches almost 
+1400% while that of muMQ-m maintained around 1600% for 
+the total of 16 CPU cores. This is because DPDK uses Poll 
+Mode Driver (PMD), which keeps configured CPU cores busy 
+all the time for polling the NIC. In summary, muMQ-k and 
+muMQ-m can utilize multiple CPU cores as configured, which 
+helps to handle greater numbers of client connections. 
+V. DISCUSSION 
+Application-specific networking based on a user-level 
+TCP/IP stack is a promising technique [6][16]. However, we 
+discovered that porting some types of applications, e.g., a 
+message broker, for mTCP is not a straightforward task. This is 
+because a message broker cannot fully utilize multi-core 
+scalability of mTCP, such as flow-level core affinity and per-
+core data structure. First, since muMQ implements the scalable 
+I/O multiplexing technique, TCP connections are distributed 
+among CPU cores regardless whether the connections belong 
+to publishers or subscribers. This results in publishers and 
+matching subscribers being run on different CPU cores. It is a 
+completely modality from web servers and key-value stores. 
+Second, when such circumstance occurs, muMQ then forwards 
+a published message to a subscriber. It can cause a lock 
+contention at the subscriber’s message queue. Nevertheless, 
+this effect happens only when many published topics match a 
+subscriber at the same time. 
+A hybrid of multi-process and multi-thread architecture is 
+another solution for utilizing multi-core facility. Mosquitto 
+supports a bridge mode that can form a cluster of message 
+brokers. In this mode, a bridge process delegates messages to 
+other broker processes according to topics. With this technique, 
+multiple CPU cores are utilized according to the number of 
+Mosquitto 
+processes. 
+Nonetheless, 
+the 
+communication 
+overhead between processes can penalize the performance. The 
+more messages are propagated inside the cluster, the poorer the 
+performance is. 
+VI. CONCLUSION 
+muMQ is a lightweight and scalable MQTT broker 
+leveraging a scalable I/O multiplexing and a user-level TCP/IP 
+stack, mTCP, with DPDK. It provides high throughput and low 
+latency when compared with an existing MQTT broker. Our 
+evaluation results show that the critical factor improving the 
+performance is multi-core scalability because muMQ can 
+process network packets in parallel. Moreover, muMQ 
+overcomes the performance limitation of the current TCP/IP 
+stack by exploiting mTCP. Finally, the experimental result 
+demonstrates 
+the 
+throughput 
+of 
+muMQ 
+with 
+mTCP 
+outperforms that of Mosquitto by up to 538%. For the future 
+work, we plan to compare the performance of other well-
+known MQTT brokers supporting multi-threading. The source 
+code is available from https://bitbucket.org/aistmu/mumq. 
+ACKNOWLEDGMENT 
+This work was partially done during an internship at AIST, 
+Japan. The authors would like to thank the members of Cyber 
+Physical Cloud Research Group for their invaluable comments. 
+The work was also supported by Faculty of Information and 
+Communication Technology, Mahidol University. 
+REFERENCES 
+[1] J. Bryzek, “Roadmap for the trillion sensor universe,” Berkeley, CA, 2 
+April 2013. 
+[2] MQTT 
+Version 
+3.1.1, 
+OASIS 
+Standard, 
+29 
+October 
+2014. 
+http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html. 
+[3] Mosquitto: 
+An 
+Open 
+Source 
+MQTT 
+v3.1/v3.1.1 
+Broker. 
+http://mosquitto.org. 
+[4] S. Han, S. Marshall, B.-G. Chun, and S. Ratnasamy. “MegaPipe: a new 
+programming interface for scalable network I/O,” In Proceedings of the 
+USENIX OSDI, pp. 135-148, 2012. 
+[5] A. Pesterev, J. Strauss, N. Zeldovich, and R. T. Morris. “Improving 
+network connection locality on multi-core systems,” In Proceedings of 
+the ACM EuroSys 2012, pp. 337-350, 2012. 
+[6] E. Jeong, S. Woo, M. A. Jamshed, H. Jeong, S. Ihm, D. Han, and K. 
+Park, “mTCP: a Highly Scalable User-level TCP Stack for Multicore 
+Systems,” In Proceedings of the USENIX NSDI 2014, pp. 489–502, 
+2014. 
+[7] L. Rizzo. “netmap: A Novel Framework for Fast Packet I/O,” In 
+Proceedings of the USENIX Security, pp. 101–112, 2012.  
+[8] M. Honda, F. Huici, C. Raiciu, J. Araujo, and L. Rizzo. “Rekindling 
+Network Protocol Innovation with User-level Stacks,” SIGCOMM 
+Comput. Commun. Rev., 44(2):52–58, Apr. 2014. 
+[9] I. Marinos, R. N. M. Watson and M. Handley. “Network stack 
+specialization for performance,” In Proceedings of the ACM HotNets-
+XII, pp. 1-7, 2013. 
+[10] The C10M problem. http://c10m.robertgraham.com/p/manifesto.html. 
+[11] DPDK: Data Plane Development Kit. http://dpdk.org. 
+[12] Apache ActiveMQ. http://activemq.apache.org. 
+[13] RabbitMQ. https://www.rabbitmq.com. 
+[14] The SO_REUSEPORT socket option. https://lwn.net/Articles/542629/. 
+[15] S. Han, K. Jang, K. Park, and S. Moon, “PacketShader: a GPU-
+accelerated software router,” In Proceedings of the ACM SIGCOMM 
+2010, pp. 195-206, 2010. 
+[16] S. Thongprasit, V. Visoottiviseth, and R. Takano, “Toward Fast and 
+Scalable Key-Value Stores Based on User Space TCP/IP Stack,”  In 
+Proceedings of AINTEC 2015, pp.40–47, 2015. 
+ 
+Authorized licensed use limited to: XIDIAN UNIVERSITY. Downloaded on November 16,2026 at 06:59:34 UTC from IEEE Xplore.  Restrictions apply. 

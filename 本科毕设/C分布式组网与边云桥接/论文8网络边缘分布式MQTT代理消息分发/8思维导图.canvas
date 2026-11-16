@@ -1,0 +1,421 @@
+{
+ "nodes": [
+  {
+   "id": "63b3506c38837b76",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 56,
+   "text": "边缘链路容量与算力受限"
+  },
+  {
+   "id": "c52c11451c79fb50",
+   "type": "text",
+   "x": 760,
+   "y": 80,
+   "width": 420,
+   "height": 56,
+   "text": "泛洪（PF/SF）不看 topic 层级，冗余流量大"
+  },
+  {
+   "id": "d57119caf7d06cb7",
+   "type": "text",
+   "x": 760,
+   "y": 204,
+   "width": 420,
+   "height": 56,
+   "text": "**SSF：转发订阅前做 topic 包含判定**"
+  },
+  {
+   "id": "e0d2bc692237496c",
+   "type": "text",
+   "x": 760,
+   "y": 284,
+   "width": 420,
+   "height": 56,
+   "text": "只发未被已有订阅覆盖的订阅"
+  },
+  {
+   "id": "cdd61bca4128a7e2",
+   "type": "text",
+   "x": 760,
+   "y": 408,
+   "width": 420,
+   "height": 56,
+   "text": "包含判定 O(min 层数) 线性时间，工程可行"
+  },
+  {
+   "id": "1e2713fbdf6dd6c3",
+   "type": "text",
+   "x": 760,
+   "y": 488,
+   "width": 420,
+   "height": 56,
+   "text": "broker 间订阅永不重复、永不重叠"
+  },
+  {
+   "id": "74461f2bad7e8d5c",
+   "type": "text",
+   "x": 760,
+   "y": 568,
+   "width": 420,
+   "height": 56,
+   "text": "退订时补发被覆盖的窄订阅（防漏报）"
+  },
+  {
+   "id": "4e241b1c8f98bdcf",
+   "type": "text",
+   "x": 760,
+   "y": 648,
+   "width": 420,
+   "height": 56,
+   "text": "假设网络无环"
+  },
+  {
+   "id": "daa5fcb81c6c5b18",
+   "type": "text",
+   "x": 760,
+   "y": 772,
+   "width": 420,
+   "height": 56,
+   "text": "SSF 比 SF 省订阅流量 42–73%"
+  },
+  {
+   "id": "a06c36865de2369b",
+   "type": "text",
+   "x": 760,
+   "y": 852,
+   "width": 420,
+   "height": 56,
+   "text": "最坏情形比 PF 省 81% 总流量"
+  },
+  {
+   "id": "fd4c61b177f417a6",
+   "type": "text",
+   "x": 760,
+   "y": 932,
+   "width": 420,
+   "height": 80,
+   "text": "时延：PF 204 / SF 126 / SSF 101（时间槽）"
+  },
+  {
+   "id": "2d40b7cd2a58a2ef",
+   "type": "text",
+   "x": 760,
+   "y": 1036,
+   "width": 420,
+   "height": 80,
+   "text": "丢包 5→15% 时延 3.0→6.5 s 非线性恶化"
+  },
+  {
+   "id": "060981834b0b93dd",
+   "type": "text",
+   "x": 760,
+   "y": 1184,
+   "width": 420,
+   "height": 56,
+   "text": "三层边云架构：边缘主力、云只协调"
+  },
+  {
+   "id": "a4280e2c24ce7d0c",
+   "type": "text",
+   "x": 760,
+   "y": 1264,
+   "width": 420,
+   "height": 56,
+   "text": "桥接模块「该不该再转发」的判据"
+  },
+  {
+   "id": "247f0eb81c1f8a11",
+   "type": "text",
+   "x": 760,
+   "y": 1344,
+   "width": 420,
+   "height": 56,
+   "text": "IBR/SPR 两参数扫测试矩阵"
+  },
+  {
+   "id": "0a3425a005d1ead6",
+   "type": "text",
+   "x": 760,
+   "y": 1468,
+   "width": 420,
+   "height": 80,
+   "text": "Mosquitto bridge = SF 特例，直接可用"
+  },
+  {
+   "id": "3cceba5a0571ac3b",
+   "type": "text",
+   "x": 760,
+   "y": 1572,
+   "width": 420,
+   "height": 56,
+   "text": "包含判定几十行 C++ 接在转发前"
+  },
+  {
+   "id": "fd10f61b8d1f6a73",
+   "type": "text",
+   "x": 760,
+   "y": 1652,
+   "width": 420,
+   "height": 80,
+   "text": "7 节点 Docker 实测 + Wireshark 算流量"
+  },
+  {
+   "id": "5bd6b24126dc07ad",
+   "type": "text",
+   "x": 20,
+   "y": 783,
+   "width": 310,
+   "height": 190,
+   "text": "# 网络边缘分布式MQTT代理消息分发\nHao et al.\nIEEE Cybermatics 2022\nSSF 选择性订阅转发"
+  },
+  {
+   "id": "a97c5edfde7c2231",
+   "type": "text",
+   "x": 380,
+   "y": 26,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "e3df94ed6feee5e8",
+   "type": "text",
+   "x": 380,
+   "y": 230,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "f081277531ccd65b",
+   "type": "text",
+   "x": 380,
+   "y": 514,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "b4d2867ac8b56fbd",
+   "type": "text",
+   "x": 380,
+   "y": 902,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "446864895ffa79d3",
+   "type": "text",
+   "x": 380,
+   "y": 1250,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "3ab70ffe08abf2b8",
+   "type": "text",
+   "x": 380,
+   "y": 1558,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "81e213f23a828b57",
+   "type": "file",
+   "x": 20,
+   "y": 1796,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/C分布式组网与边云桥接/论文8网络边缘分布式MQTT代理消息分发/8网络边缘分布式MQTT代理消息分发.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "d777c2e9c3ca7d5f",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "right",
+   "toNode": "a97c5edfde7c2231",
+   "toSide": "left"
+  },
+  {
+   "id": "88fc0de0ed3ea029",
+   "fromNode": "a97c5edfde7c2231",
+   "fromSide": "right",
+   "toNode": "63b3506c38837b76",
+   "toSide": "left"
+  },
+  {
+   "id": "b14091bd7aee57b3",
+   "fromNode": "a97c5edfde7c2231",
+   "fromSide": "right",
+   "toNode": "c52c11451c79fb50",
+   "toSide": "left"
+  },
+  {
+   "id": "8c136555685c74da",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "right",
+   "toNode": "e3df94ed6feee5e8",
+   "toSide": "left"
+  },
+  {
+   "id": "1633707c88a84045",
+   "fromNode": "e3df94ed6feee5e8",
+   "fromSide": "right",
+   "toNode": "d57119caf7d06cb7",
+   "toSide": "left"
+  },
+  {
+   "id": "512d4d2f510a6ac2",
+   "fromNode": "e3df94ed6feee5e8",
+   "fromSide": "right",
+   "toNode": "e0d2bc692237496c",
+   "toSide": "left"
+  },
+  {
+   "id": "e016ad901bb20e8b",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "right",
+   "toNode": "f081277531ccd65b",
+   "toSide": "left"
+  },
+  {
+   "id": "bc3cf57224002018",
+   "fromNode": "f081277531ccd65b",
+   "fromSide": "right",
+   "toNode": "cdd61bca4128a7e2",
+   "toSide": "left"
+  },
+  {
+   "id": "7a0ba8f229d1f37a",
+   "fromNode": "f081277531ccd65b",
+   "fromSide": "right",
+   "toNode": "1e2713fbdf6dd6c3",
+   "toSide": "left"
+  },
+  {
+   "id": "e1d72380cdb16dd4",
+   "fromNode": "f081277531ccd65b",
+   "fromSide": "right",
+   "toNode": "74461f2bad7e8d5c",
+   "toSide": "left"
+  },
+  {
+   "id": "08f219a8ad0d2cfd",
+   "fromNode": "f081277531ccd65b",
+   "fromSide": "right",
+   "toNode": "4e241b1c8f98bdcf",
+   "toSide": "left"
+  },
+  {
+   "id": "6679d83e2856a259",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "right",
+   "toNode": "b4d2867ac8b56fbd",
+   "toSide": "left"
+  },
+  {
+   "id": "62ad2ad250e4953a",
+   "fromNode": "b4d2867ac8b56fbd",
+   "fromSide": "right",
+   "toNode": "daa5fcb81c6c5b18",
+   "toSide": "left"
+  },
+  {
+   "id": "856517c89d9ebc41",
+   "fromNode": "b4d2867ac8b56fbd",
+   "fromSide": "right",
+   "toNode": "a06c36865de2369b",
+   "toSide": "left"
+  },
+  {
+   "id": "7d79297fe087f299",
+   "fromNode": "b4d2867ac8b56fbd",
+   "fromSide": "right",
+   "toNode": "fd4c61b177f417a6",
+   "toSide": "left"
+  },
+  {
+   "id": "97adc66bd536c126",
+   "fromNode": "b4d2867ac8b56fbd",
+   "fromSide": "right",
+   "toNode": "2d40b7cd2a58a2ef",
+   "toSide": "left"
+  },
+  {
+   "id": "a884f77c3c5d0c25",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "right",
+   "toNode": "446864895ffa79d3",
+   "toSide": "left"
+  },
+  {
+   "id": "142f857187ec29b5",
+   "fromNode": "446864895ffa79d3",
+   "fromSide": "right",
+   "toNode": "060981834b0b93dd",
+   "toSide": "left"
+  },
+  {
+   "id": "6e30bbf6f59c81e7",
+   "fromNode": "446864895ffa79d3",
+   "fromSide": "right",
+   "toNode": "a4280e2c24ce7d0c",
+   "toSide": "left"
+  },
+  {
+   "id": "80847ad12f1fb52a",
+   "fromNode": "446864895ffa79d3",
+   "fromSide": "right",
+   "toNode": "247f0eb81c1f8a11",
+   "toSide": "left"
+  },
+  {
+   "id": "b5cb758e6f5a8769",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "right",
+   "toNode": "3ab70ffe08abf2b8",
+   "toSide": "left"
+  },
+  {
+   "id": "fa01a1265a42b4ce",
+   "fromNode": "3ab70ffe08abf2b8",
+   "fromSide": "right",
+   "toNode": "0a3425a005d1ead6",
+   "toSide": "left"
+  },
+  {
+   "id": "0310ff502347dd78",
+   "fromNode": "3ab70ffe08abf2b8",
+   "fromSide": "right",
+   "toNode": "3cceba5a0571ac3b",
+   "toSide": "left"
+  },
+  {
+   "id": "db4b5e635eb2f096",
+   "fromNode": "3ab70ffe08abf2b8",
+   "fromSide": "right",
+   "toNode": "fd10f61b8d1f6a73",
+   "toSide": "left"
+  },
+  {
+   "id": "84179df12779373b",
+   "fromNode": "5bd6b24126dc07ad",
+   "fromSide": "bottom",
+   "toNode": "81e213f23a828b57",
+   "toSide": "top"
+  }
+ ]
+}

@@ -1,0 +1,405 @@
+{
+ "nodes": [
+  {
+   "id": "382396363556604b",
+   "type": "text",
+   "x": 760,
+   "y": 0,
+   "width": 420,
+   "height": 80,
+   "text": "跨组织有管理壁垒 + 信任边界，broker 侧桥接行不通"
+  },
+  {
+   "id": "9ad54c8fc3ba674e",
+   "type": "text",
+   "x": 760,
+   "y": 104,
+   "width": 420,
+   "height": 56,
+   "text": "单 broker 架构在真实场景不适用"
+  },
+  {
+   "id": "510a61b02d31a3cf",
+   "type": "text",
+   "x": 760,
+   "y": 228,
+   "width": 420,
+   "height": 80,
+   "text": "client 侧桥：订阅 → 转换 → 再发布，broker 零改动"
+  },
+  {
+   "id": "811597bc3a5347d2",
+   "type": "text",
+   "x": 760,
+   "y": 332,
+   "width": 420,
+   "height": 80,
+   "text": "两种粒度对比：AUT1 每 provider 1 桥 vs AUT2 每流 1 桥"
+  },
+  {
+   "id": "2d4dd99a6f88b16e",
+   "type": "text",
+   "x": 760,
+   "y": 480,
+   "width": 420,
+   "height": 80,
+   "text": "MQTT5：No Local 防回环 + Retain As Published"
+  },
+  {
+   "id": "e8a25b8a52aa470a",
+   "type": "text",
+   "x": 760,
+   "y": 584,
+   "width": 420,
+   "height": 56,
+   "text": "通配符订阅按 provider 聚合 topic"
+  },
+  {
+   "id": "46ae2aa9c72251d5",
+   "type": "text",
+   "x": 760,
+   "y": 664,
+   "width": 420,
+   "height": 56,
+   "text": "收发端同主机保证时钟同步"
+  },
+  {
+   "id": "512c94e810d808f6",
+   "type": "text",
+   "x": 760,
+   "y": 788,
+   "width": 420,
+   "height": 80,
+   "text": "跨网+TLS 时延：QoS0/1/2 = 132/185/217 ms"
+  },
+  {
+   "id": "d96c58a0a575fb46",
+   "type": "text",
+   "x": 760,
+   "y": 892,
+   "width": 420,
+   "height": 80,
+   "text": "QoS0 下 125KB 流每千条丢 997 条；1.5KB 只丢 1"
+  },
+  {
+   "id": "deaef2008dada943",
+   "type": "text",
+   "x": 760,
+   "y": 996,
+   "width": 420,
+   "height": 80,
+   "text": "桥实例翻倍只慢 3–5 ms（传输成本 > 处理成本）"
+  },
+  {
+   "id": "78508f9a7598ed3c",
+   "type": "text",
+   "x": 760,
+   "y": 1100,
+   "width": 420,
+   "height": 80,
+   "text": "topic 15B vs 29B 差 ≤ 1.4 ms"
+  },
+  {
+   "id": "bd862030c2d89176",
+   "type": "text",
+   "x": 760,
+   "y": 1248,
+   "width": 420,
+   "height": 56,
+   "text": "边云桥接数据流的直接模板"
+  },
+  {
+   "id": "a1357bc165e5fc9b",
+   "type": "text",
+   "x": 760,
+   "y": 1328,
+   "width": 420,
+   "height": 56,
+   "text": "「传输成本 > 处理成本」的选型论据"
+  },
+  {
+   "id": "dbee1f7a04666919",
+   "type": "text",
+   "x": 760,
+   "y": 1408,
+   "width": 420,
+   "height": 56,
+   "text": "QoS 1 作默认档的实证依据"
+  },
+  {
+   "id": "8b672fd4c2ff4d8f",
+   "type": "text",
+   "x": 760,
+   "y": 1532,
+   "width": 420,
+   "height": 80,
+   "text": "C++ bridge 进程：通配订阅 + 转换 + 再发布"
+  },
+  {
+   "id": "561a4fa0f857b3f8",
+   "type": "text",
+   "x": 760,
+   "y": 1636,
+   "width": 420,
+   "height": 56,
+   "text": "启用 No Local / RAP 防回环"
+  },
+  {
+   "id": "8dc5249508b421de",
+   "type": "text",
+   "x": 760,
+   "y": 1716,
+   "width": 420,
+   "height": 56,
+   "text": "10 轮重复 × 4000 条，消息带时间戳"
+  },
+  {
+   "id": "f385c7b0be39ddac",
+   "type": "text",
+   "x": 20,
+   "y": 803,
+   "width": 310,
+   "height": 190,
+   "text": "# 跨组织MQTT桥接架构评估\nLima et al.\nICSA 2025\nclient 侧桥接 benchmark"
+  },
+  {
+   "id": "0a3c41b32d0616d6",
+   "type": "text",
+   "x": 380,
+   "y": 38,
+   "width": 250,
+   "height": 84,
+   "color": "1",
+   "text": "**问题**"
+  },
+  {
+   "id": "7ecf1563db32b1b1",
+   "type": "text",
+   "x": 380,
+   "y": 278,
+   "width": 250,
+   "height": 84,
+   "color": "2",
+   "text": "**方法**"
+  },
+  {
+   "id": "32e889c0b55bb57a",
+   "type": "text",
+   "x": 380,
+   "y": 558,
+   "width": 250,
+   "height": 84,
+   "color": "5",
+   "text": "**关键机制**"
+  },
+  {
+   "id": "7a88b4e4bcf87b53",
+   "type": "text",
+   "x": 380,
+   "y": 942,
+   "width": 250,
+   "height": 84,
+   "color": "3",
+   "text": "**关键数字**"
+  },
+  {
+   "id": "ac0e2889d4254eeb",
+   "type": "text",
+   "x": 380,
+   "y": 1314,
+   "width": 250,
+   "height": 84,
+   "color": "4",
+   "text": "**毕设价值**"
+  },
+  {
+   "id": "ce7247d65ff8e957",
+   "type": "text",
+   "x": 380,
+   "y": 1610,
+   "width": 250,
+   "height": 84,
+   "color": "6",
+   "text": "**落地动作**"
+  },
+  {
+   "id": "531f7d77ed2138ca",
+   "type": "file",
+   "x": 20,
+   "y": 1836,
+   "width": 310,
+   "height": 220,
+   "file": "本科毕设/C分布式组网与边云桥接/论文9跨组织MQTT桥接架构评估/9跨组织MQTT桥接架构评估.md"
+  }
+ ],
+ "edges": [
+  {
+   "id": "da33dd466d24cbe0",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "right",
+   "toNode": "0a3c41b32d0616d6",
+   "toSide": "left"
+  },
+  {
+   "id": "ea303d07dc1365cb",
+   "fromNode": "0a3c41b32d0616d6",
+   "fromSide": "right",
+   "toNode": "382396363556604b",
+   "toSide": "left"
+  },
+  {
+   "id": "8b0eadb4fafe4bc6",
+   "fromNode": "0a3c41b32d0616d6",
+   "fromSide": "right",
+   "toNode": "9ad54c8fc3ba674e",
+   "toSide": "left"
+  },
+  {
+   "id": "728cd2da41102637",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "right",
+   "toNode": "7ecf1563db32b1b1",
+   "toSide": "left"
+  },
+  {
+   "id": "1fe1749430f16047",
+   "fromNode": "7ecf1563db32b1b1",
+   "fromSide": "right",
+   "toNode": "510a61b02d31a3cf",
+   "toSide": "left"
+  },
+  {
+   "id": "5cf2227bb43fbc76",
+   "fromNode": "7ecf1563db32b1b1",
+   "fromSide": "right",
+   "toNode": "811597bc3a5347d2",
+   "toSide": "left"
+  },
+  {
+   "id": "a2c7a50aafeda7d0",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "right",
+   "toNode": "32e889c0b55bb57a",
+   "toSide": "left"
+  },
+  {
+   "id": "4c4564264d9025a8",
+   "fromNode": "32e889c0b55bb57a",
+   "fromSide": "right",
+   "toNode": "2d4dd99a6f88b16e",
+   "toSide": "left"
+  },
+  {
+   "id": "372df47374886d6e",
+   "fromNode": "32e889c0b55bb57a",
+   "fromSide": "right",
+   "toNode": "e8a25b8a52aa470a",
+   "toSide": "left"
+  },
+  {
+   "id": "6e8a576ede895c0e",
+   "fromNode": "32e889c0b55bb57a",
+   "fromSide": "right",
+   "toNode": "46ae2aa9c72251d5",
+   "toSide": "left"
+  },
+  {
+   "id": "71a41253bbc0da9d",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "right",
+   "toNode": "7a88b4e4bcf87b53",
+   "toSide": "left"
+  },
+  {
+   "id": "f3265a008c8d24fc",
+   "fromNode": "7a88b4e4bcf87b53",
+   "fromSide": "right",
+   "toNode": "512c94e810d808f6",
+   "toSide": "left"
+  },
+  {
+   "id": "69bc7b5bdab1083a",
+   "fromNode": "7a88b4e4bcf87b53",
+   "fromSide": "right",
+   "toNode": "d96c58a0a575fb46",
+   "toSide": "left"
+  },
+  {
+   "id": "2be03dcffe37bbc1",
+   "fromNode": "7a88b4e4bcf87b53",
+   "fromSide": "right",
+   "toNode": "deaef2008dada943",
+   "toSide": "left"
+  },
+  {
+   "id": "ca8088e8d0205c2f",
+   "fromNode": "7a88b4e4bcf87b53",
+   "fromSide": "right",
+   "toNode": "78508f9a7598ed3c",
+   "toSide": "left"
+  },
+  {
+   "id": "8f099d8f5a610e09",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "right",
+   "toNode": "ac0e2889d4254eeb",
+   "toSide": "left"
+  },
+  {
+   "id": "c1e2225020fc6f95",
+   "fromNode": "ac0e2889d4254eeb",
+   "fromSide": "right",
+   "toNode": "bd862030c2d89176",
+   "toSide": "left"
+  },
+  {
+   "id": "0147af96b3053843",
+   "fromNode": "ac0e2889d4254eeb",
+   "fromSide": "right",
+   "toNode": "a1357bc165e5fc9b",
+   "toSide": "left"
+  },
+  {
+   "id": "d8bd4dee4b090ede",
+   "fromNode": "ac0e2889d4254eeb",
+   "fromSide": "right",
+   "toNode": "dbee1f7a04666919",
+   "toSide": "left"
+  },
+  {
+   "id": "3f95ceb653001085",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "right",
+   "toNode": "ce7247d65ff8e957",
+   "toSide": "left"
+  },
+  {
+   "id": "3b68229732a541b5",
+   "fromNode": "ce7247d65ff8e957",
+   "fromSide": "right",
+   "toNode": "8b672fd4c2ff4d8f",
+   "toSide": "left"
+  },
+  {
+   "id": "48e96e5de049cd76",
+   "fromNode": "ce7247d65ff8e957",
+   "fromSide": "right",
+   "toNode": "561a4fa0f857b3f8",
+   "toSide": "left"
+  },
+  {
+   "id": "6e33a51743d4404a",
+   "fromNode": "ce7247d65ff8e957",
+   "fromSide": "right",
+   "toNode": "8dc5249508b421de",
+   "toSide": "left"
+  },
+  {
+   "id": "aa63e47be8ab100e",
+   "fromNode": "f385c7b0be39ddac",
+   "fromSide": "bottom",
+   "toNode": "531f7d77ed2138ca",
+   "toSide": "top"
+  }
+ ]
+}
