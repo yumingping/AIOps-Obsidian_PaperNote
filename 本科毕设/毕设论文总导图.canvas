@@ -1,348 +1,44 @@
 {
- "nodes": [
-  {
-   "id": "9f9b5e3a9b42a3fd",
-   "type": "group",
-   "x": 0,
-   "y": 0,
-   "width": 640,
-   "height": 980,
-   "color": "5",
-   "label": "A 协议基础与场景调研（任务1）"
-  },
-  {
-   "id": "0d60677826c9b9a3",
-   "type": "text",
-   "x": 30,
-   "y": 40,
-   "width": 520,
-   "height": 56,
-   "text": "*为什么需要边缘轻量中间件、为什么选 MQTT*"
-  },
-  {
-   "id": "cbc201603ea16410",
-   "type": "file",
-   "x": 30,
-   "y": 116,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/A协议基础与场景调研/论文1边缘计算愿景与挑战/1边缘计算愿景与挑战.md"
-  },
-  {
-   "id": "8d88d5f365e39dca",
-   "type": "file",
-   "x": 30,
-   "y": 336,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/A协议基础与场景调研/论文2物联网消息协议调研/2物联网消息协议调研.md"
-  },
-  {
-   "id": "22f238d6f59ac4a5",
-   "type": "file",
-   "x": 30,
-   "y": 556,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/A协议基础与场景调研/论文3发布订阅协议综述/3发布订阅协议综述.md"
-  },
-  {
-   "id": "23c91dfe06b3e75e",
-   "type": "file",
-   "x": 30,
-   "y": 776,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/A协议基础与场景调研/论文4QoS级别与MQTT丢包时延相关性/4QoS级别与MQTT丢包时延相关性.md"
-  },
-  {
-   "id": "9081156f40123612",
-   "type": "group",
-   "x": 730,
-   "y": 0,
-   "width": 640,
-   "height": 760,
-   "color": "2",
-   "label": "B 代理实现与性能评测（任务3、6）"
-  },
-  {
-   "id": "6d61b741a285032d",
-   "type": "text",
-   "x": 760,
-   "y": 40,
-   "width": 520,
-   "height": 56,
-   "text": "*单机 broker 怎么实现、怎么评测*"
-  },
-  {
-   "id": "fa94a477c70fb962",
-   "type": "file",
-   "x": 760,
-   "y": 116,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/B代理实现与性能评测/论文5muMQ轻量可扩展MQTT代理/5muMQ轻量可扩展MQTT代理.md"
-  },
-  {
-   "id": "064b0cd71ee67b70",
-   "type": "file",
-   "x": 760,
-   "y": 336,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/B代理实现与性能评测/论文6分布式IoT边缘MQTT代理对比/6分布式IoT边缘MQTT代理对比.md"
-  },
-  {
-   "id": "af9cb5e073adbc03",
-   "type": "file",
-   "x": 760,
-   "y": 556,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/B代理实现与性能评测/论文7IoT边缘消息代理基准测试/7IoT边缘消息代理基准测试.md"
-  },
-  {
-   "id": "ad26ea16009c7701",
-   "type": "group",
-   "x": 1460,
-   "y": 0,
-   "width": 640,
-   "height": 540,
-   "color": "4",
-   "label": "C 分布式组网与边云桥接（任务2、5）"
-  },
-  {
-   "id": "bacef2ca71e1c0cb",
-   "type": "text",
-   "x": 1490,
-   "y": 40,
-   "width": 520,
-   "height": 56,
-   "text": "*多 broker 怎么组网、边云怎么桥接*"
-  },
-  {
-   "id": "0d30a887ffdf9881",
-   "type": "file",
-   "x": 1490,
-   "y": 116,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/C分布式组网与边云桥接/论文8网络边缘分布式MQTT代理消息分发/8网络边缘分布式MQTT代理消息分发.md"
-  },
-  {
-   "id": "a4bb0aa4609a6ac7",
-   "type": "file",
-   "x": 1490,
-   "y": 336,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/C分布式组网与边云桥接/论文9跨组织MQTT桥接架构评估/9跨组织MQTT桥接架构评估.md"
-  },
-  {
-   "id": "5542e360193d8785",
-   "type": "group",
-   "x": 2190,
-   "y": 0,
-   "width": 640,
-   "height": 760,
-   "color": "6",
-   "label": "D 可靠性容错与安全（任务4）"
-  },
-  {
-   "id": "48551d75852581bb",
-   "type": "text",
-   "x": 2220,
-   "y": 40,
-   "width": 520,
-   "height": 56,
-   "text": "*broker 故障容错、可靠性边界、隐私*"
-  },
-  {
-   "id": "e66879e272fd2f0a",
-   "type": "file",
-   "x": 2220,
-   "y": 116,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/D可靠性容错与安全/论文10区块链增强MQTT容错/10区块链增强MQTT容错.md"
-  },
-  {
-   "id": "17411b3d2b4d8406",
-   "type": "file",
-   "x": 2220,
-   "y": 336,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/D可靠性容错与安全/论文11MQTT可靠性实测压力测试/11MQTT可靠性实测压力测试.md"
-  },
-  {
-   "id": "c93690ac77c03a4d",
-   "type": "file",
-   "x": 2220,
-   "y": 556,
-   "width": 520,
-   "height": 190,
-   "file": "本科毕设/D可靠性容错与安全/论文12MQTT协议隐私改进/12MQTT协议隐私改进.md"
-  },
-  {
-   "id": "38e91ccfcfee4790",
-   "type": "text",
-   "x": 900,
-   "y": -330,
-   "width": 640,
-   "height": 200,
-   "text": "# 面向边缘计算场景的轻量级消息中间件研究与实现\n西安电子科技大学 · 本科毕设 · 2026-11 → 2027-05\n\n**故事线**：为什么需要边缘轻量中间件（A）→ 单机 broker 实现与评测（B）→ 多 broker 组网桥接（C）→ 可靠性与安全（D）"
-  },
-  {
-   "id": "04518def4dfa362d",
-   "type": "text",
-   "x": 60,
-   "y": 1100,
-   "width": 300,
-   "height": 84,
-   "color": "3",
-   "text": "**任务1 协议与现状调研**"
-  },
-  {
-   "id": "afc2fe9ccad28906",
-   "type": "text",
-   "x": 390,
-   "y": 1100,
-   "width": 300,
-   "height": 84,
-   "color": "3",
-   "text": "**任务2 总体架构设计**"
-  },
-  {
-   "id": "1e9afb62e659a39c",
-   "type": "text",
-   "x": 720,
-   "y": 1100,
-   "width": 300,
-   "height": 84,
-   "color": "3",
-   "text": "**任务3 发布订阅模块（QoS 0/1/2）**"
-  },
-  {
-   "id": "679bffe43a9057c8",
-   "type": "text",
-   "x": 1050,
-   "y": 1100,
-   "width": 300,
-   "height": 84,
-   "color": "3",
-   "text": "**任务4 持久化/断线重连/遗嘱**"
-  },
-  {
-   "id": "cb8ca8744be6efa0",
-   "type": "text",
-   "x": 1380,
-   "y": 1100,
-   "width": 300,
-   "height": 84,
-   "color": "3",
-   "text": "**任务5 边云桥接与组网测试**"
-  },
-  {
-   "id": "b85415be79049d81",
-   "type": "text",
-   "x": 1710,
-   "y": 1100,
-   "width": 300,
-   "height": 84,
-   "color": "3",
-   "text": "**任务6 性能测试与论文撰写**"
-  }
- ],
- "edges": [
-  {
-   "id": "4e02cf9593b1b7e8",
-   "fromNode": "9f9b5e3a9b42a3fd",
-   "fromSide": "right",
-   "toNode": "9081156f40123612",
-   "toSide": "left",
-   "color": "6",
-   "label": "协议基础"
-  },
-  {
-   "id": "a017a40c237b888e",
-   "fromNode": "9081156f40123612",
-   "fromSide": "right",
-   "toNode": "ad26ea16009c7701",
-   "toSide": "left",
-   "color": "6",
-   "label": "单点瓶颈引出分布式"
-  },
-  {
-   "id": "2d31e85f2efc8c02",
-   "fromNode": "9081156f40123612",
-   "fromSide": "bottom",
-   "toNode": "5542e360193d8785",
-   "toSide": "top",
-   "color": "6",
-   "label": "实现可靠性"
-  },
-  {
-   "id": "81fcaae3965ba422",
-   "fromNode": "ad26ea16009c7701",
-   "fromSide": "bottom",
-   "toNode": "5542e360193d8785",
-   "toSide": "top",
-   "color": "6",
-   "label": "组网保可靠"
-  },
-  {
-   "id": "d82fcd79c603d7d1",
-   "fromNode": "9f9b5e3a9b42a3fd",
-   "fromSide": "bottom",
-   "toNode": "5542e360193d8785",
-   "toSide": "left",
-   "color": "3",
-   "label": "QoS 实测基线（论文4→11）",
-   "fromEnd": "none",
-   "toEnd": "arrow"
-  },
-  {
-   "id": "f2461e60906a4bfd",
-   "fromNode": "04518def4dfa362d",
-   "fromSide": "top",
-   "toNode": "9f9b5e3a9b42a3fd",
-   "toSide": "bottom"
-  },
-  {
-   "id": "b9f13eaa8295d5b3",
-   "fromNode": "afc2fe9ccad28906",
-   "fromSide": "top",
-   "toNode": "ad26ea16009c7701",
-   "toSide": "bottom"
-  },
-  {
-   "id": "8d0ad2681a1caec6",
-   "fromNode": "1e9afb62e659a39c",
-   "fromSide": "top",
-   "toNode": "9081156f40123612",
-   "toSide": "bottom"
-  },
-  {
-   "id": "bd29f0b387b73d31",
-   "fromNode": "679bffe43a9057c8",
-   "fromSide": "top",
-   "toNode": "5542e360193d8785",
-   "toSide": "bottom"
-  },
-  {
-   "id": "010211cc7deefeba",
-   "fromNode": "cb8ca8744be6efa0",
-   "fromSide": "top",
-   "toNode": "ad26ea16009c7701",
-   "toSide": "bottom"
-  },
-  {
-   "id": "7d76fc89b8616664",
-   "fromNode": "b85415be79049d81",
-   "fromSide": "top",
-   "toNode": "9081156f40123612",
-   "toSide": "bottom"
-  }
- ]
+	"nodes":[
+		{"id":"9f9b5e3a9b42a3fd","type":"group","x":0,"y":0,"width":640,"height":980,"color":"5","label":"A 协议基础与场景调研（任务1）"},
+		{"id":"0d60677826c9b9a3","type":"text","x":30,"y":40,"width":520,"height":56,"text":"*为什么需要边缘轻量中间件、为什么选 MQTT*"},
+		{"id":"cbc201603ea16410","type":"file","x":30,"y":116,"width":520,"height":190,"file":"本科毕设/A协议基础与场景调研/论文1边缘计算愿景与挑战/1边缘计算愿景与挑战.md"},
+		{"id":"8d88d5f365e39dca","type":"file","x":30,"y":336,"width":520,"height":190,"file":"本科毕设/A协议基础与场景调研/论文2物联网消息协议调研/2物联网消息协议调研.md"},
+		{"id":"22f238d6f59ac4a5","type":"file","x":30,"y":556,"width":520,"height":190,"file":"本科毕设/A协议基础与场景调研/论文3发布订阅协议综述/3发布订阅协议综述.md"},
+		{"id":"23c91dfe06b3e75e","type":"file","x":30,"y":776,"width":520,"height":190,"file":"本科毕设/A协议基础与场景调研/论文4QoS级别与MQTT丢包时延相关性/4QoS级别与MQTT丢包时延相关性.md"},
+		{"id":"9081156f40123612","type":"group","x":730,"y":0,"width":640,"height":760,"color":"2","label":"B 代理实现与性能评测（任务3、6）"},
+		{"id":"6d61b741a285032d","type":"text","x":760,"y":40,"width":520,"height":56,"text":"*单机 broker 怎么实现、怎么评测*"},
+		{"id":"fa94a477c70fb962","type":"file","x":760,"y":116,"width":520,"height":190,"file":"本科毕设/B代理实现与性能评测/论文5muMQ轻量可扩展MQTT代理/5muMQ轻量可扩展MQTT代理.md"},
+		{"id":"064b0cd71ee67b70","type":"file","x":760,"y":336,"width":520,"height":190,"file":"本科毕设/B代理实现与性能评测/论文6分布式IoT边缘MQTT代理对比/6分布式IoT边缘MQTT代理对比.md"},
+		{"id":"af9cb5e073adbc03","type":"file","x":760,"y":556,"width":520,"height":190,"file":"本科毕设/B代理实现与性能评测/论文7IoT边缘消息代理基准测试/7IoT边缘消息代理基准测试.md"},
+		{"id":"ad26ea16009c7701","type":"group","x":1460,"y":0,"width":640,"height":540,"color":"4","label":"C 分布式组网与边云桥接（任务2、5）"},
+		{"id":"bacef2ca71e1c0cb","type":"text","x":1490,"y":40,"width":520,"height":56,"text":"*多 broker 怎么组网、边云怎么桥接*"},
+		{"id":"0d30a887ffdf9881","type":"file","x":1490,"y":116,"width":520,"height":190,"file":"本科毕设/C分布式组网与边云桥接/论文8网络边缘分布式MQTT代理消息分发/8网络边缘分布式MQTT代理消息分发.md"},
+		{"id":"a4bb0aa4609a6ac7","type":"file","x":1490,"y":336,"width":520,"height":190,"file":"本科毕设/C分布式组网与边云桥接/论文9跨组织MQTT桥接架构评估/9跨组织MQTT桥接架构评估.md"},
+		{"id":"5542e360193d8785","type":"group","x":2190,"y":0,"width":640,"height":760,"color":"6","label":"D 可靠性容错与安全（任务4）"},
+		{"id":"48551d75852581bb","type":"text","x":2220,"y":40,"width":520,"height":56,"text":"*broker 故障容错、可靠性边界、隐私*"},
+		{"id":"e66879e272fd2f0a","type":"file","x":2220,"y":116,"width":520,"height":190,"file":"本科毕设/D可靠性容错与安全/论文10区块链增强MQTT容错/10区块链增强MQTT容错.md"},
+		{"id":"17411b3d2b4d8406","type":"file","x":2220,"y":336,"width":520,"height":190,"file":"本科毕设/D可靠性容错与安全/论文11MQTT可靠性实测压力测试/11MQTT可靠性实测压力测试.md"},
+		{"id":"c93690ac77c03a4d","type":"file","x":2220,"y":556,"width":520,"height":190,"file":"本科毕设/D可靠性容错与安全/论文12MQTT协议隐私改进/12MQTT协议隐私改进.md"},
+		{"id":"38e91ccfcfee4790","type":"text","x":900,"y":-330,"width":640,"height":200,"text":"# 面向边缘计算场景的轻量级消息中间件研究与实现\n西安电子科技大学 · 本科毕设 · 2026-11 → 2027-05\n\n**故事线**：为什么需要边缘轻量中间件（A）→ 单机 broker 实现与评测（B）→ 多 broker 组网桥接（C）→ 可靠性与安全（D）"},
+		{"id":"04518def4dfa362d","type":"text","x":60,"y":1100,"width":300,"height":84,"color":"3","text":"**任务1 协议与现状调研**"},
+		{"id":"afc2fe9ccad28906","type":"text","x":390,"y":1100,"width":300,"height":84,"color":"3","text":"**任务2 总体架构设计**"},
+		{"id":"1e9afb62e659a39c","type":"text","x":720,"y":1100,"width":300,"height":84,"color":"3","text":"**任务3 发布订阅模块（QoS 0/1/2）**"},
+		{"id":"679bffe43a9057c8","type":"text","x":1050,"y":1100,"width":300,"height":84,"color":"3","text":"**任务4 持久化/断线重连/遗嘱**"},
+		{"id":"cb8ca8744be6efa0","type":"text","x":1380,"y":1100,"width":300,"height":84,"color":"3","text":"**任务5 边云桥接与组网测试**"},
+		{"id":"b85415be79049d81","type":"text","x":1710,"y":1100,"width":300,"height":84,"color":"3","text":"**任务6 性能测试与论文撰写**"}
+	],
+	"edges":[
+		{"id":"4e02cf9593b1b7e8","fromNode":"9f9b5e3a9b42a3fd","fromSide":"right","toNode":"9081156f40123612","toSide":"left","color":"6","label":"协议基础"},
+		{"id":"a017a40c237b888e","fromNode":"9081156f40123612","fromSide":"right","toNode":"ad26ea16009c7701","toSide":"left","color":"6","label":"单点瓶颈引出分布式"},
+		{"id":"2d31e85f2efc8c02","fromNode":"9081156f40123612","fromSide":"bottom","toNode":"5542e360193d8785","toSide":"top","color":"6","label":"实现可靠性"},
+		{"id":"81fcaae3965ba422","fromNode":"ad26ea16009c7701","fromSide":"bottom","toNode":"5542e360193d8785","toSide":"top","color":"6","label":"组网保可靠"},
+		{"id":"d82fcd79c603d7d1","fromNode":"9f9b5e3a9b42a3fd","fromSide":"bottom","toNode":"5542e360193d8785","toSide":"left","color":"3","label":"QoS 实测基线（论文4→11）","fromEnd":"none","toEnd":"arrow"},
+		{"id":"f2461e60906a4bfd","fromNode":"04518def4dfa362d","fromSide":"top","toNode":"9f9b5e3a9b42a3fd","toSide":"bottom"},
+		{"id":"b9f13eaa8295d5b3","fromNode":"afc2fe9ccad28906","fromSide":"top","toNode":"ad26ea16009c7701","toSide":"bottom"},
+		{"id":"8d0ad2681a1caec6","fromNode":"1e9afb62e659a39c","fromSide":"top","toNode":"9081156f40123612","toSide":"bottom"},
+		{"id":"bd29f0b387b73d31","fromNode":"679bffe43a9057c8","fromSide":"top","toNode":"5542e360193d8785","toSide":"bottom"},
+		{"id":"010211cc7deefeba","fromNode":"cb8ca8744be6efa0","fromSide":"top","toNode":"ad26ea16009c7701","toSide":"bottom"},
+		{"id":"7d76fc89b8616664","fromNode":"b85415be79049d81","fromSide":"top","toNode":"9081156f40123612","toSide":"bottom"}
+	]
 }
