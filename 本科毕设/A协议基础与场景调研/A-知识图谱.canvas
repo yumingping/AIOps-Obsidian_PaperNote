@@ -18,8 +18,8 @@
 		{"id":"e3","fromNode":"p3","fromSide":"right","toNode":"t3","toSide":"left"},
 		{"id":"e4","fromNode":"p4","fromSide":"right","toNode":"t4","toSide":"left"},
 		{"id":"eh","fromNode":"head","fromSide":"bottom","toNode":"p1","toSide":"top"},
-		{"id":"rp1p3","fromNode":"p1","fromSide":"bottom","toNode":"p3","toSide":"top","label":"场景约束","color":"6"},
-		{"id":"rp2p3","fromNode":"p2","fromSide":"bottom","toNode":"p3","toSide":"top","label":"机制细节","color":"6"},
-		{"id":"rp3p4","fromNode":"p3","fromSide":"bottom","toNode":"p4","toSide":"top","label":"选定 MQTT → 实测 QoS","color":"6"}
+		{"id":"rp1p3","fromNode":"p1","fromSide":"bottom","toNode":"p3","toSide":"top","color":"6","label":"场景约束"},
+		{"id":"rp2p3","fromNode":"p2","fromSide":"bottom","toNode":"p3","toSide":"top","color":"6","label":"机制细节"},
+		{"id":"rp3p4","fromNode":"p3","fromSide":"bottom","toNode":"p4","toSide":"top","color":"6","label":"选定 MQTT → 实测 QoS"}
 	]
 }

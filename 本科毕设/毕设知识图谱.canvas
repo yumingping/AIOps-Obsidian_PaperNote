@@ -1,439 +1,55 @@
 {
- "nodes": [
-  {
-   "id": "theme",
-   "type": "text",
-   "text": "## 毕设 · 12 篇论文总知识图谱\n\n题目：面向边缘计算场景的轻量级消息中间件（MQTT）\n\n故事线：**为什么需要边缘轻量中间件（A）→ 单机 broker 怎么实现与评测（B）→ 多 broker 怎么组网桥接（C）→ 可靠性与安全怎么保（D）**",
-   "x": -780,
-   "y": -2150,
-   "width": 640,
-   "height": 260,
-   "color": "1"
-  },
-  {
-   "id": "guide",
-   "type": "text",
-   "text": "## 研0 怎么读这张图\n\n1. 中间一排**紫卡**是四个区块（按任务书分工），每张紫卡下面的红卡是区块级图谱，双击展开\n2. 四列**彩卡**是 12 篇论文，双击打开精读笔记（按页码顺序、术语带浅显解释和概念双链）\n3. 箭头上的字是论文之间的关系：读完一篇顺着箭头找下一篇\n4. 顶部右侧是任务书六条速览——写论文时倒着查：这一章该引哪几篇\n5. 概念看不懂 → 底部「概念索引」85 个术语的研0 版解释",
-   "x": -2380,
-   "y": -2150,
-   "width": 620,
-   "height": 280,
-   "color": "2"
-  },
-  {
-   "id": "task",
-   "type": "text",
-   "text": "## 任务书六条 → 对应区块\n\n1 调研协议现状 → **A**\n2 总体架构/端边云流转 → **C**\n3 发布订阅 + QoS 0/1/2 → **B**\n4 持久化/重连/遗嘱 → **D**\n5 边云桥接 + 组网测试 → **C**\n6 性能测试 + 论文 → **B**（论文11 供参数矩阵）",
-   "x": 320,
-   "y": -2150,
-   "width": 560,
-   "height": 280,
-   "color": "2"
-  },
-  {
-   "id": "hubA",
-   "type": "text",
-   "text": "## A 协议基础与场景调研\n\n任务 1：为什么边缘、为什么 MQTT\n4 篇：愿景 → 协议字典 → 协议横评 → QoS 实测",
-   "x": -2380,
-   "y": -1450,
-   "width": 480,
-   "height": 240,
-   "color": "6"
-  },
-  {
-   "id": "gA",
-   "type": "file",
-   "file": "本科毕设/A协议基础与场景调研/A-知识图谱.canvas",
-   "x": -2380,
-   "y": -1140,
-   "width": 480,
-   "height": 180,
-   "color": "1"
-  },
-  {
-   "id": "p1",
-   "type": "file",
-   "file": "本科毕设/A协议基础与场景调研/论文1边缘计算愿景与挑战/1边缘计算愿景与挑战.md",
-   "x": -2380,
-   "y": -880,
-   "width": 480,
-   "height": 280,
-   "color": "5"
-  },
-  {
-   "id": "p2",
-   "type": "file",
-   "file": "本科毕设/A协议基础与场景调研/论文2物联网消息协议调研/2物联网消息协议调研.md",
-   "x": -2380,
-   "y": -540,
-   "width": 480,
-   "height": 280,
-   "color": "5"
-  },
-  {
-   "id": "p3",
-   "type": "file",
-   "file": "本科毕设/A协议基础与场景调研/论文3发布订阅协议综述/3发布订阅协议综述.md",
-   "x": -2380,
-   "y": -200,
-   "width": 480,
-   "height": 280,
-   "color": "5"
-  },
-  {
-   "id": "p4",
-   "type": "file",
-   "file": "本科毕设/A协议基础与场景调研/论文4QoS级别与MQTT丢包时延相关性/4QoS级别与MQTT丢包时延相关性.md",
-   "x": -2380,
-   "y": 140,
-   "width": 480,
-   "height": 280,
-   "color": "5"
-  },
-  {
-   "id": "hubB",
-   "type": "text",
-   "text": "## B 代理实现与性能评测\n\n任务 3/6：broker 怎么做、怎么测\n3 篇：自研实现 → 三家对比 → 基准方法论",
-   "x": -1380,
-   "y": -1450,
-   "width": 480,
-   "height": 240,
-   "color": "6"
-  },
-  {
-   "id": "gB",
-   "type": "file",
-   "file": "本科毕设/B代理实现与性能评测/B-知识图谱.canvas",
-   "x": -1380,
-   "y": -1140,
-   "width": 480,
-   "height": 180,
-   "color": "1"
-  },
-  {
-   "id": "p5",
-   "type": "file",
-   "file": "本科毕设/B代理实现与性能评测/论文5muMQ轻量可扩展MQTT代理/5muMQ轻量可扩展MQTT代理.md",
-   "x": -1380,
-   "y": -880,
-   "width": 480,
-   "height": 280,
-   "color": "4"
-  },
-  {
-   "id": "p6",
-   "type": "file",
-   "file": "本科毕设/B代理实现与性能评测/论文6分布式IoT边缘MQTT代理对比/6分布式IoT边缘MQTT代理对比.md",
-   "x": -1380,
-   "y": -540,
-   "width": 480,
-   "height": 280,
-   "color": "4"
-  },
-  {
-   "id": "p7",
-   "type": "file",
-   "file": "本科毕设/B代理实现与性能评测/论文7IoT边缘消息代理基准测试/7IoT边缘消息代理基准测试.md",
-   "x": -1380,
-   "y": -200,
-   "width": 480,
-   "height": 280,
-   "color": "4"
-  },
-  {
-   "id": "hubC",
-   "type": "text",
-   "text": "## C 分布式组网与边云桥接\n\n任务 2/5：多 broker 组网、边云怎么连\n2 篇：层内分发 → 跨层桥接",
-   "x": -380,
-   "y": -1450,
-   "width": 480,
-   "height": 240,
-   "color": "6"
-  },
-  {
-   "id": "gC",
-   "type": "file",
-   "file": "本科毕设/C分布式组网与边云桥接/C-知识图谱.canvas",
-   "x": -380,
-   "y": -1140,
-   "width": 480,
-   "height": 180,
-   "color": "1"
-  },
-  {
-   "id": "p8",
-   "type": "file",
-   "file": "本科毕设/C分布式组网与边云桥接/论文8网络边缘分布式MQTT代理消息分发/8网络边缘分布式MQTT代理消息分发.md",
-   "x": -380,
-   "y": -880,
-   "width": 480,
-   "height": 280,
-   "color": "3"
-  },
-  {
-   "id": "p9",
-   "type": "file",
-   "file": "本科毕设/C分布式组网与边云桥接/论文9跨组织MQTT桥接架构评估/9跨组织MQTT桥接架构评估.md",
-   "x": -380,
-   "y": -540,
-   "width": 480,
-   "height": 280,
-   "color": "3"
-  },
-  {
-   "id": "hubD",
-   "type": "text",
-   "text": "## D 可靠性容错与安全\n\n任务 4：挂了怎么办、多可靠、泄露什么\n3 篇：压力实测 → 区块链容错 → 隐私",
-   "x": 620,
-   "y": -1450,
-   "width": 480,
-   "height": 240,
-   "color": "6"
-  },
-  {
-   "id": "gD",
-   "type": "file",
-   "file": "本科毕设/D可靠性容错与安全/D-知识图谱.canvas",
-   "x": 620,
-   "y": -1140,
-   "width": 480,
-   "height": 180,
-   "color": "1"
-  },
-  {
-   "id": "p10",
-   "type": "file",
-   "file": "本科毕设/D可靠性容错与安全/论文10区块链增强MQTT容错/10区块链增强MQTT容错.md",
-   "x": 620,
-   "y": -880,
-   "width": 480,
-   "height": 280,
-   "color": "2"
-  },
-  {
-   "id": "p11",
-   "type": "file",
-   "file": "本科毕设/D可靠性容错与安全/论文11MQTT可靠性实测压力测试/11MQTT可靠性实测压力测试.md",
-   "x": 620,
-   "y": -540,
-   "width": 480,
-   "height": 280,
-   "color": "2"
-  },
-  {
-   "id": "p12",
-   "type": "file",
-   "file": "本科毕设/D可靠性容错与安全/论文12MQTT协议隐私改进/12MQTT协议隐私改进.md",
-   "x": 620,
-   "y": -200,
-   "width": 480,
-   "height": 280,
-   "color": "2"
-  },
-  {
-   "id": "cidx",
-   "type": "file",
-   "file": "本科毕设/概念索引.md",
-   "x": -380,
-   "y": 480,
-   "width": 480,
-   "height": 160,
-   "color": "4"
-  }
- ],
- "edges": [
-  {
-   "id": "thA",
-   "fromNode": "theme",
-   "fromSide": "bottom",
-   "toNode": "hubA",
-   "toSide": "top",
-   "label": "任务书"
-  },
-  {
-   "id": "hgA",
-   "fromNode": "hubA",
-   "fromSide": "bottom",
-   "toNode": "gA",
-   "toSide": "top",
-   "label": "展开细读"
-  },
-  {
-   "id": "hpA",
-   "fromNode": "gA",
-   "fromSide": "bottom",
-   "toNode": "p1",
-   "toSide": "top"
-  },
-  {
-   "id": "ch2",
-   "fromNode": "p1",
-   "fromSide": "bottom",
-   "toNode": "p2",
-   "toSide": "top"
-  },
-  {
-   "id": "ch3",
-   "fromNode": "p2",
-   "fromSide": "bottom",
-   "toNode": "p3",
-   "toSide": "top"
-  },
-  {
-   "id": "ch4",
-   "fromNode": "p3",
-   "fromSide": "bottom",
-   "toNode": "p4",
-   "toSide": "top"
-  },
-  {
-   "id": "thB",
-   "fromNode": "theme",
-   "fromSide": "bottom",
-   "toNode": "hubB",
-   "toSide": "top",
-   "label": ""
-  },
-  {
-   "id": "hgB",
-   "fromNode": "hubB",
-   "fromSide": "bottom",
-   "toNode": "gB",
-   "toSide": "top",
-   "label": "展开细读"
-  },
-  {
-   "id": "hpB",
-   "fromNode": "gB",
-   "fromSide": "bottom",
-   "toNode": "p5",
-   "toSide": "top"
-  },
-  {
-   "id": "ch6",
-   "fromNode": "p5",
-   "fromSide": "bottom",
-   "toNode": "p6",
-   "toSide": "top"
-  },
-  {
-   "id": "ch7",
-   "fromNode": "p6",
-   "fromSide": "bottom",
-   "toNode": "p7",
-   "toSide": "top"
-  },
-  {
-   "id": "thC",
-   "fromNode": "theme",
-   "fromSide": "bottom",
-   "toNode": "hubC",
-   "toSide": "top",
-   "label": ""
-  },
-  {
-   "id": "hgC",
-   "fromNode": "hubC",
-   "fromSide": "bottom",
-   "toNode": "gC",
-   "toSide": "top",
-   "label": "展开细读"
-  },
-  {
-   "id": "hpC",
-   "fromNode": "gC",
-   "fromSide": "bottom",
-   "toNode": "p8",
-   "toSide": "top"
-  },
-  {
-   "id": "ch9",
-   "fromNode": "p8",
-   "fromSide": "bottom",
-   "toNode": "p9",
-   "toSide": "top"
-  },
-  {
-   "id": "thD",
-   "fromNode": "theme",
-   "fromSide": "bottom",
-   "toNode": "hubD",
-   "toSide": "top",
-   "label": ""
-  },
-  {
-   "id": "hgD",
-   "fromNode": "hubD",
-   "fromSide": "bottom",
-   "toNode": "gD",
-   "toSide": "top",
-   "label": "展开细读"
-  },
-  {
-   "id": "hpD",
-   "fromNode": "gD",
-   "fromSide": "bottom",
-   "toNode": "p10",
-   "toSide": "top"
-  },
-  {
-   "id": "ch11",
-   "fromNode": "p10",
-   "fromSide": "bottom",
-   "toNode": "p11",
-   "toSide": "top"
-  },
-  {
-   "id": "ch12",
-   "fromNode": "p11",
-   "fromSide": "bottom",
-   "toNode": "p12",
-   "toSide": "top"
-  },
-  {
-   "id": "bbhubAhubB",
-   "fromNode": "hubA",
-   "fromSide": "right",
-   "toNode": "hubB",
-   "toSide": "left",
-   "label": "选好协议 → 做 broker",
-   "color": "6"
-  },
-  {
-   "id": "bbhubBhubC",
-   "fromNode": "hubB",
-   "fromSide": "right",
-   "toNode": "hubC",
-   "toSide": "left",
-   "label": "单机 → 组网",
-   "color": "6"
-  },
-  {
-   "id": "bbhubBhubD",
-   "fromNode": "hubB",
-   "fromSide": "right",
-   "toNode": "hubD",
-   "toSide": "left",
-   "label": "性能 → 可靠",
-   "color": "6"
-  },
-  {
-   "id": "bbhubChubD",
-   "fromNode": "hubC",
-   "fromSide": "right",
-   "toNode": "hubD",
-   "toSide": "left",
-   "label": "组网 → 守稳",
-   "color": "6"
-  },
-  {
-   "id": "eci",
-   "fromNode": "gA",
-   "fromSide": "bottom",
-   "toNode": "cidx",
-   "toSide": "top",
-   "label": "85 个概念的研0 解释",
-   "color": "4"
-  }
- ]
+	"nodes":[
+		{"id":"theme","type":"text","text":"## 毕设 · 12 篇论文总知识图谱\n\n题目：面向边缘计算场景的轻量级消息中间件（MQTT）\n\n故事线：**为什么需要边缘轻量中间件（A）→ 单机 broker 怎么实现与评测（B）→ 多 broker 怎么组网桥接（C）→ 可靠性与安全怎么保（D）**","x":-780,"y":-2150,"width":640,"height":260,"color":"1"},
+		{"id":"guide","type":"text","text":"## 研0 怎么读这张图\n\n1. 中间一排**紫卡**是四个区块（按任务书分工），每张紫卡下面的红卡是区块级图谱，双击展开\n2. 四列**彩卡**是 12 篇论文，双击打开精读笔记（按页码顺序、术语带浅显解释和概念双链）\n3. 箭头上的字是论文之间的关系：读完一篇顺着箭头找下一篇\n4. 顶部右侧是任务书六条速览——写论文时倒着查：这一章该引哪几篇\n5. 概念看不懂 → 底部「概念索引」85 个术语的研0 版解释","x":-2380,"y":-2150,"width":620,"height":280,"color":"2"},
+		{"id":"task","type":"text","text":"## 任务书六条 → 对应区块\n\n1 调研协议现状 → **A**\n2 总体架构/端边云流转 → **C**\n3 发布订阅 + QoS 0/1/2 → **B**\n4 持久化/重连/遗嘱 → **D**\n5 边云桥接 + 组网测试 → **C**\n6 性能测试 + 论文 → **B**（论文11 供参数矩阵）","x":320,"y":-2150,"width":560,"height":280,"color":"2"},
+		{"id":"hubA","type":"text","text":"## A 协议基础与场景调研\n\n任务 1：为什么边缘、为什么 MQTT\n4 篇：愿景 → 协议字典 → 协议横评 → QoS 实测","x":-2380,"y":-1450,"width":480,"height":240,"color":"6"},
+		{"id":"gA","type":"file","file":"本科毕设/A协议基础与场景调研/A-知识图谱.canvas","x":-2380,"y":-1140,"width":480,"height":180,"color":"1"},
+		{"id":"p1","type":"file","file":"本科毕设/A协议基础与场景调研/论文1边缘计算愿景与挑战/1边缘计算愿景与挑战.md","x":-2380,"y":-880,"width":480,"height":280,"color":"5"},
+		{"id":"p2","type":"file","file":"本科毕设/A协议基础与场景调研/论文2物联网消息协议调研/2物联网消息协议调研.md","x":-2380,"y":-540,"width":480,"height":280,"color":"5"},
+		{"id":"p3","type":"file","file":"本科毕设/A协议基础与场景调研/论文3发布订阅协议综述/3发布订阅协议综述.md","x":-2380,"y":-200,"width":480,"height":280,"color":"5"},
+		{"id":"p4","type":"file","file":"本科毕设/A协议基础与场景调研/论文4QoS级别与MQTT丢包时延相关性/4QoS级别与MQTT丢包时延相关性.md","x":-2380,"y":140,"width":480,"height":280,"color":"5"},
+		{"id":"hubB","type":"text","text":"## B 代理实现与性能评测\n\n任务 3/6：broker 怎么做、怎么测\n3 篇：自研实现 → 三家对比 → 基准方法论","x":-1380,"y":-1450,"width":480,"height":240,"color":"6"},
+		{"id":"gB","type":"file","file":"本科毕设/B代理实现与性能评测/B-知识图谱.canvas","x":-1380,"y":-1140,"width":480,"height":180,"color":"1"},
+		{"id":"p5","type":"file","file":"本科毕设/B代理实现与性能评测/论文5muMQ轻量可扩展MQTT代理/5muMQ轻量可扩展MQTT代理.md","x":-1380,"y":-880,"width":480,"height":280,"color":"4"},
+		{"id":"p6","type":"file","file":"本科毕设/B代理实现与性能评测/论文6分布式IoT边缘MQTT代理对比/6分布式IoT边缘MQTT代理对比.md","x":-1380,"y":-540,"width":480,"height":280,"color":"4"},
+		{"id":"p7","type":"file","file":"本科毕设/B代理实现与性能评测/论文7IoT边缘消息代理基准测试/7IoT边缘消息代理基准测试.md","x":-1380,"y":-200,"width":480,"height":280,"color":"4"},
+		{"id":"hubC","type":"text","text":"## C 分布式组网与边云桥接\n\n任务 2/5：多 broker 组网、边云怎么连\n2 篇：层内分发 → 跨层桥接","x":-380,"y":-1450,"width":480,"height":240,"color":"6"},
+		{"id":"gC","type":"file","file":"本科毕设/C分布式组网与边云桥接/C-知识图谱.canvas","x":-380,"y":-1140,"width":480,"height":180,"color":"1"},
+		{"id":"p8","type":"file","file":"本科毕设/C分布式组网与边云桥接/论文8网络边缘分布式MQTT代理消息分发/8网络边缘分布式MQTT代理消息分发.md","x":-380,"y":-880,"width":480,"height":280,"color":"3"},
+		{"id":"p9","type":"file","file":"本科毕设/C分布式组网与边云桥接/论文9跨组织MQTT桥接架构评估/9跨组织MQTT桥接架构评估.md","x":-380,"y":-540,"width":480,"height":280,"color":"3"},
+		{"id":"hubD","type":"text","text":"## D 可靠性容错与安全\n\n任务 4：挂了怎么办、多可靠、泄露什么\n3 篇：压力实测 → 区块链容错 → 隐私","x":620,"y":-1450,"width":480,"height":240,"color":"6"},
+		{"id":"gD","type":"file","file":"本科毕设/D可靠性容错与安全/D-知识图谱.canvas","x":620,"y":-1140,"width":480,"height":180,"color":"1"},
+		{"id":"p10","type":"file","file":"本科毕设/D可靠性容错与安全/论文10区块链增强MQTT容错/10区块链增强MQTT容错.md","x":620,"y":-880,"width":480,"height":280,"color":"2"},
+		{"id":"p11","type":"file","file":"本科毕设/D可靠性容错与安全/论文11MQTT可靠性实测压力测试/11MQTT可靠性实测压力测试.md","x":620,"y":-540,"width":480,"height":280,"color":"2"},
+		{"id":"p12","type":"file","file":"本科毕设/D可靠性容错与安全/论文12MQTT协议隐私改进/12MQTT协议隐私改进.md","x":620,"y":-200,"width":480,"height":280,"color":"2"},
+		{"id":"cidx","type":"file","file":"本科毕设/概念索引.md","x":-380,"y":480,"width":480,"height":160,"color":"4"}
+	],
+	"edges":[
+		{"id":"thA","fromNode":"theme","fromSide":"bottom","toNode":"hubA","toSide":"top","label":"任务书"},
+		{"id":"hgA","fromNode":"hubA","fromSide":"bottom","toNode":"gA","toSide":"top","label":"展开细读"},
+		{"id":"hpA","fromNode":"gA","fromSide":"bottom","toNode":"p1","toSide":"top"},
+		{"id":"ch2","fromNode":"p1","fromSide":"bottom","toNode":"p2","toSide":"top"},
+		{"id":"ch3","fromNode":"p2","fromSide":"bottom","toNode":"p3","toSide":"top"},
+		{"id":"ch4","fromNode":"p3","fromSide":"bottom","toNode":"p4","toSide":"top"},
+		{"id":"thB","fromNode":"theme","fromSide":"bottom","toNode":"hubB","toSide":"top","label":""},
+		{"id":"hgB","fromNode":"hubB","fromSide":"bottom","toNode":"gB","toSide":"top","label":"展开细读"},
+		{"id":"hpB","fromNode":"gB","fromSide":"bottom","toNode":"p5","toSide":"top"},
+		{"id":"ch6","fromNode":"p5","fromSide":"bottom","toNode":"p6","toSide":"top"},
+		{"id":"ch7","fromNode":"p6","fromSide":"bottom","toNode":"p7","toSide":"top"},
+		{"id":"thC","fromNode":"theme","fromSide":"bottom","toNode":"hubC","toSide":"top","label":""},
+		{"id":"hgC","fromNode":"hubC","fromSide":"bottom","toNode":"gC","toSide":"top","label":"展开细读"},
+		{"id":"hpC","fromNode":"gC","fromSide":"bottom","toNode":"p8","toSide":"top"},
+		{"id":"ch9","fromNode":"p8","fromSide":"bottom","toNode":"p9","toSide":"top"},
+		{"id":"thD","fromNode":"theme","fromSide":"bottom","toNode":"hubD","toSide":"top","label":""},
+		{"id":"hgD","fromNode":"hubD","fromSide":"bottom","toNode":"gD","toSide":"top","label":"展开细读"},
+		{"id":"hpD","fromNode":"gD","fromSide":"bottom","toNode":"p10","toSide":"top"},
+		{"id":"ch11","fromNode":"p10","fromSide":"bottom","toNode":"p11","toSide":"top"},
+		{"id":"ch12","fromNode":"p11","fromSide":"bottom","toNode":"p12","toSide":"top"},
+		{"id":"bbhubAhubB","fromNode":"hubA","fromSide":"right","toNode":"hubB","toSide":"left","label":"选好协议 → 做 broker","color":"6"},
+		{"id":"bbhubBhubC","fromNode":"hubB","fromSide":"right","toNode":"hubC","toSide":"left","label":"单机 → 组网","color":"6"},
+		{"id":"bbhubBhubD","fromNode":"hubB","fromSide":"right","toNode":"hubD","toSide":"left","label":"性能 → 可靠","color":"6"},
+		{"id":"bbhubChubD","fromNode":"hubC","fromSide":"right","toNode":"hubD","toSide":"left","label":"组网 → 守稳","color":"6"},
+		{"id":"eci","fromNode":"gA","fromSide":"bottom","toNode":"cidx","toSide":"top","label":"85 个概念的研0 解释","color":"4"}
+	]
 }
